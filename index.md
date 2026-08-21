@@ -9,13 +9,14 @@ By the end, you will not just understand how agents work: you will have built an
 
 ## Choose your scenario
 
-All three scenarios use the same five-challenge structure. Choose the industry that best matches your interests.
+All four scenarios use the same five-challenge structure. Choose the industry that best matches your interests.
 
 | Scenario | Domain | What you will build |
 |----------|--------|----------------|
 | [🏭 Factory](./factory/README.md) | Predictive maintenance | Anomaly detection and failure diagnosis agents |
 | [📋 Claims](./claims/README.md) | Insurance processing | Claims triage and claims decision agents |
 | [📞 Call center](./callcenter/README.md) | Customer support | Intent classification and resolution guidance agents |
+| [🌱 Smart Farm](./smart-farm/README.md) | Precision agriculture | Crop health monitoring and agricultural advisory agents |
 
 ## Challenge structure
 

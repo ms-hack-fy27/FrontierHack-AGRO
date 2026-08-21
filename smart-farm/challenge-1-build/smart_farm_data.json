@@ -1,0 +1,102 @@
+{
+  "farm": "GreenRise AgriTech",
+  "site": "Salinas Valley Demonstration Farm",
+  "timestamp": "2026-08-20T07:30:00Z",
+  "zones": [
+    {
+      "zone_id": "ZONE-ALPHA",
+      "name": "North Lettuce Beds",
+      "crop": "romaine lettuce",
+      "status": "warning",
+      "last_inspection": "2026-08-19",
+      "readings": {
+        "soil_moisture": {"value": 26.0, "unit": "%"},
+        "temperature": {"value": 31.5, "unit": "celsius"},
+        "humidity": {"value": 64.0, "unit": "%"},
+        "ph_level": {"value": 6.5, "unit": "pH"}
+      },
+      "thresholds": {
+        "soil_moisture": {"min": 30.0, "max": 65.0},
+        "temperature": {"min": 12.0, "max": 30.0},
+        "humidity": {"min": 45.0, "max": 80.0},
+        "ph_level": {"min": 6.0, "max": 7.0}
+      }
+    },
+    {
+      "zone_id": "ZONE-BETA",
+      "name": "East Tomato Greenhouse",
+      "crop": "heirloom tomatoes",
+      "status": "normal",
+      "last_inspection": "2026-08-20",
+      "readings": {
+        "soil_moisture": {"value": 48.0, "unit": "%"},
+        "temperature": {"value": 24.0, "unit": "celsius"},
+        "humidity": {"value": 68.0, "unit": "%"},
+        "ph_level": {"value": 6.3, "unit": "pH"}
+      },
+      "thresholds": {
+        "soil_moisture": {"min": 35.0, "max": 70.0},
+        "temperature": {"min": 18.0, "max": 28.0},
+        "humidity": {"min": 50.0, "max": 80.0},
+        "ph_level": {"min": 5.8, "max": 6.8}
+      }
+    },
+    {
+      "zone_id": "ZONE-GAMMA",
+      "name": "South Strawberry Rows",
+      "crop": "strawberries",
+      "status": "critical",
+      "last_inspection": "2026-08-18",
+      "readings": {
+        "soil_moisture": {"value": 18.0, "unit": "%"},
+        "temperature": {"value": 35.0, "unit": "celsius"},
+        "humidity": {"value": 91.0, "unit": "%"},
+        "ph_level": {"value": 5.1, "unit": "pH"}
+      },
+      "thresholds": {
+        "soil_moisture": {"min": 35.0, "max": 70.0},
+        "temperature": {"min": 15.0, "max": 30.0},
+        "humidity": {"min": 55.0, "max": 85.0},
+        "ph_level": {"min": 5.5, "max": 6.5}
+      }
+    },
+    {
+      "zone_id": "ZONE-DELTA",
+      "name": "West Bell Pepper Block",
+      "crop": "bell peppers",
+      "status": "normal",
+      "last_inspection": "2026-08-20",
+      "readings": {
+        "soil_moisture": {"value": 52.0, "unit": "%"},
+        "temperature": {"value": 26.5, "unit": "celsius"},
+        "humidity": {"value": 62.0, "unit": "%"},
+        "ph_level": {"value": 6.1, "unit": "pH"}
+      },
+      "thresholds": {
+        "soil_moisture": {"min": 35.0, "max": 70.0},
+        "temperature": {"min": 18.0, "max": 32.0},
+        "humidity": {"min": 45.0, "max": 78.0},
+        "ph_level": {"min": 5.8, "max": 6.8}
+      }
+    },
+    {
+      "zone_id": "ZONE-EPSILON",
+      "name": "Central Herb Garden",
+      "crop": "basil and cilantro",
+      "status": "warning",
+      "last_inspection": "2026-08-19",
+      "readings": {
+        "soil_moisture": {"value": 42.0, "unit": "%"},
+        "temperature": {"value": 29.0, "unit": "celsius"},
+        "humidity": {"value": 84.0, "unit": "%"},
+        "ph_level": {"value": 5.4, "unit": "pH"}
+      },
+      "thresholds": {
+        "soil_moisture": {"min": 30.0, "max": 65.0},
+        "temperature": {"min": 16.0, "max": 32.0},
+        "humidity": {"min": 45.0, "max": 78.0},
+        "ph_level": {"min": 5.8, "max": 6.8}
+      }
+    }
+  ]
+}

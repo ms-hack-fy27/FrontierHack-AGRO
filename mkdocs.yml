@@ -71,3 +71,11 @@ nav:
       - Challenge 3 — Evaluate: callcenter/challenge-3-evaluate/README.md
       - Challenge 4 — Workflow: callcenter/challenge-4-deploy/README.md
       - Wrap Up: callcenter/wrapup.md
+  - 🌱 Smart Farm:
+      - Overview: smart-farm/README.md
+      - Challenge 0 — Setup: smart-farm/challenge-0-setup/README.md
+      - Challenge 1 — Build Agents: smart-farm/challenge-1-build/README.md
+      - Challenge 2 — Monitor: smart-farm/challenge-2-monitor/README.md
+      - Challenge 3 — Evaluate: smart-farm/challenge-3-evaluate/README.md
+      - Challenge 4 — Workflow: smart-farm/challenge-4-deploy/README.md
+      - Facilitator Guide: smart-farm/FACILITATOR_GUIDE.md
