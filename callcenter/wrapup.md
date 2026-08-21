@@ -33,7 +33,7 @@ Want to take the NovaTel system further? Here are some directions:
 - **Improve evaluation** — add task-specific evaluators (for example, "did the agent offer a retention discount to a Premium customer at risk of cancellation?") alongside generic coherence scores
 - **Configure CI/CD** — run your evaluation set automatically on every prompt change using GitHub Actions and fail the build if quality scores fall below a threshold
 - **Explore fine-tuning** — use your traced conversations as training data to fine-tune a smaller, less expensive model for intent classification
-- **Try another scenario** — the [Factory](../factory/README.md) and [Claims](../claims/README.md) scenarios cover predictive maintenance and insurance claims processing using the same lifecycle
+- **Try another scenario** — the [Smart Farm](../smart-farm/README.md) scenario covers crop health monitoring and agricultural advice using the same lifecycle
 
 ---
 

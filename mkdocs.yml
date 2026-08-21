@@ -47,22 +47,6 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - 🏭 Factory:
-      - Overview: factory/README.md
-      - Challenge 0 — Setup: factory/challenge-0-setup/README.md
-      - Challenge 1 — Build Agents: factory/challenge-1-build/README.md
-      - Challenge 2 — Monitor: factory/challenge-2-monitor/README.md
-      - Challenge 3 — Evaluate: factory/challenge-3-evaluate/README.md
-      - Challenge 4 — Workflow: factory/challenge-4-deploy/README.md
-      - Wrap Up: factory/wrapup.md
-  - 📋 Claims:
-      - Overview: claims/README.md
-      - Challenge 0 — Setup: claims/challenge-0-setup/README.md
-      - Challenge 1 — Build Agents: claims/challenge-1-build/README.md
-      - Challenge 2 — Monitor: claims/challenge-2-monitor/README.md
-      - Challenge 3 — Evaluate: claims/challenge-3-evaluate/README.md
-      - Challenge 4 — Workflow: claims/challenge-4-deploy/README.md
-      - Wrap Up: claims/wrapup.md
   - 📞 Call Center:
       - Overview: callcenter/README.md
       - Challenge 0 — Setup: callcenter/challenge-0-setup/README.md

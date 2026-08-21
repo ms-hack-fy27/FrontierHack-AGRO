@@ -27,8 +27,6 @@ All tracks teach the same Foundry concepts. Choose the one that best matches you
 
 | Scenario | Description | Start here |
 |----------|-------------|------------|
-| 🏭 **Factory** | Detect machine anomalies and diagnose failures at TireForge Industries | [Factory lab](./factory/README.md) |
-| 📋 **Claims** | Triage incoming claims and recommend actions at ClaimSight Insurance | [Claims lab](./claims/README.md) |
 | 📞 **Call center** | Classify call intents and guide resolutions at NovaTel Communications | [Call center lab](./callcenter/README.md) |
 | 🌱 **Smart Farm** | Monitor crop health and recommend actions at GreenRise AgriTech | [Smart Farm lab](./smart-farm/README.md) |
 

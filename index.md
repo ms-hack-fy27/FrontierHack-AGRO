@@ -9,12 +9,10 @@ By the end, you will not just understand how agents work: you will have built an
 
 ## Choose your scenario
 
-All four scenarios use the same five-challenge structure. Choose the industry that best matches your interests.
+The scenarios use the same five-challenge structure. Choose the industry that best matches your interests.
 
 | Scenario | Domain | What you will build |
 |----------|--------|----------------|
-| [🏭 Factory](./factory/README.md) | Predictive maintenance | Anomaly detection and failure diagnosis agents |
-| [📋 Claims](./claims/README.md) | Insurance processing | Claims triage and claims decision agents |
 | [📞 Call center](./callcenter/README.md) | Customer support | Intent classification and resolution guidance agents |
 | [🌱 Smart Farm](./smart-farm/README.md) | Precision agriculture | Crop health monitoring and agricultural advisory agents |
 
@@ -42,6 +40,6 @@ All scenarios follow the same five challenges:
 
 1. Clone this repository and authenticate with `az login` and `azd auth login`.
 2. To provision the default call center scenario, run `azd up` from the repository root.
-3. For a specific scenario, enter `factory/`, `claims/`, or `callcenter/` and run `azd up`.
+3. For a specific scenario, enter `callcenter/` or `smart-farm/` and run `azd up`.
 4. Complete challenges 1–4 in order; each one builds on the previous challenge.
 5. The `agents.py` and `deploy.py` scripts are ready to run. Read the README in each challenge folder for instructions.
