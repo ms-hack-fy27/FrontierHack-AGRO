@@ -1,47 +1,47 @@
-# 🎉 Laboratório concluído — Processamento de Sinistros (ClaimSight Insurance)
+# 🎉 Lab Complete — Claims Processing (ClaimSight Insurance)
 
-Parabéns: você criou, instrumentou, avaliou e implantou do zero um sistema de IA multiagente pronto para produção. Veja o que você realizou.
+Congratulations: you built, instrumented, evaluated, and deployed a production-ready multi-agent AI system from scratch. Here is what you accomplished.
 
 ---
 
-## Recapitulação
+## Recap
 
-| # | Desafio | O que você criou |
+| # | Challenge | What you built |
 |---|-----------|----------------|
-| 0 | **Configuração** | Provisionou um recurso do Microsoft Foundry, um projeto, uma implantação de modelo GPT, um workspace do Log Analytics e uma instância do Application Insights usando `azd provision` |
-| 1 | **Criar agentes** | Criou um **Claims Triage Agent** (avalia completude documental, risco de fraude e cobertura da apólice) e um **Claims Decision Agent** (recomenda aprovar, acelerar, sinalizar para investigação ou negar, com justificativa) |
-| 2 | **Monitorar** | Habilitou o rastreamento GenAI do OpenTelemetry: cada chamada de modelo, invocação de ferramenta e contagem de tokens é capturada como um trace distribuído no Application Insights |
-| 3 | **Avaliar** | Executou avaliações sistemáticas com LLM como juiz em todo o conjunto de dados de sinistros, produzindo pontuações repetíveis de coerência e fluência que podem ser acompanhadas por versão entre alterações de prompt |
-| 4 | **Fluxo de produção** | Conectou os dois agentes em um pipeline orquestrado no portal do Foundry, um endpoint estável e testável com histórico de execuções que os reguladores podem inspecionar e auditar |
+| 0 | **Setup** | Provisioned a Microsoft Foundry resource, project, GPT model deployment, Log Analytics workspace, and Application Insights instance using `azd provision` |
+| 1 | **Build agents** | Built a **Claims Triage Agent** (assesses document completeness, fraud risk, and policy coverage) and a **Claims Decision Agent** (recommends approval, acceleration, investigation, or denial with justification) |
+| 2 | **Monitor** | Enabled OpenTelemetry GenAI tracing: every model call, tool invocation, and token count is captured as a distributed trace in Application Insights |
+| 3 | **Evaluate** | Ran systematic LLM-as-a-judge evaluations across the claims dataset, producing repeatable coherence and fluency scores that can be tracked by version across prompt changes |
+| 4 | **Production workflow** | Connected both agents in an orchestrated pipeline in the Foundry portal, creating a stable, testable endpoint with run history that regulators can inspect and audit |
 
-### Habilidades praticadas
+### Skills Practiced
 
-- Projetar prompts de sistema para agentes com limites claros de função e restrições
-- Fundamentar agentes em dados reais de sinistros por meio de chamadas de ferramentas (function calling)
-- Rastreamento distribuído de sistemas de IA com OpenTelemetry
-- Avaliação com LLM como juiz usando o Azure AI Evaluation SDK
-- Orquestração multiagente no portal do Foundry
-
----
-
-## Próximos passos
-
-Quer levar o sistema ClaimSight mais longe? Veja algumas direções:
-
-- **Adicionar mais agentes**: um agente de Extração de Documentos que analise PDFs carregados ou um agente de Padrões de Fraude que cruze o histórico de sinistros dos segurados
-- **Conectar dados reais**: substitua o `claims_data.json` estático por um sistema ativo de gerenciamento de apólices ou uma consulta ao armazenamento de documentos
-- **Melhorar a avaliação**: adicione avaliadores específicos da tarefa (por exemplo, "o agente sinalizou corretamente um sinistro com pontuação de fraude acima de 0,7?") junto às pontuações genéricas de coerência
-- **Configurar CI/CD**: execute seu conjunto de dados de avaliação automaticamente a cada alteração de prompt usando o GitHub Actions e faça o build falhar se as pontuações de qualidade caírem abaixo de um limite
-- **Explorar ajuste fino**: use suas decisões de sinistros rastreadas como dados de treinamento para ajustar um modelo menor para a etapa inicial de triagem
-- **Experimentar outro cenário**: os cenários de [Fábrica](../factory/README.md) e [Central de atendimento](../callcenter/README.md) abordam manutenção preditiva e suporte ao cliente usando o mesmo ciclo de vida
+- Design system prompts for agents with clear role boundaries and constraints
+- Ground agents in real claims data through tool calls (function calling)
+- Distributed tracing for AI systems with OpenTelemetry
+- LLM-as-a-judge evaluation using the Azure AI Evaluation SDK
+- Multi-agent orchestration in the Foundry portal
 
 ---
 
-## Limpar recursos do Azure
+## Next Steps
 
-> **Importante:** os recursos implantados no Desafio 0 geram custos do Azure enquanto existirem. Exclua-os quando terminar.
+Want to take the ClaimSight system further? Here are some directions:
 
-### O que será excluído
+- **Add more agents**: a Document Extraction agent that analyzes uploaded PDFs or a Fraud Patterns agent that cross-references policyholder claims history
+- **Connect real data**: replace the static `claims_data.json` with a live policy management system or a document storage query
+- **Improve evaluation**: add task-specific evaluators (for example, "Did the agent correctly flag a claim with a fraud score above 0.7?") alongside the generic coherence scores
+- **Configure CI/CD**: run your evaluation dataset automatically on every prompt change using GitHub Actions and fail the build if quality scores fall below a threshold
+- **Explore fine-tuning**: use your tracked claims decisions as training data to fine-tune a smaller model for the initial triage step
+- **Try another scenario**: the [Factory](../factory/README.md) and [Call Center](../callcenter/README.md) scenarios cover predictive maintenance and customer support using the same lifecycle
+
+---
+
+## Clean Up Azure Resources
+
+> **Important:** resources deployed in Challenge 0 incur Azure charges while they exist. Delete them when you are finished.
+
+### What Will Be Deleted
 
 - O grupo de recursos `foundry-hackathon-rg-<suffix>` e tudo dentro dele:
   - Microsoft Foundry Resource + project
@@ -49,25 +49,25 @@ Quer levar o sistema ClaimSight mais longe? Veja algumas direções:
   - Log Analytics workspace
   - Application Insights instance
 
-### Opção 1 — azd down
+### Option 1 — azd down
 
-Na pasta **claims** (onde o ambiente `azd` foi inicializado), execute:
+From the **claims** folder (where the `azd` environment was initialized), run:
 
 ```bash
 cd claims
 azd down --purge
 ```
 
-O comando usa o ambiente `azd` criado por `azd provision` para saber exatamente qual grupo de recursos deve ser alvo. Ele pede confirmação antes de excluir.
+The command uses the `azd` environment created by `azd provision` to identify exactly which resource group to target. It asks for confirmation before deleting it.
 
-### Opção 2 — Portal do Azure
+### Option 2 — Azure portal
 
 1. Go to [portal.azure.com](https://portal.azure.com)
-2. Pesquise por **Grupos de recursos**
-3. Encontre `foundry-hackathon-rg-<your-suffix>`
-4. Clique em **Excluir grupo de recursos** e confirme
+2. Search for **Resource groups**
+3. Find `foundry-hackathon-rg-<your-suffix>`
+4. Click **Delete resource group** and confirm
 
-### Opção 3 — Azure CLI
+### Option 3 — Azure CLI
 
 ```bash
 # Replace <suffix> with the value shown in your .env file

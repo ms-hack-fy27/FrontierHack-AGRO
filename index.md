@@ -1,46 +1,46 @@
-# Laboratório — Crie agentes de IA com o Microsoft Foundry
-Boas-vindas ao laboratório prático do **Hackathon Microsoft Cloud & AI Frontier Week** — onde ideias se transformam em soluções reais.
+# Lab — Build AI agents with Microsoft Foundry
+Welcome to the **Microsoft Cloud & AI Frontier Week Hackathon** hands-on lab, where ideas become real solutions.
 
-Ao longo da Frontier Week, você explorou como a IA está transformando as organizações. Aqui você colocará esse conhecimento em prática.
+Throughout Frontier Week, you explored how AI is transforming organizations. Here, you will put that knowledge into practice.
 
-Neste laboratório, você **criará, monitorará, avaliará e orquestrará agentes de IA** usando o SDK do Microsoft Foundry — seguindo uma experiência guiada e baseada em cenários, projetada para levar você do conceito a um sistema multiagente funcional e pronto para empresas.
+In this lab, you will **build, monitor, evaluate, and orchestrate AI agents** using the Microsoft Foundry SDK, following a guided, scenario-based experience designed to take you from concept to a functional, enterprise-ready multi-agent system.
 
-Ao final, você não apenas entenderá como os agentes funcionam: terá criado um agente que pode **rastrear, avaliar e implantar**.
+By the end, you will not just understand how agents work: you will have built an agent that can be **traced, evaluated, and deployed**.
 
-## Escolha seu cenário
+## Choose your scenario
 
-Os três cenários usam a mesma estrutura de cinco desafios. Escolha o setor que mais combina com seus interesses.
+All three scenarios use the same five-challenge structure. Choose the industry that best matches your interests.
 
-| Cenário | Domínio | O que você criará |
+| Scenario | Domain | What you will build |
 |----------|--------|----------------|
-| [🏭 Fábrica](./factory/README.md) | Manutenção preditiva | Agentes de detecção de anomalias e diagnóstico de falhas |
-| [📋 Sinistros](./claims/README.md) | Processamento de seguros | Agentes de triagem de sinistros e decisão sobre sinistros |
-| [📞 Central de atendimento](./callcenter/README.md) | Suporte ao cliente | Agentes de classificação de intenção e orientação de resolução |
+| [🏭 Factory](./factory/README.md) | Predictive maintenance | Anomaly detection and failure diagnosis agents |
+| [📋 Claims](./claims/README.md) | Insurance processing | Claims triage and claims decision agents |
+| [📞 Call center](./callcenter/README.md) | Customer support | Intent classification and resolution guidance agents |
 
-## Estrutura dos desafios
+## Challenge structure
 
-Todos os cenários seguem os mesmos cinco desafios:
+All scenarios follow the same five challenges:
 
-| # | Desafio | Duração |
+| # | Challenge | Duration |
 |---|-----------|----------|
-| 0 | **Configuração** — Implantar a infraestrutura do Azure AI Foundry | 20 min |
-| 1 | **Criar agentes** — Criar dois agentes de IA com ferramentas | 30 min |
-| 2 | **Monitorar** — Habilitar o rastreamento de GenAI com o Application Insights | 20 min |
-| 3 | **Avaliar** — Executar avaliações sistemáticas de qualidade | 30 min |
-| 4 | **Workflow** — Orquestração multiagente pelo portal do Foundry | 20 min |
+| 0 | **Setup** — Deploy the Azure AI Foundry infrastructure | 20 min |
+| 1 | **Build agents** — Build two AI agents with tools | 30 min |
+| 2 | **Monitor** — Enable GenAI tracing with Application Insights | 20 min |
+| 3 | **Evaluate** — Run systematic quality evaluations | 30 min |
+| 4 | **Workflow** — Orchestrate multiple agents in the Foundry portal | 20 min |
 
-## Pré-requisitos
+## Prerequisites
 
-- Assinatura do Azure com acesso de Colaborador
-- Python 3.10 ou posterior
-- Azure CLI (`az`) instalada e autenticada (`az login`)
-- Azure Developer CLI (`azd`) instalada
-- Um terminal (bash, PowerShell ou WSL)
+- Azure subscription with Contributor access
+- Python 3.10 or later
+- Azure CLI (`az`) installed and authenticated (`az login`)
+- Azure Developer CLI (`azd`) installed
+- A terminal (bash, PowerShell, or WSL)
 
-## Primeiros passos
+## Getting started
 
-1. Clone este repositório e autentique-se com `az login` e `azd auth login`
-2. Para provisionar o cenário padrão da central de atendimento, execute `azd up` na raiz do repositório
-3. Para um cenário específico, entre em `factory/`, `claims/` ou `callcenter/` e execute `azd up`
-4. Percorra os desafios 1–4 na ordem; cada um se baseia no anterior
-5. Os scripts `agents.py` e `deploy.py` estão prontos para execução — leia o README em cada pasta de desafio para saber o que fazer
+1. Clone this repository and authenticate with `az login` and `azd auth login`.
+2. To provision the default call center scenario, run `azd up` from the repository root.
+3. For a specific scenario, enter `factory/`, `claims/`, or `callcenter/` and run `azd up`.
+4. Complete challenges 1–4 in order; each one builds on the previous challenge.
+5. The `agents.py` and `deploy.py` scripts are ready to run. Read the README in each challenge folder for instructions.

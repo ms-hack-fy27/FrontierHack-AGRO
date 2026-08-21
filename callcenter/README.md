@@ -1,10 +1,10 @@
-# 📞 Cenário: Triagem de Central de Atendimento — NovaTel Communications
+# 📞 Scenario: Call Center Triage — NovaTel Communications
 
 ## Contexto
 
 ![scenario](./images/scenario.png)
 
-**NovaTel Communications** é uma operadora de telecomunicações que atende centenas de chamadas de clientes diariamente em sua central de suporte. A fila de hoje tem 7 chamadas ativas, abrangendo diferentes tipos de problemas:
+**NovaTel Communications** is a telecommunications provider handling hundreds of customer calls every day through its support center. Today's queue has 7 active calls covering different types of issues:
 
 - **CALL-001** — Maria Gonzalez (Premium, 3 years) — Unexpected charge dispute
 - **CALL-002** — James Liu (Basic, 4 months) — Internet dropping repeatedly
@@ -16,35 +16,35 @@
 
 
 
-## Sua missão
+## Your mission
 
 ![agentic-orchestration](./images/agentic-orchestration.png)
 
-Crie um sistema de agentes de IA que:
+Build an AI agent system that:
 
-1. **Classifica a intenção** — Determina o que cada cliente precisa (cobrança, suporte técnico, cancelamento, upsell, suporte, segurança)
-2. **Recomenda uma resolução** — Recomenda a melhor estratégia de atendimento com base no contexto do cliente
-3. **Produz um relatório do turno** — Triagem consolidada com itens de ação priorizados
+1. **Classifies intent** — Determines what each customer needs (billing, technical support, cancellation, upsell, account support, security)
+2. **Recommends a resolution** — Recommends the best service strategy based on the customer's context
+3. **Produces a shift report** — Consolidated triage with prioritized action items
 
-## Desafios
+## Challenges
 
-| # | Desafio | O que você fará | Tempo |
+| # | Challenge | What you'll do | Time |
 |---|-----------|---------------|------|
-| 0 | [Configuração](./challenge-0-setup/README.md) | Implantar a infraestrutura do Microsoft Foundry | 20 min |
-| 1 | [Criar agentes](./challenge-1-build/README.md) | Criar agentes de Classificação de Intenção e Consultoria de Resolução | 30 min |
-| 2 | [Monitorar](./challenge-2-monitor/README.md) | Habilitar o tracing de GenAI com o Application Insights | 20 min |
-| 3 | [Avaliar](./challenge-3-evaluate/README.md) | Executar avaliações sistemáticas de qualidade | 30 min |
-| 4 | [Fluxo de produção](./challenge-4-deploy/README.md) | Orquestração multiagente e fluxo no portal | 20 min |
+| 0 | [Setup](./challenge-0-setup/README.md) | Deploy the Microsoft Foundry infrastructure | 20 min |
+| 1 | [Build agents](./challenge-1-build/README.md) | Build Intent Classification and Resolution Advisory agents | 30 min |
+| 2 | [Monitor](./challenge-2-monitor/README.md) | Enable GenAI tracing with Application Insights | 20 min |
+| 3 | [Evaluate](./challenge-3-evaluate/README.md) | Run systematic quality evaluations | 30 min |
+| 4 | [Production workflow](./challenge-4-deploy/README.md) | Multi-agent orchestration and portal workflow | 20 min |
 
-## Por que os desafios estão nesta ordem
+## Why the challenges are in this order
 
-**Crie primeiro.** A classificação de intenção só funciona se o agente tiver instruções precisas e contexto real da conta. Um agente que não consegue distinguir um risco de cancelamento de uma contestação de cobrança encaminhará as chamadas incorretamente — enviando ofertas de retenção a clientes que só têm uma dúvida sobre cobrança e colocando contas de alto valor na fila errada. A ferramenta `lookup_customer` fornece ao Agente de Intenção dados reais da conta: nível, tempo de relacionamento e casos abertos. Sem ela, o agente fica apenas supondo.
+**Build first.** Intent classification only works when the agent has precise instructions and real account context. An agent that cannot distinguish a cancellation risk from a billing dispute will route calls incorrectly — sending retention offers to customers who only have a billing question and putting high-value accounts in the wrong queue. The `lookup_customer` tool provides the Intent Agent with real account data: tier, tenure, and open cases. Without it, the agent is only guessing.
 
-**Depois monitore.** Um sistema de triagem de chamadas funciona o dia todo, processando centenas de chamadas. Os traces do Application Insights permitem ver o que o agente realmente fez em cada uma — se chamou `lookup_customer`, quanto tempo levou e exatamente o que recomendou. Quando um supervisor diz "o sistema deu uma orientação errada na CALL-007", é pelos traces que você descobre o motivo.
+**Monitor next.** A call triage system runs all day, processing hundreds of calls. Application Insights traces let you see what the agent actually did for each one — whether it called `lookup_customer`, how long it took, and exactly what it recommended. When a supervisor says, "the system gave the wrong guidance on CALL-007," the traces show you why.
 
-**Depois avalie.** O conjunto de dados de teste tem respostas corretas conhecidas. Executar os agentes com ele — antes e depois de cada alteração — fornece uma pontuação que mostra se a classificação está melhorando ou se deteriorando silenciosamente. Um ajuste no prompt que parece bom em cinco respostas verificadas pontualmente ainda pode prejudicar a precisão em casos extremos que você não conferiu.
+**Evaluate next.** The test dataset has known-correct answers. Running the agents against it — before and after every change — gives you a score showing whether classification is improving or silently degrading. A prompt change that looks good on five spot-checked answers can still hurt accuracy on edge cases you did not check.
 
-**Depois implante.** O fluxo do portal produz um relatório do turno sobre o qual os supervisores podem agir: fila priorizada, ações recomendadas, contexto do cliente e histórico completo de traces. Essa é a diferença entre um script Python executado manualmente e algo em que a equipe de operações confia no início de cada turno.
+**Deploy next.** The portal workflow produces a shift report supervisors can act on: a prioritized queue, recommended actions, customer context, and a complete trace history. That is the difference between a manually run Python script and something the operations team trusts at the start of every shift.
 
 
 
@@ -52,29 +52,29 @@ Crie um sistema de agentes de IA que:
 
 ![architecture](./images/architecture.png)
 
-## Próximos passos
+## Next steps
 
-Ao concluir estes desafios, você terá um sistema multiagente funcional, com observabilidade e avaliação configuradas. Veja algumas direções para evoluí-lo:
+After completing these challenges, you will have a working multi-agent system with observability and evaluation configured. Here are some directions for taking it further:
 
-**Implante como um endpoint de agente hospedado**
-O Microsoft Foundry pode hospedar seus agentes como endpoints de API persistentes e escaláveis — sem infraestrutura para gerenciar. Depois de hospedados, sua plataforma de telefonia (Twilio, Genesys, Azure Communication Services) poderá enviar transcrições de chamadas ao vivo diretamente ao Agente de Classificação de Intenção e receber decisões de triagem em tempo real, substituindo a revisão manual da fila.
+**Deploy as a hosted agent endpoint**
+Microsoft Foundry can host your agents as persistent, scalable API endpoints — with no infrastructure to manage. Once hosted, your telephony platform (Twilio, Genesys, Azure Communication Services) can send live call transcripts directly to the Intent Classification Agent and receive real-time triage decisions, replacing manual queue review.
 
-**Adicione mais ferramentas aos seus agentes**
-A função `lookup_customer` deste laboratório usa dados simulados locais. Em produção, você a substituiria por ferramentas que chamam sistemas reais:
-- Uma ferramenta `fetch_crm_history` que consulta o Salesforce ou o Dynamics 365 para obter o histórico completo de interações do cliente
-- Uma ferramenta `check_active_offers` que busca promoções de retenção atuais e regras de elegibilidade em uma API de preços
-- Uma ferramenta `create_case` que abre automaticamente um tíquete no CRM e o atribui à fila correta com base na recomendação do Consultor de Resolução
+**Add more tools to your agents**
+This lab's `lookup_customer` function uses local mock data. In production, you would replace it with tools that call real systems:
+- A `fetch_crm_history` tool that queries Salesforce or Dynamics 365 for the customer's complete interaction history
+- A `check_active_offers` tool that retrieves current retention promotions and eligibility rules from a pricing API
+- A `create_case` tool that automatically opens a CRM ticket and assigns it to the correct queue based on the Resolution Advisor's recommendation
 
-**Crie uma base de conhecimento**
-Carregue o manual de políticas de atendimento ao cliente da NovaTel, os scripts de resolução e a documentação de produtos em uma base de conhecimento do Microsoft Foundry. Anexe-a ao Agente Consultor de Resolução como uma ferramenta de Pesquisa de Arquivos para que seus scripts se baseiem no manual aprovado — e não em uma versão inventada.
+**Create a knowledge base**
+Upload NovaTel's customer service policy manual, resolution scripts, and product documentation to a Microsoft Foundry knowledge base. Attach it to the Resolution Advisor Agent as a File Search tool so its scripts are grounded in the approved manual — rather than an invented version.
 
-**Integre as avaliações ao CI/CD**
-Execute automaticamente seu conjunto de avaliação em cada pull request ou implantação. Se a pontuação de coerência ou relevância cair abaixo de um limite (por exemplo, 3,5 de 5), bloqueie a versão. Isso impede que uma edição do prompt do sistema ou uma atualização do modelo reduza silenciosamente a precisão da classificação durante os horários de pico.
+**Integrate evaluations into CI/CD**
+Run your evaluation set automatically on every pull request or deployment. If the coherence or relevance score falls below a threshold (for example, 3.5 out of 5), block the release. This prevents a system prompt edit or model update from silently reducing classification accuracy during peak hours.
 
-**Explore padrões avançados de agentes**
-- **Paralelize** a classificação de intenção nas 7 chamadas simultaneamente, em vez de sequencialmente
-- **Adicione limites de confiança** — se o Agente de Intenção estiver em dúvida entre cancelamento e cobrança, sinalize a chamada para revisão humana em vez de atribuí-la automaticamente
-- **Humano no circuito** — para a CALL-007 (incidentes de segurança), sempre encaminhe a um supervisor humano, independentemente do nível de confiança do agente
+**Explore advanced agent patterns**
+- **Parallelize** intent classification across all 7 calls simultaneously instead of sequentially
+- **Add confidence thresholds** — if the Intent Agent is unsure whether a call is about cancellation or billing, flag it for human review instead of assigning it automatically
+- **Human in the loop** — always route CALL-007 (security incidents) to a human supervisor, regardless of the agent's confidence level
 
-**Ajuste para seu domínio**
-Use os resultados das avaliações para identificar erros sistemáticos — tipos de intenção que o agente confunde consistentemente ou segmentos de clientes que ele atende mal. Use esses casos para refinar os prompts do sistema, adicionar exemplos few-shot direcionados ou ajustar o modelo subjacente com transcrições de chamadas da NovaTel.
+**Tune for your domain**
+Use evaluation results to identify systematic errors — intent types the agent consistently confuses or customer segments it serves poorly. Use these cases to refine system prompts, add targeted few-shot examples, or fine-tune the underlying model with NovaTel call transcripts.

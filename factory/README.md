@@ -1,50 +1,50 @@
-# 🏭 Cenário: Manutenção Preditiva — TireForge Industries
+# 🏭 Scenario: Predictive Maintenance — TireForge Industries
 
-## Contexto
+## Context
 
 ![scenario](./images/scenario.png)
 
-**TireForge Industries** opera uma fábrica de pneus com 5 máquinas críticas:
+**TireForge Industries** operates a tire factory with 5 critical machines:
 
-- **MX-001** (Misturador) — Mistura compostos de borracha bruta
-- **EX-002** (Extrusora) — Molda a borracha nos perfis da banda de rodagem
-- **CP-003** (Prensa de Cura) — Vulcaniza pneus sob calor e pressão
-- **CU-004** (Unidade de Resfriamento) — Resfria gradualmente os pneus curados
-- **IS-005** (Estação de Inspeção) — Garantia de qualidade por análise de vibração
+- **MX-001** (Mixer) — Mixes raw rubber compounds
+- **EX-002** (Extruder) — Shapes rubber into tread profiles
+- **CP-003** (Curing Press) — Vulcanizes tires under heat and pressure
+- **CU-004** (Cooling Unit) — Gradually cools cured tires
+- **IS-005** (Inspection Station) — Performs quality assurance through vibration analysis
 
-Cada máquina emite dados de sensores em tempo real: temperatura, pressão, vibração e RPM.
+Each machine emits real-time sensor data: temperature, pressure, vibration, and RPM.
 
 
 
-## Sua Missão
+## Your Mission
 
 ![agentic-orchestration](./images/agentic-orchestration.png)
 
-Crie um sistema de agentes de IA que:
+Create an AI agent system that:
 
-1. **Detecte anomalias** — Compare as leituras dos sensores com os limites
-2. **Diagnostique falhas** — Raciocine sobre as causas raiz a partir dos padrões de anomalia
-3. **Relate a saúde** — Produza um relatório consolidado da saúde da fábrica
+1. **Detects anomalies** — Compare sensor readings with thresholds
+2. **Diagnoses faults** — Reason about root causes from anomaly patterns
+3. **Reports health** — Produce a consolidated factory health report
 
-## Desafios
+## Challenges
 
-| # | Desafio | O que você fará | Tempo |
+| # | Challenge | What you will do | Time |
 |---|-----------|---------------|------|
-| 0 | [Configuração](./challenge-0-setup/README.md) | Implantar a infraestrutura do Microsoft Foundry | 20 min |
-| 1 | [Criar Agentes](./challenge-1-build/README.md) | Criar agentes de Detecção de Anomalias + Diagnóstico de Falhas | 30 min |
-| 2 | [Monitorar](./challenge-2-monitor/README.md) | Habilitar rastreamento de GenAI com o Application Insights | 20 min |
-| 3 | [Avaliar](./challenge-3-evaluate/README.md) | Executar avaliações sistemáticas de qualidade | 30 min |
-| 4 | [Fluxo de Produção](./challenge-4-deploy/README.md) | Orquestração multiagente + fluxo no portal | 20 min |
+| 0 | [Setup](./challenge-0-setup/README.md) | Provision the Microsoft Foundry infrastructure | 20 min |
+| 1 | [Build Agents](./challenge-1-build/README.md) | Build Anomaly Detection + Fault Diagnosis agents | 30 min |
+| 2 | [Monitor](./challenge-2-monitor/README.md) | Enable GenAI tracing with Application Insights | 20 min |
+| 3 | [Evaluate](./challenge-3-evaluate/README.md) | Run systematic quality evaluations | 30 min |
+| 4 | [Production Workflow](./challenge-4-deploy/README.md) | Multi-agent orchestration + portal workflow | 20 min |
 
-## Por que os Desafios Estão Nesta Ordem
+## Why the Challenges Are in This Order
 
-**Crie primeiro.** Um agente com um prompt de sistema vago ou sem ferramentas produzirá diagnósticos plausíveis, mas inventados. Em uma fábrica de pneus, isso não é um problema acadêmico — significa equipes de manutenção perseguindo falhas inexistentes ou não detectando falhas reais até que uma máquina pare no meio do turno. A ferramenta `check_thresholds` fundamenta o Agente de Anomalias nas especificações reais das máquinas, e não no conhecimento geral do LLM sobre como é a vibração "normal" de uma extrusora.
+**Build first.** An agent with a vague system prompt or no tools will produce plausible but fabricated diagnoses. In a tire factory, that is not an academic problem — it means maintenance teams chasing nonexistent faults or failing to detect real faults until a machine stops mid-shift. The `check_thresholds` tool grounds the Anomaly Agent in the machines' actual specifications, rather than the LLM's general knowledge of what "normal" extruder vibration looks like.
 
-**Depois monitore.** Quando o Agente de Diagnóstico de Falhas recomendar tirar a CP-003 de operação, ele realmente examinou as leituras dos sensores que você forneceu? `check_thresholds` foi chamado ou o agente raciocinou apenas com base no contexto? Os rastreamentos do Application Insights respondem a isso. Sem eles, o único sinal que você tem é uma falha de máquina que deveria ter sido detectada antes.
+**Monitor next.** When the Fault Diagnosis Agent recommends taking CP-003 offline, did it actually examine the sensor readings you supplied? Was `check_thresholds` called, or did the agent reason only from context? Application Insights traces answer that question. Without them, the only signal you have is a machine failure that should have been detected earlier.
 
-**Depois avalie.** O rastreamento informa que o agente foi executado. A avaliação informa que ele foi executado corretamente. O conjunto de testes selecionado fornece uma pontuação repetível para comparar antes e depois de qualquer mudança de prompt ou troca de modelo, permitindo detectar regressões antes que cheguem ao chão de fábrica.
+**Evaluate next.** Tracing tells you that the agent ran. Evaluation tells you whether it ran correctly. The selected test set provides a repeatable score for comparison before and after any prompt change or model swap, helping detect regressions before they reach the factory floor.
 
-**Depois implante.** O fluxo do portal transforma o que você criou em scripts em algo que a equipe de manutenção pode realmente utilizar: um endpoint estável, um relatório da saúde da fábrica por turno e um histórico de rastreamento para cada diagnóstico. Essa é a diferença entre uma demonstração e uma ferramenta em que alguém confiará antes de agendar uma janela de manutenção não planejada.
+**Deploy next.** The portal workflow turns what you built in scripts into something the maintenance team can actually use: a stable endpoint, a shift-by-shift factory health report, and a trace history for every diagnosis. That is the difference between a demo and a tool someone will trust before scheduling an unplanned maintenance window.
 
 
 ## Architecture
@@ -52,29 +52,29 @@ Crie um sistema de agentes de IA que:
 ![architecture](./images/architecture.png)
 
 
-## Próximos Passos
+## Next Steps
 
-Ao concluir estes desafios, você terá um sistema multiagente funcional, com observabilidade e avaliação configuradas. Veja alguns caminhos para levá-lo adiante:
+After completing these challenges, you will have a functional multi-agent system with observability and evaluation configured. Here are some ways to take it further:
 
-**Implante como endpoint de agente hospedado**
-O Microsoft Foundry pode hospedar seus agentes como endpoints de API persistentes e escaláveis, sem infraestrutura para gerenciar. Depois de hospedados, qualquer sistema (um painel SCADA, um aplicativo móvel de manutenção ou um bot do Slack) pode enviar um ID de máquina e receber um diagnóstico em tempo real, em vez de executar manualmente um script Python.
+**Deploy as a hosted agent endpoint**
+Microsoft Foundry can host your agents as persistent, scalable API endpoints with no infrastructure to manage. Once hosted, any system (a SCADA dashboard, a maintenance mobile app, or a Slack bot) can send a machine ID and receive a real-time diagnosis instead of manually running a Python script.
 
-**Adicione mais ferramentas aos seus agentes**
-A função `check_thresholds` deste laboratório usa dados simulados locais. Em produção, você a substituiria por ferramentas que chamam sistemas reais:
-- Uma ferramenta `fetch_maintenance_history` que consulta seu CMMS (por exemplo, SAP PM ou IBM Maximo) em busca de falhas anteriores nessa máquina
-- Uma ferramenta `lookup_spare_parts` que verifica a disponibilidade no estoque antes de recomendar uma substituição
-- Uma ferramenta `create_work_order` que abre automaticamente um tíquete no ServiceNow quando o Agente de Diagnóstico de Falhas sinaliza um problema crítico
+**Add more tools to your agents**
+This lab's `check_thresholds` function uses local simulated data. In production, you would replace it with tools that call real systems:
+- A `fetch_maintenance_history` tool that queries your CMMS (such as SAP PM or IBM Maximo) for previous faults on that machine
+- A `lookup_spare_parts` tool that checks inventory availability before recommending a replacement
+- A `create_work_order` tool that automatically opens a ServiceNow ticket when the Fault Diagnosis Agent flags a critical issue
 
-**Crie uma base de conhecimento**
-Carregue os manuais das máquinas da TireForge, as fichas de especificações dos fornecedores e os relatórios históricos de incidentes em uma base de conhecimento do Microsoft Foundry. Anexe-a ao Agente de Diagnóstico de Falhas como uma ferramenta de Pesquisa de Arquivos para que suas recomendações se baseiem em procedimentos documentados, e não no conhecimento geral do LLM.
+**Create a knowledge base**
+Upload TireForge machine manuals, vendor specification sheets, and historical incident reports to a Microsoft Foundry knowledge base. Attach it to the Fault Diagnosis Agent as a File Search tool so its recommendations are based on documented procedures rather than the LLM's general knowledge.
 
-**Integre avaliações ao CI/CD**
-Execute automaticamente seu conjunto de avaliação em cada pull request ou implantação. Se a pontuação de coerência ou relevância cair abaixo de um limite (por exemplo, 3,5 de 5), bloqueie a versão. Isso impede que uma edição do prompt de sistema ou uma atualização do modelo degrade silenciosamente a qualidade do diagnóstico em produção.
+**Integrate evaluations into CI/CD**
+Run your evaluation set automatically on every pull request or deployment. If the coherence or relevance score falls below a threshold (for example, 3.5 out of 5), block the release. This prevents a system prompt edit or model update from silently degrading diagnostic quality in production.
 
-**Explore padrões avançados de agentes**
-- **Paralelize** as verificações de anomalias nas 5 máquinas simultaneamente, em vez de sequencialmente
-- **Adicione limites de confiança** — se o Agente de Detecção de Anomalias estiver incerto, encaminhe o caso a um operador humano em vez de passá-lo automaticamente ao Diagnóstico de Falhas
-- **Humano no circuito** — para falhas críticas, exija que um engenheiro de manutenção aprove a ação recomendada antes que ela acione uma ordem de serviço
+**Explore advanced agent patterns**
+- **Parallelize** anomaly checks across all 5 machines simultaneously instead of sequentially
+- **Add confidence thresholds** — if the Anomaly Detection Agent is uncertain, route the case to a human operator instead of automatically passing it to Fault Diagnosis
+- **Human in the loop** — for critical faults, require a maintenance engineer to approve the recommended action before it triggers a work order
 
-**Faça o ajuste fino para seu domínio**
-Use os resultados da avaliação para identificar erros sistemáticos — máquinas que o agente classifica incorretamente de forma recorrente ou tipos de falha que ele trata mal. Use esses casos para refinar os prompts de sistema, adicionar exemplos few-shot direcionados ou fazer o ajuste fino do modelo subjacente com padrões de sensores específicos da TireForge.
+**Fine-tune for your domain**
+Use evaluation results to identify systematic errors — machines the agent repeatedly misclassifies or fault types it handles poorly. Use these cases to refine system prompts, add targeted few-shot examples, or fine-tune the underlying model with TireForge-specific sensor patterns.

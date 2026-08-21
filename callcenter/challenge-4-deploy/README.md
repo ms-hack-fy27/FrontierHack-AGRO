@@ -1,26 +1,26 @@
-# Desafio 4: Fluxo de produção
+# Challenge 4: Production workflow
 
-Tempo: ~20 minutos
+Time: ~20 minutes
 
-Crie um fluxo de orquestração multiagente para a NovaTel Communications e leve-o à produção.
+Create a multi-agent orchestration workflow for NovaTel Communications and take it to production.
 
-## Cenário
+## Scenario
 
-Os agentes individuais que você criou no Desafio 1 são valiosos — mas, em produção, os agentes precisam trabalhar
-**juntos** como um pipeline automatizado. Neste desafio, você conectará os dois agentes em um fluxo completo
-de triagem da central de atendimento, executará o fluxo pelo código e depois o criará e testará visualmente no portal do Foundry.
+The individual agents you created in Challenge 1 are valuable — but in production, agents need to work
+**together** as an automated pipeline. In this challenge, you will connect the two agents into a complete
+call center triage workflow, run the workflow from code, and then create and test it visually in the Foundry portal.
 
 ![deploy](./images/deploy.png)
 
-## Objetivos de aprendizagem
+## Learning objectives
 
-- Implantar agentes de produção persistentes (criar uma vez e reutilizar sempre)
-- Orquestrar vários agentes passo a passo em um fluxo Python
-- Criar visualmente o mesmo fluxo no portal do Foundry
-- Invocar o fluxo do portal pelo Python com streaming ao vivo
-- Visualizar o histórico de execuções e traces no portal
+- Deploy persistent production agents (create once and reuse indefinitely)
+- Orchestrate multiple agents step by step in a Python workflow
+- Visually create the same workflow in the Foundry portal
+- Invoke the portal workflow from Python with live streaming
+- View run history and traces in the portal
 
-## O fluxo
+## The workflow
 
 ```
 ensure_agents_deployed()
@@ -37,25 +37,25 @@ print_shift_report()            <-- Consolidated Shift Report
 
 ---
 
-## Parte 1 — SDK: criar e executar o fluxo Python
+## Part 1 — SDK: create and run the Python workflow
 
-### Etapa 1: Revisar a implementação
+### Step 1: Review the implementation
 
-Abra [deploy.py](./deploy.py) e revise:
+Open [deploy.py](./deploy.py) and review:
 
-- **`ensure_agents_deployed()`** — lista os agentes existentes e cria `intent-classification-agent` e `resolution-advisor-agent` se não estiverem presentes
-- **`run_intent_classification()`** — chama o agente de intenção e trata o loop de chamadas de função `lookup_customer`
-- **`run_resolution_advisory()`** — chama o agente de resolução para cada chamada de alta prioridade
-- **`run_call_center_workflow()`** — orquestra todas as etapas e retorna o relatório consolidado
+- **`ensure_agents_deployed()`** — lists existing agents and creates `intent-classification-agent` and `resolution-advisor-agent` if they are not present
+- **`run_intent_classification()`** — calls the intent agent and handles the `lookup_customer` function-call loop
+- **`run_resolution_advisory()`** — calls the resolution agent for each high-priority call
+- **`run_call_center_workflow()`** — orchestrates all steps and returns the consolidated report
 
-### Etapa 2: Executar o fluxo
+### Step 2: Run the workflow
 
 ```bash
 cd callcenter/challenge-4-deploy
 python deploy.py
 ```
 
-Saída esperada:
+Expected output:
 ```
 === Step 1: Ensure Agents Are Deployed ===
   Found existing: intent-classification-agent
@@ -84,64 +84,64 @@ NOVATEL CALL CENTER — SHIFT REPORT
 
 ---
 
-## Parte 2 — Portal: criar e testar o fluxo visual
+## Part 2 — Portal: create and test the visual workflow
 
-### Etapa 3: Verificar se os agentes estão implantados no portal
+### Step 3: Verify that the agents are deployed in the portal
 
-1. Abra o [portal do Microsoft Foundry](https://ai.azure.com/nextgen)
-2. Selecione seu projeto
-3. Selecione **Build** → **Agents** na barra superior
-4. Confirme que os dois agentes aparecem:
+1. Open the [Microsoft Foundry portal](https://ai.azure.com/nextgen)
+2. Select your project
+3. Select **Build** → **Agents** in the top bar
+4. Confirm that both agents appear:
    - `intent-classification-agent`
    - `resolution-advisor-agent`
 
 
-### Etapa 4: Criar o fluxo no designer do portal
+### Step 4: Create the workflow in the portal designer
 
-1. Selecione **Build** → **Agents** → **Workflows**
-2. Observe que o fluxo criado usando o SDK na Parte 1 está listado. Vamos criar um novo fluxo selecionando **Create** → **Blank workflow**
+1. Select **Build** → **Agents** → **Workflows**
+2. Notice that the workflow created using the SDK in Part 1 is listed. Create a new workflow by selecting **Create** → **Blank workflow**
 
 ![Create workflow](./images/create-workflow.png)
 
-3. No designer visual, na caixa de diálogo **Add a workflow node**, escolha **Agent**
+3. In the visual designer, in the **Add a workflow node** dialog, choose **Agent**
 
    ![add agent](./images/add-agent.png)
 
-4. No seletor **Select an agent**, selecione `intent-classification-agent`
+4. In the **Select an agent** selector, select `intent-classification-agent`
 
    ![select agent](./images/select-agent.png)
 
-5. No seletor **Next node**, selecione **Agent** e clique no botão **Done**
+5. In the **Next node** selector, select **Agent** and click the **Done** button
    \
     ![next node agent](./images/next-node-agent.png)
 
-6. Selecione o novo nó de agente na tela e, no seletor **Select and agent**, selecione `resolution-advisor-agent`
+6. Select the new agent node on the canvas and, in the **Select and agent** selector, select `resolution-advisor-agent`
 
    ![select agent 2](./images/select-agent-2.png) 
 
-7. No seletor **Next node**, selecione **End** e clique no botão **Done**
+7. In the **Next node** selector, select **End** and click the **Done** button
 
     ![end node](./images/end-node.png) 
 
-8. Selecione **Save** e dê a ele o nome `callcenter-triage-workflow-portal`
+8. Select **Save** and name it `callcenter-triage-workflow-portal`
 
 ![Save agent](./images/save-agent.png) 
 
-### Etapa 5: Testar o fluxo no playground do portal
+### Step 5: Test the workflow in the portal playground
 
-> **Por que você precisa incluir os dados da chamada na mensagem**
+> **Why you need to include the call data in the message**
 >
-> Os agentes usam uma ferramenta `lookup_customer` que lê dados de um arquivo Python local.
-> O playground do portal **não consegue executar funções Python** — se você enviar um
-> prompt genérico, o agente tentará chamar a ferramenta e ficará parado esperando um resultado que
-> nunca chegará. Cole os dados da chamada diretamente na mensagem para que os agentes possam
-> trabalhar sem precisar da ferramenta.
+> The agents use a `lookup_customer` tool that reads data from a local Python file.
+> The portal playground **cannot execute Python functions** — if you send a
+> generic prompt, the agent will try to call the tool and remain stuck waiting for a result that
+> never arrives. Paste the call data directly into the message so the agents can
+> work without the tool.
 
-1. Abra **callcenter-triage-workflow-portal** → **Preview**
+1. Open **callcenter-triage-workflow-portal** → **Preview**
 
 ![Preview Agent](./images/preview-agent.png) 
 
-2. Cole a mensagem a seguir (os dados já estão incorporados, portanto não são necessárias chamadas de ferramentas):
+2. Paste the following message (the data is already embedded, so no tool calls are needed):
 
    ```
    All call data for today is below — analyse it directly, do not call lookup_customer.
@@ -171,50 +171,50 @@ NOVATEL CALL CENTER — SHIFT REPORT
    Then recommend resolution strategies for high-priority and security calls.
    ```
 
-3. Observe as etapas serem executadas em sequência — primeiro a classificação e depois a consultoria de resolução
-4. Revise o relatório consolidado final
+3. Watch the steps run in sequence — classification first, followed by resolution advisory
+4. Review the final consolidated report
 
-### Etapa 6: Ver o histórico de execuções e os traces
+### Step 6: View run history and traces
 
-1. No fluxo **callcenter-triage-workflow-portal**, clique em **Traces**
+1. In the **callcenter-triage-workflow-portal** workflow, click **Traces**
 
 ![Workflow Traces](./images/workflow-traces.png) 
 
-2. Clique na execução mais recente para ver a linha do tempo — cada etapa, duração e saída
+2. Click the most recent run to view the timeline — each step, duration, and output
 
 ---
 
-## Critérios de sucesso
+## Success criteria
 
-- [ ] O fluxo Python é executado de ponta a ponta: classificação → resolução → relatório do turno
-- [ ] Os dois agentes estão visíveis no portal do Foundry como ativos persistentes
-- [ ] O fluxo visual foi criado no portal e testado em seu playground
+- [ ] The Python workflow runs end to end: classification → resolution → shift report
+- [ ] Both agents are visible in the Foundry portal as persistent assets
+- [ ] The visual workflow was created in the portal and tested in its playground
 
 ---
 
-## Além do laboratório: opções de implantação em produção
+## Beyond the lab: production deployment options
 
-Você criou e testou seus agentes localmente. Veja como levá-los à produção:
+You created and tested your agents locally. Here is how to take them to production:
 
-### Opção 1: Agentes hospedados (o que você já tem)
+### Option 1: Hosted agents (what you already have)
 
-Seus agentes criados com `agents.create_version()` já são agentes hospedados prontos para produção. Eles permanecem no Foundry indefinidamente — qualquer cliente pode invocá-los pelo nome usando a Responses API. Não há infraestrutura para gerenciar; o Foundry cuida do dimensionamento, versionamento e disponibilidade.
+Your agents created with `agents.create_version()` are already production-ready hosted agents. They remain in Foundry indefinitely — any client can invoke them by name using the Responses API. There is no infrastructure to manage; Foundry handles scaling, versioning, and availability.
 
-- **Versionamento**: Cada `create_version()` produz uma versão imutável. Reverta referenciando uma versão anterior.
-- **Multi-tenant**: Vários usuários/aplicativos podem chamar o mesmo agente simultaneamente.
-- **Visibilidade no portal**: os agentes aparecem em Build → Agents com playground, histórico de execuções e tracing.
+- **Versioning**: Each `create_version()` produces an immutable version. Roll back by referencing an earlier version.
+- **Multi-tenant**: Multiple users/applications can call the same agent simultaneously.
+- **Portal visibility**: agents appear under Build → Agents with a playground, run history, and tracing.
 
-### Opção 2: Fluxos do Foundry (orquestração visual)
+### Option 2: Foundry workflows (visual orchestration)
 
-O que você criou na Parte 2 — conecte vários agentes hospedados em um DAG usando o designer do portal. O fluxo se torna um agente implantável, invocado pela mesma Responses API.
+What you created in Part 2 — connect multiple hosted agents in a DAG using the portal designer. The workflow becomes a deployable agent, invoked through the same Responses API.
 
-- Sequenciamento de etapas com passagem automática de saídas
-- Streaming de eventos `workflow_action` mostrando o progresso
-- Histórico de execuções com tempo por etapa
+- Step sequencing with automatic output passing
+- `workflow_action` event streaming showing progress
+- Run history with time per step
 
-### Opção 3: Azure App Service / Container Apps
+### Option 3: Azure App Service / Container Apps
 
-Envolva seu fluxo Python em um aplicativo FastAPI/Flask para obter middleware personalizado, autenticação ou lógica de negócio:
+Wrap your Python workflow in a FastAPI/Flask application for custom middleware, authentication, or business logic:
 
 ```python
 # Example: FastAPI endpoint that calls your Foundry agents
@@ -224,32 +224,32 @@ async def triage_calls():
     return report
 ```
 
-Implante no **App Service** (PaaS gerenciado) ou no **Container Apps** (contêineres com escalonamento automático).
+Deploy to **App Service** (managed PaaS) or **Container Apps** (containers with automatic scaling).
 
-### Opção 4: Azure Functions (orientado a eventos)
+### Option 4: Azure Functions (event-driven)
 
-Dispare fluxos de agentes a partir de eventos:
+Trigger agent workflows from events:
 
-- **Gatilho do Service Bus**: classificar e resolver cada chamada quando ela entrar na fila
-- **Gatilho de timer**: gerar relatórios do turno a cada hora durante o horário comercial
-- **Gatilho HTTP**: endpoint sob demanda para que supervisores solicitem atualizações da triagem
+- **Service Bus trigger**: classify and resolve each call when it enters the queue
+- **Timer trigger**: generate shift reports every hour during business hours
+- **HTTP trigger**: on-demand endpoint for supervisors to request triage updates
 
-Pagamento por execução, com escala até zero quando ocioso.
+Pay per execution, with scale-to-zero when idle.
 
-### Opção 5: Gates de qualidade no CI/CD
+### Option 5: CI/CD quality gates
 
-Integre a avaliação ao seu pipeline de implantação:
+Integrate evaluation into your deployment pipeline:
 
-- Execute `evaluate.py` em cada PR — bloqueie o merge se a qualidade cair abaixo do limite
-- Promova versões dos agentes: `v1-dev` → `v1-staging` → `v1-prod` depois que a avaliação for aprovada
-- Blue/green: implante a nova versão para 10% do tráfego, compare as métricas e depois promova-a
+- Run `evaluate.py` on every PR — block the merge if quality falls below the threshold
+- Promote agent versions: `v1-dev` → `v1-staging` → `v1-prod` after evaluation passes
+- Blue/green: deploy the new version to 10% of traffic, compare metrics, and then promote it
 
-### Resumo
+### Summary
 
-| Padrão | Melhor para |
+| Pattern | Best for |
 |---------|----------|
-| Agentes hospedados | Sempre ativos, invocação pelo nome e sem gerenciamento de infraestrutura |
-| Fluxos do Foundry | Orquestração multiagente sem código |
-| App Service / Contêineres | Autenticação personalizada, middleware e webhooks |
-| Azure Functions | Orientado a eventos, pagamento por uso e processamento de filas |
-| Gates de CI/CD | Garantia de qualidade automatizada antes da promoção |
+| Hosted agents | Always-on agents, name-based invocation, and no infrastructure management |
+| Foundry workflows | No-code multi-agent orchestration |
+| App Service / Containers | Custom authentication, middleware, and webhooks |
+| Azure Functions | Event-driven, pay-per-use, and queue processing |
+| CI/CD gates | Automated quality assurance before promotion |

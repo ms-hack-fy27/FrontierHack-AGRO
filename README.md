@@ -1,57 +1,57 @@
 <img width="990" height="150" alt="Microsoft Agent-a-thon_banner_WEB_990x150" src="https://github.com/user-attachments/assets/5f550061-077d-421c-bba2-4a5820e72fad" />
 
 # Frontier Week Hack
-## Microsoft Foundry: Crie, escale, observa e proteja seus agentes de IA 
+## Microsoft Foundry: Build, scale, observe, and secure your AI agents
  
-Boas-vindas à experiência de laboratório prático onde ideias se transformam em soluções reais e prontas para empresas. Esta é a mais avançada das três trilhas de criação de agentes. Enquanto a trilha Explorer cria seu primeiro agente sem código e a trilha Maker automatiza tarefas com ferramentas low-code, esta trilha é voltada a desenvolvedores, engenheiros e arquitetos que desejam controle total sobre modelos, orquestração e operações.
+Welcome to the hands-on lab experience where ideas become real, enterprise-ready solutions. This is the most advanced of the three agent-building tracks. While the Explorer track creates your first no-code agent and the Maker track automates tasks with low-code tools, this track is designed for developers, engineers, and architects who want full control over models, orchestration, and operations.
 
-Neste laboratório, você criará, monitorará, avaliará e orquestrará agentes de IA usando o SDK do Microsoft Foundry. Você seguirá uma experiência guiada e baseada em cenários, projetada para ajudar a transformar um conceito em um sistema multiagente funcional e pronto para empresas.
+In this lab, you will build, monitor, evaluate, and orchestrate AI agents using the Microsoft Foundry SDK. You will follow a guided, scenario-based experience designed to help turn a concept into a functional, enterprise-ready multi-agent system.
  
-Ao final, você não apenas entenderá como os agentes funcionam: terá criado um agente que pode rastrear, avaliar e implantar.
+By the end, you will not just understand how agents work: you will have built an agent that can be traced, evaluated, and deployed.
 
-## O que você aprenderá
+## What you will learn
 
-Este laboratório orienta você por todo o ciclo de vida da criação de agentes de IA prontos para produção com o [Microsoft Foundry](https://learn.microsoft.com/azure/ai-foundry/):
+This lab guides you through the full lifecycle of building production-ready AI agents with [Microsoft Foundry](https://learn.microsoft.com/azure/ai-foundry/):
 
-- **Design de agentes** — Criar agentes especializados com prompts de sistema, ferramentas e dados específicos do domínio
-- **Observabilidade** — Instrumentar agentes com rastreamento de GenAI baseado em OpenTelemetry por meio do Application Insights
-- **Avaliação de qualidade** — Executar avaliações com LLM como juiz para medir sistematicamente a qualidade das saídas dos agentes
-- **Orquestração multiagente** — Conectar agentes a fluxos de trabalho automatizados usando o SDK do Python e o portal do Foundry
+- **Agent design** — Build specialized agents with system prompts, tools, and domain-specific data
+- **Observability** — Instrument agents with OpenTelemetry-based GenAI tracing through Application Insights
+- **Quality evaluation** — Run LLM-as-a-judge evaluations to systematically measure agent output quality
+- **Multi-agent orchestration** — Connect agents to automated workflows using the Python SDK and the Foundry portal
 
-Este é um **hackathon code-first**: você escreverá e executará Python ao longo de todo o percurso. No entanto, vários desafios também exigem interação com o **portal do Microsoft Foundry** para implantar modelos, explorar rastreamentos, revisar avaliações e criar fluxos de trabalho visualmente. Espere alternar regularmente entre seu IDE e o portal.
+This is a **code-first hackathon**: you will write and run Python throughout the experience. However, several challenges also require interaction with the **Microsoft Foundry portal** to deploy models, explore traces, review evaluations, and create workflows visually. Expect to switch regularly between your IDE and the portal.
 
 
-## Escolha seu cenário
+## Choose your scenario
 
-Todas as trilhas ensinam os mesmos conceitos do Foundry — escolha aquela com a qual você mais se identifica:
+All tracks teach the same Foundry concepts. Choose the one that best matches your interests:
 
-| Cenário | Descrição | Comece aqui |
+| Scenario | Description | Start here |
 |----------|-------------|------------|
-| 🏭 **Fábrica** | Detectar anomalias em máquinas e diagnosticar falhas na TireForge Industries | [Laboratório de fábrica](./factory/README.md) |
-| 📋 **Sinistros** | Fazer a triagem de sinistros recebidos e recomendar ações na ClaimSight Insurance | [Laboratório de sinistros](./claims/README.md) |
-| 📞 **Central de atendimento** | Classificar intenções de chamadas e orientar resoluções na NovaTel Communications | [Laboratório de central de atendimento](./callcenter/README.md) |
+| 🏭 **Factory** | Detect machine anomalies and diagnose failures at TireForge Industries | [Factory lab](./factory/README.md) |
+| 📋 **Claims** | Triage incoming claims and recommend actions at ClaimSight Insurance | [Claims lab](./claims/README.md) |
+| 📞 **Call center** | Classify call intents and guide resolutions at NovaTel Communications | [Call center lab](./callcenter/README.md) |
 
-Todos os cenários seguem a mesma estrutura de cinco desafios:
+All scenarios follow the same five-challenge structure:
 
-| # | Desafio | Duração | O que você aprenderá |
+| # | Challenge | Duration | What you will learn |
 |---|-----------|----------|-------------------|
-| 0 | **Configuração** | 20 min | Provisionar o Microsoft Foundry, implantar um modelo e verificar a autenticação |
-| 1 | **Criar agentes** | 35 min | Criar dois agentes com ferramentas e prompts de sistema |
-| 2 | **Monitorar** | 20 min | Habilitar o rastreamento de GenAI com o Application Insights |
-| 3 | **Avaliar** | 25 min | Executar avaliações com LLM como juiz em conjuntos de dados de teste |
-| 4 | **Workflow** | 20 min | Orquestrar agentes em um pipeline de várias etapas |
+| 0 | **Setup** | 20 min | Provision Microsoft Foundry, deploy a model, and verify authentication |
+| 1 | **Build agents** | 35 min | Build two agents with tools and system prompts |
+| 2 | **Monitor** | 20 min | Enable GenAI tracing with Application Insights |
+| 3 | **Evaluate** | 25 min | Run LLM-as-a-judge evaluations on test datasets |
+| 4 | **Workflow** | 20 min | Orchestrate agents in a multi-step pipeline |
 
-## Pré-requisitos
+## Prerequisites
 
-- **Assinatura do Azure** com acesso de **Colaborador** e **Usuário do Foundry**
-- Uma **conta do GitHub**
-- **Python 3.10 ou posterior** instalado localmente (pré-instalado ao usar Codespaces)
-- **Azure CLI** (`az`) instalada (pré-instalada ao usar Codespaces)
-- **Azure Developer CLI** (`azd`) instalada (pré-instalada ao usar Codespaces)
+- **Azure subscription** with **Contributor** and **Foundry User** access
+- A **GitHub account**
+- **Python 3.10 or later** installed locally (pre-installed when using Codespaces)
+- **Azure CLI** (`az`) installed (pre-installed when using Codespaces)
+- **Azure Developer CLI** (`azd`) installed (pre-installed when using Codespaces)
 
-## Implantar pelo diretório raiz
+## Deploy from the repository root
 
-O projeto `azd` na raiz provisiona o cenário da central de atendimento. Depois de autenticar no Azure, execute:
+The root `azd` project provisions the call center scenario. After authenticating with Azure, run:
 
 ```bash
 az login
@@ -59,25 +59,25 @@ azd auth login
 azd up
 ```
 
-O comando cria os recursos no grupo de recursos do ambiente `azd` e gera o arquivo `.env` na raiz do repositório. Para alterar o ambiente ou a assinatura, use `azd env set` antes de executar `azd up`.
+The command creates resources in the `azd` environment's resource group and generates the `.env` file in the repository root. To change the environment or subscription, use `azd env set` before running `azd up`.
 
-## Pronto para ampliar seus conhecimentos?
+## Ready to go further?
 
-### 1. Aprofunde-se com a documentação
+### 1. Dive deeper with the documentation
 
-- [O que é o Microsoft Foundry?](https://learn.microsoft.com/azure/foundry/what-is-foundry)
-- [Visão geral do Foundry Agent Service](https://learn.microsoft.com/azure/foundry/agents/overview)
-- [Rastreie seus agentes com o Microsoft Foundry](https://learn.microsoft.com/azure/foundry/observability/how-to/trace-agent-setup)
-- [Avalie fluxos de trabalho agentivos](https://learn.microsoft.com/azure/foundry/observability/how-to/evaluate-agent)
-- [Referência do SDK azure-ai-projects](https://learn.microsoft.com/python/api/azure-ai-projects/)
+- [What is Microsoft Foundry?](https://learn.microsoft.com/azure/foundry/what-is-foundry)
+- [Foundry Agent Service overview](https://learn.microsoft.com/azure/foundry/agents/overview)
+- [Trace your agents with Microsoft Foundry](https://learn.microsoft.com/azure/foundry/observability/how-to/trace-agent-setup)
+- [Evaluate agentic workflows](https://learn.microsoft.com/azure/foundry/observability/how-to/evaluate-agent)
+- [azure-ai-projects SDK reference](https://learn.microsoft.com/python/api/azure-ai-projects/)
 
-### 2. Continue aprendendo no Microsoft Learn
+### 2. Keep learning with Microsoft Learn
 
-- [Desenvolva um agente de IA com o Foundry Agent Service](https://learn.microsoft.com/training/modules/develop-ai-agent-azure/) — módulo de 55 min
-- [Crie fluxos de trabalho orientados por agentes usando o Microsoft Foundry](https://learn.microsoft.com/training/modules/build-agent-workflows-microsoft-foundry/) — módulo de 1 hora
-- [Analise e depure seu aplicativo de IA generativa com rastreamento](https://learn.microsoft.com/training/modules/tracing-generative-ai-app/) — módulo de 1 hora
-- [Avalie o desempenho de IA generativa no portal do Microsoft Foundry](https://learn.microsoft.com/training/modules/evaluate-models-azure-ai-studio/) — módulo de 38 min
-- [Monitore seu aplicativo de IA generativa](https://learn.microsoft.com/training/modules/monitor-generative-ai-app/) — módulo de 1 hora
-- [Desenvolva aplicativos de IA generativa no Azure](https://learn.microsoft.com/training/paths/develop-generative-ai-apps/) — trilha de aprendizagem
-- [Monitore cargas de trabalho de IA no Azure](https://learn.microsoft.com/training/paths/monitor-ai-workloads-on-azure/) — trilha de aprendizagem
-- [Operacionalize a IA com responsabilidade usando o Azure AI Foundry](https://learn.microsoft.com/training/paths/operationalize-ai-responsibly/) — trilha de aprendizagem
+- [Develop an AI agent with Foundry Agent Service](https://learn.microsoft.com/training/modules/develop-ai-agent-azure/) — 55-minute module
+- [Build agentic workflows with Microsoft Foundry](https://learn.microsoft.com/training/modules/build-agent-workflows-microsoft-foundry/) — 1-hour module
+- [Trace and debug your generative AI app](https://learn.microsoft.com/training/modules/tracing-generative-ai-app/) — 1-hour module
+- [Evaluate generative AI performance in the Microsoft Foundry portal](https://learn.microsoft.com/training/modules/evaluate-models-azure-ai-studio/) — 38-minute module
+- [Monitor your generative AI app](https://learn.microsoft.com/training/modules/monitor-generative-ai-app/) — 1-hour module
+- [Develop generative AI apps on Azure](https://learn.microsoft.com/training/paths/develop-generative-ai-apps/) — learning path
+- [Monitor AI workloads on Azure](https://learn.microsoft.com/training/paths/monitor-ai-workloads-on-azure/) — learning path
+- [Operationalize AI responsibly with Azure AI Foundry](https://learn.microsoft.com/training/paths/operationalize-ai-responsibly/) — learning path

@@ -1,73 +1,73 @@
-# 🎉 Laboratório Concluído — Manutenção Preditiva (TireForge Industries)
+# 🎉 Lab Complete — Predictive Maintenance (TireForge Industries)
 
-Parabéns — você criou, instrumentou, avaliou e implantou do zero um sistema de IA multiagente pronto para produção. Veja o que você realizou.
+Congratulations — you built, instrumented, evaluated, and deployed a production-ready multi-agent AI system from scratch. Here is what you accomplished.
 
 ---
 
-## Recapitulação
+## Recap
 
-| # | Desafio | O que você criou |
+| # | Challenge | What you built |
 |---|-----------|----------------|
-| 0 | **Configuração** | Provisionou um recurso e projeto do Microsoft Foundry, uma implantação de modelo GPT, um workspace do Log Analytics e uma instância do Application Insights usando `azd provision` |
-| 1 | **Criar Agentes** | Criou um **Agente de Detecção de Anomalias** (lê telemetria de sensores ao vivo — temperatura, vibração e pressão — e identifica máquinas operando fora dos limites seguros) e um **Agente de Diagnóstico de Falhas** (determina a causa raiz e recomenda ações de manutenção por tipo de máquina) |
-| 2 | **Monitorar** | Habilitou o rastreamento GenAI do OpenTelemetry — cada chamada de modelo, invocação de ferramenta e contagem de tokens é capturada como um rastreamento distribuído no Application Insights |
-| 3 | **Avaliar** | Executou avaliações sistemáticas com LLM como juiz em todo o conjunto de dados de sensores, produzindo pontuações repetíveis de coerência e fluência que podem ser acompanhadas por versão entre mudanças de prompt |
-| 4 | **Fluxo de Produção** | Conectou os dois agentes em um pipeline orquestrado no portal do Foundry — um endpoint estável e testável, com histórico de execuções que os operadores da fábrica podem inspecionar |
+| 0 | **Setup** | Provisioned a Microsoft Foundry resource and project, a GPT model deployment, a Log Analytics workspace, and an Application Insights instance using `azd provision` |
+| 1 | **Build Agents** | Created an **Anomaly Detection Agent** (reads live sensor telemetry — temperature, vibration, and pressure — and identifies machines operating outside safe limits) and a **Fault Diagnosis Agent** (determines root cause and recommends maintenance actions by machine type) |
+| 2 | **Monitor** | Enabled OpenTelemetry GenAI tracing — every model call, tool invocation, and token count is captured as a distributed trace in Application Insights |
+| 3 | **Evaluate** | Ran systematic LLM-as-a-judge evaluations across the sensor dataset, producing repeatable coherence and fluency scores that can be tracked by version across prompt changes |
+| 4 | **Production Workflow** | Connected the two agents in an orchestrated Foundry portal pipeline — a stable, testable endpoint with run history that factory operators can inspect |
 
-### Habilidades praticadas
+### Skills Practiced
 
-- Projetar prompts de sistema de agentes com limites claros de função e restrições
-- Fundamentar agentes em telemetria real de sensores por meio de chamadas de ferramentas (function calling)
-- Rastreamento distribuído de sistemas de IA com OpenTelemetry
-- Avaliação com LLM como juiz usando o SDK de Avaliação de IA do Azure
-- Orquestração multiagente no portal do Foundry
-
----
-
-## Próximos Passos
-
-Quer levar o sistema da TireForge adiante? Veja alguns caminhos:
-
-- **Adicione mais agentes** — um agente de Inventário de Peças que verifica se os componentes de reposição estão em estoque antes de recomendar a manutenção, ou um agente de Agendamento que encontra a primeira janela de manutenção com o menor impacto na produção
-- **Conecte dados reais** — substitua o `sensor_data.json` estático por um fluxo ativo do IoT Hub ou Azure Event Hub
-- **Melhore a avaliação** — adicione avaliadores específicos da tarefa (por exemplo, "o agente identificou corretamente uma falha na Prensa de Cura a partir da combinação de temperatura elevada e pressão anormal?") junto às pontuações genéricas de coerência
-- **Configure CI/CD** — execute automaticamente seu conjunto de avaliação a cada mudança de prompt usando o GitHub Actions e faça o build falhar se as pontuações de qualidade caírem abaixo de um limite
-- **Explore o ajuste fino** — use seus diagnósticos de falha rastreados como dados de treinamento para ajustar um modelo menor e mais barato para a etapa inicial de detecção de anomalias
-- **Experimente outro cenário** — os cenários de [Claims](../claims/README.md) e [Call Center](../callcenter/README.md) abordam processamento de seguros e suporte ao cliente usando o mesmo ciclo de vida
+- Designing agent system prompts with clear role boundaries and constraints
+- Grounding agents in real sensor telemetry through tool calls (function calling)
+- Distributed tracing for AI systems with OpenTelemetry
+- LLM-as-a-judge evaluation using the Azure AI Evaluation SDK
+- Multi-agent orchestration in the Foundry portal
 
 ---
 
-## Limpar Recursos do Azure
+## Next Steps
 
-> **Importante:** Os recursos implantados no Desafio 0 geram custos do Azure enquanto existirem. Exclua-os quando terminar.
+Want to take the TireForge system further? Here are some options:
 
-### O que será excluído
+- **Add more agents** — a Parts Inventory agent that checks whether replacement components are in stock before recommending maintenance, or a Scheduling agent that finds the earliest maintenance window with the least production impact
+- **Connect real data** — replace the static `sensor_data.json` with a live stream from IoT Hub or Azure Event Hub
+- **Improve evaluation** — add task-specific evaluators (for example, “did the agent correctly identify a Curing Press fault from the combination of elevated temperature and abnormal pressure?”) alongside generic coherence scores
+- **Configure CI/CD** — automatically run your evaluation set after every prompt change using GitHub Actions and fail the build if quality scores fall below a threshold
+- **Explore fine-tuning** — use your traced fault diagnoses as training data to fine-tune a smaller, less expensive model for the initial anomaly detection step
+- **Try another scenario** — the [Claims](../claims/README.md) and [Call Center](../callcenter/README.md) scenarios cover insurance processing and customer support using the same lifecycle
 
-- O grupo de recursos `foundry-hackathon-rg-<suffix>` e tudo o que estiver dentro dele:
-  - Recurso e projeto do Microsoft Foundry
-  - Implantação do modelo GPT
-  - Workspace do Log Analytics
-  - Instância do Application Insights
+---
 
-### Opção 1 — azd down
+## Clean Up Azure Resources
 
-Na pasta **factory** (onde o ambiente `azd` foi inicializado), execute:
+> **Important:** Resources deployed in Challenge 0 incur Azure costs while they exist. Delete them when you are finished.
+
+### What Will Be Deleted
+
+- The `foundry-hackathon-rg-<suffix>` resource group and everything in it:
+  - Microsoft Foundry resource and project
+  - GPT model deployment
+  - Log Analytics workspace
+  - Application Insights instance
+
+### Option 1 — azd down
+
+In the **factory** folder (where the `azd` environment was initialized), run:
 
 ```bash
 cd factory
 azd down --purge
 ```
 
-O comando usa o ambiente `azd` criado por `azd provision` para saber exatamente qual grupo de recursos deve atingir. Ele pede confirmação antes de excluir.
+The command uses the `azd` environment created by `azd provision` to know exactly which resource group to target. It asks for confirmation before deleting it.
 
-### Opção 2 — Portal do Azure
+### Option 2 — Azure portal
 
-1. Acesse [portal.azure.com](https://portal.azure.com)
-2. Pesquise por **Grupos de recursos**
-3. Localize `foundry-hackathon-rg-<your-suffix>`
-4. Clique em **Excluir grupo de recursos** e confirme
+1. Open [portal.azure.com](https://portal.azure.com)
+2. Search for **Resource groups**
+3. Find `foundry-hackathon-rg-<your-suffix>`
+4. Select **Delete resource group** and confirm
 
-### Opção 3 — CLI do Azure
+### Option 3 — Azure CLI
 
 ```bash
 # Replace <suffix> with the value shown in your .env file

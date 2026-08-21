@@ -1,52 +1,52 @@
-# Desafio 0: Configuração e Autenticação
+# Challenge 0: Setup and Authentication
 
-Tempo: ~20 minutos
+Time: ~20 minutes
 
-## Objetivos
+## Objectives
 
-Ao final deste desafio, você terá:
+By the end of this challenge, you will have:
 
-- ✅ Um projeto do Microsoft Foundry totalmente provisionado com um modelo implantado
-- ✅ O Application Insights provisionado e a cadeia de conexão disponível
-- ✅ A autenticação da sua máquina local para o Foundry verificada
-- ✅ A confirmação de que o endpoint do seu agente está funcionando
+- ✅ A fully provisioned Microsoft Foundry project with a deployed model
+- ✅ Application Insights provisioned with its connection string available
+- ✅ Verified authentication from your local machine to Foundry
+- ✅ Confirmation that your agent endpoint is working
 
 ![setup](./images/setup.png)
 
-## Comece Aqui
+## Start Here
 
 > [!NOTE]
-> Antes de começar, verifique se você tem:
-> - Uma **assinatura do Azure** na qual você tenha as funções **Colaborador** (para implantar a infraestrutura) e **Usuário do Foundry** (para criar, avaliar e executar agentes nos Desafios 1–4).
-> - Uma **conta do GitHub** para criar um fork deste repositório e executá-lo no GitHub Codespaces.
+> Before you begin, make sure you have:
+> - An **Azure subscription** where you have the **Contributor** role (to deploy infrastructure) and the **Foundry User** role (to create, evaluate, and run agents in Challenges 1–4).
+> - A **GitHub account** to fork this repository and run it in GitHub Codespaces.
 >
-> Os direitos de **Proprietário** (ou Colaborador) da assinatura, sozinhos, **não** são suficientes. Eles concedem acesso ao plano de controle para criar e gerenciar recursos, mas criar e executar agentes são operações do plano de dados que exigem a função separada **Usuário do Foundry** atribuída na conta do Foundry. Um Proprietário pode atribuí-la a si mesmo; um Colaborador deve pedir a um administrador que a atribua após a implantação.
+> **Owner** (or Contributor) rights on the subscription alone are **not** sufficient. They grant control-plane access to create and manage resources, but creating and running agents are data-plane operations that require the separate **Foundry User** role assigned on the Foundry resource. An Owner can assign it to themselves; a Contributor must ask an administrator to assign it after deployment.
 
-Há duas maneiras de começar — escolha uma:
+There are two ways to get started — choose one:
 
-> **Primeiro passo para as duas opções:** [Crie um fork deste repositório](https://github.com/diegodocs/FrontierWeekHack/fork) na sua conta do GitHub.
+> **First step for both options:** [Fork this repository](https://github.com/diegodocs/FrontierWeekHack/fork) to your GitHub account.
 
-### Opção A: GitHub Codespaces (recomendado)
+### Option A: GitHub Codespaces (recommended)
 
-Não é necessário instalar nada localmente. Tudo é executado em um ambiente de desenvolvimento na nuvem.
+No local installation is required. Everything runs in a cloud development environment.
 
-[![Abrir no GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/diegodocs/FrontierWeekHack)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/diegodocs/FrontierWeekHack)
 
-1. Clique no selo acima (se aplicável, selecione seu fork)
-2. Aguarde a criação do Codespace (~2 min)
-3. No terminal, entre no Azure:
+1. Select the badge above (choose your fork if applicable)
+2. Wait for the Codespace to be created (~2 min)
+3. Sign in to Azure in the terminal:
 
 ```bash
 az login
 ```
 
-4. Continue em **Implantar a Infraestrutura** abaixo.
+4. Continue to **Deploy the Infrastructure** below.
 
 ---
 
-### Opção B: Ambiente local
+### Option B: Local environment
 
-Execute tudo na sua própria máquina. Requer Python 3.10+ e a CLI do Azure.
+Run everything on your own machine. Requires Python 3.10+ and the Azure CLI.
 
 ```bash
 # 1. Clone this repo
@@ -64,11 +64,11 @@ pip install -r requirements.txt
 az login
 ```
 
-4. Continue em **Implantar a Infraestrutura** abaixo.
+4. Continue to **Deploy the Infrastructure** below.
 
-## Implantar a Infraestrutura
+## Deploy the Infrastructure
 
-Na pasta **factory**, inicialize o ambiente `azd` e provisione a infraestrutura:
+In the **factory** folder, initialize the `azd` environment and provision the infrastructure:
 
 ```bash
 cd factory
@@ -76,35 +76,35 @@ azd auth login
 azd provision
 ```
 
-Isso provisionará todos os recursos **e** gravará automaticamente seu arquivo `.env` na pasta **factory**. A implantação levará alguns minutos para ser concluída.
+This provisions all resources **and** automatically writes your `.env` file to the **factory** folder. Deployment takes a few minutes to complete.
 
-## Verificar a criação dos seus recursos
+## Verify Resource Creation
 
-Acesse o [Portal do Azure](https://portal.azure.com/) e localize seu grupo de recursos, que agora deverá conter recursos como estes:
+Open the [Azure portal](https://portal.azure.com/) and find your resource group, which should now contain resources like these:
 
 ![Azure Portal Resources](./images/azure-portal-resources.png)
 
 > [!NOTE]
-> Os prefixos dos nomes dos recursos variam por cenário e os sufixos são exclusivos para cada implantação
+> Resource name prefixes vary by scenario, and suffixes are unique to each deployment
 
-Acesse o [Portal do Microsoft Foundry](https://ai.azure.com/nextgen) e verifique se você consegue acessar o projeto do Foundry.
+Open the [Microsoft Foundry portal](https://ai.azure.com/nextgen) and verify that you can access the Foundry project.
 
 ![Foundry Project](./images/foundry-project.png)
 
-Selecione **Criar** na navegação superior, depois **Modelos**, e verifique se o modelo **gpt-5.4** está implantado.
+Select **Build** in the top navigation, then **Models**, and verify that the **gpt-5.4** model is deployed.
 
 >[!NOTE]
-> Em algumas versões do Portal do Foundry, a guia **Modelos** aparece com o nome **Implantações**, mas ambas têm a mesma finalidade.
+> In some versions of the Foundry portal, the **Models** tab is named **Deployments**, but both serve the same purpose.
 
 ![Foundry Model](./images/foundry-model.png)
 
-Selecione **gpt-5.4**, insira uma mensagem de teste no playground do modelo e verifique se você recebe uma resposta.
+Select **gpt-5.4**, enter a test message in the model playground, and verify that you receive a response.
 
 ![Foundry Model Playground](./images/foundry-model-playground.png)
 
 
-## Critérios de Sucesso
+## Success Criteria
 
-- [ ] Você consegue ver seu projeto do Microsoft Foundry no Portal do Azure
-- [ ] Uma implantação do modelo gpt-5.4 mostra o status "Succeeded"
-- [ ] Você consegue enviar uma mensagem de teste no Playground de Modelos do Foundry
+- [ ] You can see your Microsoft Foundry project in the Azure portal
+- [ ] A gpt-5.4 model deployment shows the status "Succeeded"
+- [ ] You can send a test message in the Foundry Model Playground

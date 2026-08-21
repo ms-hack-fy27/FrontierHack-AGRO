@@ -1,97 +1,97 @@
-# Desafio 3: Avaliar
+# Challenge 3: Evaluate
 
-Tempo: ~30 minutos
+Time: ~30 minutes
 
-## Objetivos
+## Objectives
 
-Ao final deste desafio, você terá:
+By the end of this challenge, you will have:
 
-- ✅ Executado uma avaliação sistemática dos seus agentes com um conjunto de testes
-- ✅ Usado avaliadores integrados (coerência e fluência) para medir a qualidade
-- ✅ Interpretado métricas de avaliação e identificado áreas de melhoria
-- ✅ Entendido como integrar avaliações a um pipeline de CI/CD
+- ✅ Run a systematic evaluation of your agents with a test set
+- ✅ Use built-in evaluators (coherence and fluency) to measure quality
+- ✅ Interpret evaluation metrics and identify areas for improvement
+- ✅ Understand how to integrate evaluations into a CI/CD pipeline
 
 ![evaluate](./images/evaluate.png)
 
-## Contexto
+## Context
 
-O monitoramento informa **o que está acontecendo** (latência, erros e uso de tokens). A avaliação informa **se as respostas são realmente boas**.
+Monitoring tells you **what is happening** (latency, errors, and token usage). Evaluation tells you **whether the responses are actually good**.
 
-Você tem um conjunto de dados com 10 casos de teste, cada um com um instantâneo das leituras dos sensores e a saída correta esperada (classificação + ação recomendada). Você executará seus agentes nesses casos e medirá o desempenho usando pontuação com LLM como juiz.
+You have a dataset with 10 test cases, each containing a snapshot of sensor readings and the expected correct output (classification + recommended action). You will run your agents on these cases and measure performance using LLM-as-a-judge scoring.
 
-## Por que Avaliar?
+## Why Evaluate?
 
-O monitoramento informa que seus agentes estão *executando*; a avaliação informa se estão fazendo a *coisa certa*. Essas são perguntas fundamentalmente diferentes.
+Monitoring tells you that your agents are *running*; evaluation tells you whether they are doing the *right thing*. These are fundamentally different questions.
 
-O monitoramento captura **sinais operacionais**: latência, contagem de tokens, taxas de erro e disponibilidade. Eles informam *como* o sistema se comporta mecanicamente. A avaliação captura **sinais de qualidade**: as saídas do agente estão corretas, relevantes, coerentes e consistentes com os resultados esperados? Esses sinais informam *se* o sistema está realmente cumprindo sua função.
+Monitoring captures **operational signals**: latency, token counts, error rates, and availability. These tell you *how* the system behaves mechanically. Evaluation captures **quality signals**: are agent outputs correct, relevant, coherent, and consistent with expected results? These signals tell you *whether* the system is actually fulfilling its purpose.
 
-Sem uma avaliação sistemática, você depende de verificações pontuais: lê algumas respostas e as julga subjetivamente. Isso não escala, não é repetível e não detecta regressões quando você atualiza um prompt ou troca de modelo. A avaliação fornece uma linha de base mensurável: uma pontuação que você pode acompanhar ao longo do tempo e comparar entre versões.
+Without systematic evaluation, you rely on spot checks: you read a few responses and judge them subjectively. This does not scale, is not repeatable, and does not detect regressions when you update a prompt or change models. Evaluation provides a measurable baseline: a score you can track over time and compare across versions.
 
-A avaliação também revela problemas que o monitoramento não enxerga. Um agente que sempre responde rapidamente e sem erros, mas diagnostica incorretamente as condições de falha de forma recorrente, ou recomenda "agendar manutenção de rotina" para uma máquina que precisa ser desligada imediatamente, parece perfeitamente saudável para o monitoramento. A avaliação detecta isso na hora.
+Evaluation also reveals problems that monitoring cannot see. An agent that always responds quickly and without errors but repeatedly misdiagnoses fault conditions, or recommends “schedule routine maintenance” for a machine that needs to be shut down immediately, looks perfectly healthy to monitoring. Evaluation catches this immediately.
 
-Para IA em produção, as avaliações devem ser executadas:
+For production AI, evaluations should run:
 
-- **Antes da implantação** — estabelecer uma linha de base de qualidade e controlar versões com pontuações mínimas
-- **Após qualquer mudança** — em prompts de sistema, modelos, ferramentas ou dados de limites
-- **Em uma programação** — detectar desvios à medida que as configurações das máquinas ou as condições operacionais evoluem
+- **Before deployment** — establish a quality baseline and gate releases with minimum scores
+- **After any change** — to system prompts, models, tools, or threshold data
+- **On a schedule** — detect drift as machine configurations or operating conditions evolve
 
-Especificamente para a TireForge: um agente que diagnostique com confiança uma anomalia da CP-003 como "vibração normal" quando os limites foram excedidos pode atrasar uma ação crítica de manutenção por horas. O monitoramento vê uma resposta rápida e sem erros. Somente a avaliação, comparando a saída com a classificação correta conhecida, revela o problema.
+For TireForge specifically: an agent that confidently diagnoses a CP-003 anomaly as “normal vibration” when thresholds have been exceeded could delay critical maintenance action for hours. Monitoring sees a fast, error-free response. Only evaluation, comparing the output with the known correct classification, reveals the problem.
 
-## O Conjunto de Dados de Avaliação
+## The Evaluation Dataset
 
-O conjunto de dados está em [challenge-4-deploy/evaluation_dataset.json](../challenge-4-deploy/evaluation_dataset.json) e contém:
+The dataset is in [challenge-4-deploy/evaluation_dataset.json](../challenge-4-deploy/evaluation_dataset.json) and contains:
 
-- 10 cenários que abrangem máquinas normais, em alerta e críticas
-- Cada um tem um `input` (o que você envia ao agente)
-- Cada um tem um `expected_output` (a classificação e a ação corretas)
+- 10 scenarios covering normal, warning, and critical machines
+- Each has an `input` (what you send to the agent)
+- Each has an `expected_output` (the correct classification and action)
 
-## Sobre os Avaliadores
+## About the Evaluators
 
-O Microsoft Foundry usa uma abordagem de **LLM como juiz**: um modelo separado lê cada resposta do agente junto com a entrada e a verdade de referência e atribui uma pontuação de 1 a 5. Você usará dois avaliadores integrados:
+Microsoft Foundry uses an **LLM-as-a-judge** approach: a separate model reads each agent response along with the input and reference truth and assigns a score from 1 to 5. You will use two built-in evaluators:
 
-- **Coerência** — mede se a resposta do agente é logicamente estruturada e internamente consistente. Uma pontuação 5 significa que a saída é clara, bem organizada e flui naturalmente. Uma pontuação baixa significa que a resposta é contraditória, confusa ou difícil de acompanhar. Para um agente de fábrica, isso detecta situações como recomendar "nenhuma ação" enquanto lista anomalias críticas.
+- **Coherence** — measures whether the agent response is logically structured and internally consistent. A score of 5 means the output is clear, well organized, and flows naturally. A low score means the response is contradictory, confusing, or difficult to follow. For a factory agent, this catches situations such as recommending “no action” while listing critical anomalies.
 
-- **Fluência** — mede a qualidade gramatical e linguística da resposta do agente. Uma pontuação 5 significa que a saída é bem escrita, natural e fácil de ler. Uma pontuação baixa significa que a resposta tem formulação estranha, erros gramaticais ou é difícil de interpretar, o que reduz a confiança na classificação mesmo quando o diagnóstico subjacente está correto.
+- **Fluency** — measures the grammatical and linguistic quality of the agent response. A score of 5 means the output is well written, natural, and easy to read. A low score means the response has awkward phrasing, grammatical errors, or is difficult to interpret, reducing confidence in the classification even when the underlying diagnosis is correct.
 
-Juntas, essas duas pontuações fornecem um sinal rápido da qualidade da saída. Ao ver uma pontuação baixa de coerência, examine a estrutura do prompt de sistema do agente. Ao ver uma pontuação baixa de fluência, examine como o agente formula a saída e se o prompt de sistema incentiva respostas claras e bem construídas.
+Together, these two scores provide a quick signal of output quality. When you see a low coherence score, examine the agent's system prompt structure. When you see a low fluency score, examine how the agent phrases its output and whether the system prompt encourages clear, well-formed responses.
 
-## Comece Aqui
+## Start Here
 
-O conjunto de dados de avaliação já foi preparado para você em [eval_portal.jsonl](./eval_portal.jsonl): são 10 cenários de sensores de máquinas prontos para upload.
-
----
-
-### Etapa 1: Abrir a guia de avaliação
-
-1. Acesse o [portal do Microsoft Foundry](https://ai.azure.com/nextgen) → seu projeto
-2. Na barra superior → **Criar** → **Avaliações** → **Criar**
-
-### Etapa 2: Configurar a avaliação
-
-3. Selecione **Agente** como destino da avaliação
-4. Escolha `anomaly-detection-agent` na lista suspensa
-5. Selecione **Turnos individuais** e depois **Conjunto de dados existente**
-6. Clique em **Carregar novo conjunto de dados**.
-Primeiro, você deve inserir um nome para o conjunto de dados; o upload permanecerá desabilitado até isso ser feito. Digite um nome (por exemplo, `factory-eval`), adicione o arquivo localizado em `factory/challenge-3-evaluate/eval_portal.jsonl` e confirme o upload.
-7. Deixe os campos **Mapeamento de campos** e **Configurar agentes** como estão.
-8. Na etapa **Critérios**, mantenha apenas **Coerência** e **Fluência**. Remova todos os outros avaliadores, especialmente **desmarque Tool Call Accuracy**, pois os agentes não podem executar as ferramentas locais durante a avaliação e sempre terão uma pontuação baixa nesse item. Reduzir a lista de avaliadores também torna a execução significativamente mais rápida.
-9. Mantenha o Nome da avaliação como está ou configure-o como preferir.
-10. Envie sua avaliação. A execução levará algum tempo.
-
-### Etapa 3: Ver os resultados
-
-Os resultados aparecem na guia **Avaliar** em alguns minutos. Clique no nome da execução para abrir os resultados.
-
-Há duas maneiras de ler os resultados, e elas respondem a perguntas diferentes:
-
-- **Métricas agregadas** — a pontuação média de cada avaliador nos 10 casos de teste (por exemplo, uma Coerência geral de 4,2). Essa é sua linha de base de qualidade em um único número, o principal valor que você acompanha ao longo do tempo e compara entre versões dos agentes.
-- **Análise por linha** — a pontuação de cada caso de teste individual, para que você veja *quais cenários específicos* reduziram a média. O agregado informa *se* há um problema; a visualização por linha informa *onde* ele está. Ordene pelas pontuações mais baixas para encontrar os casos que merecem investigação.
+The evaluation dataset is already prepared for you in [eval_portal.jsonl](./eval_portal.jsonl): 10 machine sensor scenarios ready for upload.
 
 ---
 
-## Critérios de Sucesso
+### Step 1: Open the evaluation tab
 
-- [ ] A avaliação é executada nos 10 casos de teste sem erros
-- [ ] Você consegue ver as pontuações por linha de coerência e fluência
-- [ ] Você identificou pelo menos um caso em que o agente poderia melhorar
-- [ ] Você entende a diferença entre métricas agregadas e análise por linha
+1. Open the [Microsoft Foundry portal](https://ai.azure.com/nextgen) → your project
+2. In the top bar → **Build** → **Evaluations** → **Create**
+
+### Step 2: Configure the evaluation
+
+3. Select **Agent** as the evaluation target
+4. Choose `anomaly-detection-agent` from the dropdown
+5. Select **Individual turns**, then **Existing dataset**
+6. Select **Upload new dataset**.
+First, you must enter a dataset name; upload remains disabled until you do. Enter a name (for example, `factory-eval`), add the file at `factory/challenge-3-evaluate/eval_portal.jsonl`, and confirm the upload.
+7. Leave **Field mapping** and **Configure agents** unchanged.
+8. In the **Criteria** step, keep only **Coherence** and **Fluency**. Remove all other evaluators, especially **uncheck Tool Call Accuracy**, because the agents cannot execute local tools during evaluation and will always score poorly on that item. Reducing the evaluator list also makes the run significantly faster.
+9. Keep the evaluation name as is or configure it as you prefer.
+10. Submit your evaluation. The run will take some time.
+
+### Step 3: View the results
+
+Results appear in the **Evaluate** tab after a few minutes. Select the run name to open the results.
+
+There are two ways to read the results, and they answer different questions:
+
+- **Aggregate metrics** — the average score for each evaluator across the 10 test cases (for example, an overall Coherence score of 4.2). This is your one-number quality baseline, the primary value you track over time and compare across agent versions.
+- **Row-level analysis** — the score for each individual test case, so you can see *which specific scenarios* lowered the average. The aggregate tells you *whether* there is a problem; the row view tells you *where* it is. Sort by the lowest scores to find cases that deserve investigation.
+
+---
+
+## Success Criteria
+
+- [ ] The evaluation runs on all 10 test cases without errors
+- [ ] You can see row-level coherence and fluency scores
+- [ ] You identified at least one case where the agent could improve
+- [ ] You understand the difference between aggregate metrics and row-level analysis

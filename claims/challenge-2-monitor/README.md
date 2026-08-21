@@ -1,10 +1,10 @@
-# Desafio 2: Monitorar com o Application Insights
+# Challenge 2: Monitor with Application Insights
 
 Tempo: ~20 minutos
 
-## Objetivos
+## Objectives
 
-Ao final deste desafio, você terá:
+By the end of this challenge, you will have:
 
 - ✅ GenAI tracing enabled for your Foundry agents
 - ✅ Agent interactions visible as traces in Application Insights
@@ -12,9 +12,9 @@ Ao final deste desafio, você terá:
 
 ![monitor](./images/monitor.png)
 
-## Contexto
+## Context
 
-Seus agentes funcionam, mas como saber se estão funcionando **bem**? E se um agente classificar incorretamente um sinistro legítimo como fraude? E se a latência aumentar nos horários de pico? E se uma chamada de ferramenta falhar silenciosamente?
+Your agents work, but how do you know they are working **well**? What if an agent incorrectly classifies a legitimate claim as fraud? What if latency increases during peak hours? What if a tool call fails silently?
 
 **Application Insights** with **GenAI tracing** gives you:
 
@@ -23,7 +23,7 @@ Seus agentes funcionam, mas como saber se estão funcionando **bem**? E se um ag
 - Latency breakdown (network, model inference, tool execution)
 - Error tracking and alerting
 
-## Por que monitorar?
+## Why monitor?
 
 AI agents behave differently from traditional software. A conventional API either returns the right data or throws an error — you can test it deterministically. An agent's output is probabilistic: the same input can produce subtly different responses on each run, tool calls can succeed but return unexpected data, and failures can be silent (the agent responds confidently but incorrectly). Without observability, these issues are invisible until a user reports them.
 
@@ -43,7 +43,7 @@ Microsoft Foundry gives you two ways to monitor agents. The **Foundry portal** (
 
 In this challenge we use the **SDK** — `monitor.py` instruments your agents so every interaction is automatically captured as a distributed trace. Once the script runs, you'll explore those traces using both portal options, seeing how each one presents the same data differently.
 
-## Pré-requisitos
+## Prerequisites
 
 Make sure your `.env` has:
 ```
@@ -52,13 +52,13 @@ OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true
 APPLICATIONINSIGHTS_CONNECTION_STRING=InstrumentationKey=xxx;...
 ```
 
-## Conectar o Application Insights ao portal
+## Connect Application Insights to the portal
 
 The deploy script automatically links Application Insights to your Foundry project. To confirm it worked, open the [Microsoft Foundry portal](https://ai.azure.com/nextgen), navigate to your project, and click **Tracing** in the left sidebar — you should see the Application Insights resource already connected.
 
 If you see a **"Create or connect an App Insights resource to get started"** banner, the automatic connection was blocked by a tenant policy. Fix it in one click: click **Connect**, select the `foundry-hack-insights-<suffix>` resource from the dropdown, and confirm. You only need to do this once.
 
-## Primeiros passos
+## Getting started
 
 Open [monitor.py](./monitor.py) and review the tracing setup.
 
@@ -67,11 +67,11 @@ cd claims/challenge-2-monitor
 python monitor.py
 ```
 
-Quando o script terminar, seus traces estarão ativos. Explore-os no Portal do Azure.
+When the script finishes, your traces will be active. Explore them in the Azure portal.
 
 ---
 
-### Etapa 1: Portal do Microsoft Foundry
+### Step 1: Microsoft Foundry portal
 
 1. Go to [Microsoft Foundry Portal](https://ai.azure.com/nextgen) → open your project
 2. Click on the `claims-decision-agent` -> **Traces**
@@ -96,7 +96,7 @@ Quando o script terminar, seus traces estarão ativos. Explore-os no Portal do A
 
    ![monitor2](./images/monitor2.png)
 
-### Etapa 2 - Application Insights
+### Step 2 - Application Insights
 
 1. Go to [portal.azure.com](https://portal.azure.com) → search for **Application Insights** → open `foundry-hack-insights-<suffix>`
 2. Left sidebar → **Investigate** → **Search**
@@ -129,7 +129,7 @@ You will see the **end-to-end transaction trace** showing:
      - **Input vs Output Tokens** — input versus output token totals over time (e.g., 17K input vs 5.1K output), useful for tracking cost drivers.
 ---
 
-## Critérios de sucesso
+## Success criteria
 
 - [ ] GenAI tracing is enabled and `monitor.py` ran successfully
 - [ ] You can browse agent traces in the Foundry portal **Traces** view and open a conversation

@@ -1,10 +1,10 @@
-# Desafio 4: Fluxo de produção
+# Challenge 4: Production Workflow
 
 Tempo: ~20 minutos
 
-Crie um fluxo de orquestração multiagente para a ClaimSight Insurance e leve-o à produção.
+Create a multi-agent orchestration workflow for ClaimSight Insurance and take it to production.
 
-## Cenário
+## Scenario
 
 The individual agents you built in Challenge 1 are valuable — but in production, agents need to work
 **together** as an automated pipeline. In this challenge you wire the two agents into a full
@@ -12,7 +12,7 @@ claims processing workflow, run it from code, then build and test it visually in
 
 ![deploy](./images/deploy.png)
 
-## Objetivos de aprendizagem
+## Learning objectives
 
 - Deploy persistent production agents (create once, reuse forever)
 - Orchestrate multiple agents step-by-step in a Python workflow
@@ -20,7 +20,7 @@ claims processing workflow, run it from code, then build and test it visually in
 - Invoke the portal workflow from Python with live streaming
 - View run history and traces in the portal
 
-## O Workflow
+## The Workflow
 
 ```
 ensure_agents_deployed()
@@ -37,25 +37,25 @@ print_claims_report()           <-- Consolidated Claims Processing Report
 
 ---
 
-## Parte 1 — SDK: Criar e executar o fluxo Python
+## Part 1 — SDK: Create and run the Python workflow
 
-### Etapa 1: Revisar a implementação
+### Step 1: Review the implementation
 
-Abra [deploy.py](./deploy.py) e revise:
+Open [deploy.py](./deploy.py) and review:
 
 - **`ensure_agents_deployed()`** — lists existing agents, creates `claims-triage-agent` and `claims-decision-agent` if not present
 - **`run_claims_triage()`** — calls the triage agent, handles the `assess_claim` function call loop
 - **`run_claims_decision()`** — calls the decision agent for each flagged claim
 - **`run_claims_workflow()`** — orchestrates all steps and returns the consolidated report
 
-### Etapa 2: Executar o fluxo
+### Step 2: Run the workflow
 
 ```bash
 cd claims/challenge-4-deploy
 python deploy.py
 ```
 
-Saída esperada:
+Expected output:
 ```
 === Step 1: Ensure Agents Are Deployed ===
   Found existing: claims-triage-agent
@@ -80,9 +80,9 @@ CLAIMSIGHT INSURANCE — CLAIMS PROCESSING REPORT
 
 ---
 
-## Parte 2 — Portal: Criar e testar o fluxo visual
+## Part 2 — Portal: Create and test the visual workflow
 
-### Etapa 3: Verificar se os agentes estão implantados no portal
+### Step 3: Verify that the agents are deployed in the portal
 
 1. Open the [Microsoft Foundry portal](https://ai.azure.com/nextgen)
 2. Select your project
@@ -92,7 +92,7 @@ CLAIMSIGHT INSURANCE — CLAIMS PROCESSING REPORT
    - `claims-decision-agent`
 
 
-### Etapa 4: Criar o fluxo no designer do portal
+### Step 4: Create the workflow in the portal designer
 
 1. Select **Build** → **Agents** → **Workflows**
 2. Notice that the workflow created using the SDK in Part 1 is listed. Let's create a new workflow by selecting **Create** → **Blank workflow**
@@ -123,7 +123,7 @@ CLAIMSIGHT INSURANCE — CLAIMS PROCESSING REPORT
 
 ![Save agent](./images/save-agent.png) 
 
-### Etapa 5: Testar o fluxo no playground do portal
+### Step 5: Test the workflow in the portal playground
 
 > **Why you must include the claims data in your message**
 >
@@ -183,7 +183,7 @@ CLAIMSIGHT INSURANCE — CLAIMS PROCESSING REPORT
 3. Watch the steps execute in sequence — triage first, then decisions
 4. Review the approval/denial decisions with justifications
 
-### Etapa 6: Exibir o histórico de execuções e os traces
+### Step 6: View run history and traces
 
 1. In the **claims-processing-workflow-portal** workflow click **Traces**
 
@@ -193,7 +193,7 @@ CLAIMSIGHT INSURANCE — CLAIMS PROCESSING REPORT
 
 ---
 
-## Critérios de sucesso
+## Success criteria
 
 - [ ] Python workflow runs end-to-end: triage → decisions → claims report
 - [ ] Both agents visible in the Foundry portal as persistent assets
@@ -201,11 +201,11 @@ CLAIMSIGHT INSURANCE — CLAIMS PROCESSING REPORT
 
 ---
 
-## Além do laboratório: opções de implantação em produção
+## Beyond the lab: production deployment options
 
 You've built and tested your agents locally. Here's how to take them to production:
 
-### Opção 1: Agentes hospedados (o que você já tem)
+### Option 1: Hosted agents (what you already have)
 
 Your agents created with `agents.create_version()` are already production-ready hosted agents. They live in Foundry indefinitely — any client can invoke them by name via the Responses API. No infrastructure to manage; Foundry handles scaling, versioning, and availability.
 
@@ -213,7 +213,7 @@ Your agents created with `agents.create_version()` are already production-ready 
 - **Multi-tenant**: Multiple users/apps can call the same agent simultaneously.
 - **Portal visibility**: Agents appear under Build → Agents with playground, run history, and tracing.
 
-### Opção 2: Fluxos do Foundry (orquestração visual)
+### Option 2: Foundry Workflows (visual orchestration)
 
 What you built in Part 2 — wire multiple hosted agents into a DAG using the portal designer. The workflow becomes a deployable agent invoked via the same Responses API.
 
@@ -221,7 +221,7 @@ What you built in Part 2 — wire multiple hosted agents into a DAG using the po
 - Streaming `workflow_action` events showing progress
 - Run history with per-step timing
 
-### Opção 3: Azure App Service / Container Apps
+### Option 3: Azure App Service / Container Apps
 
 Wrap your Python workflow in a FastAPI/Flask app for custom middleware, auth, or business logic:
 
@@ -233,9 +233,9 @@ async def process_claims():
     return report
 ```
 
-Implante no **App Service** (PaaS gerenciado) ou no **Container Apps** (contêineres com dimensionamento automático).
+Deploy to **App Service** (managed PaaS) or **Container Apps** (containers with automatic scaling).
 
-### Opção 4: Azure Functions (orientado a eventos)
+### Option 4: Azure Functions (event-driven)
 
 Trigger agent workflows from events:
 
@@ -243,9 +243,9 @@ Trigger agent workflows from events:
 - **Service Bus trigger**: Handle claims from a message queue
 - **HTTP trigger**: On-demand endpoint for claims adjusters
 
-Pague por execução; o serviço reduz a escala a zero quando está ocioso.
+You pay per execution; the service scales to zero when idle.
 
-### Opção 5: Gates de qualidade de CI/CD
+### Option 5: CI/CD quality gates
 
 Integrate evaluation into your deployment pipeline:
 
@@ -253,7 +253,7 @@ Integrate evaluation into your deployment pipeline:
 - Promote agent versions: `v1-dev` → `v1-staging` → `v1-prod` after evaluation passes
 - Blue/green: Deploy new version to 10% traffic, compare metrics, then promote
 
-### Resumo
+### Summary
 
 | Pattern | Best For |
 |---------|----------|
