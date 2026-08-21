@@ -24,13 +24,13 @@ By the end of this challenge, you will have:
 
 There are two ways to get started — choose one:
 
-> **First step for either option:** [fork this repository](https://github.com/diegodocs/FrontierWeekHack/fork) to your own GitHub account.
+> **First step for either option:** [fork this repository](https://github.com/ms-hack-fy27/FrontierHack-Agro//fork) to your own GitHub account.
 
 ### Option A: GitHub Codespaces (recommended)
 
 No local installation is required. Everything runs in a cloud development environment.
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/diegodocs/FrontierWeekHack)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/ms-hack-fy27/FrontierHack-AGRO)
 
 1. Click the badge above (select your fork if applicable)
 2. Wait for the Codespace to be created (~2 min)
@@ -50,7 +50,7 @@ Run everything on your own machine. Requires Python 3.10+ and the Azure CLI.
 
 ```bash
 # 1. Clone this repo
-git clone https://github.com/diegodocs/FrontierWeekHack.git
+git clone https://github.com/ms-hack-fy27/FrontierHack-Agro/.git
 cd FrontierWeekHack
 
 # 2. Create and activate a virtual environment
