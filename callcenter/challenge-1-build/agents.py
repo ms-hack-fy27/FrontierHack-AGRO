@@ -139,7 +139,7 @@ class IntentClassificationAgent:
         """
 
         self.agent = self.client.agents.create_version(
-            agent_name="intent-classification-agent",
+            agent_name="call-center-intent-classifier-agent",
             definition=PromptAgentDefinition(
                 model=MODEL_DEPLOYMENT_NAME,
                 instructions=system_prompt,
@@ -248,7 +248,7 @@ class ResolutionAdvisorAgent:
         """
 
         self.agent = self.client.agents.create_version(
-            agent_name="resolution-advisor-agent",
+            agent_name="call-center-advisor-agent",
             definition=PromptAgentDefinition(
                 model=MODEL_DEPLOYMENT_NAME,
                 instructions=system_prompt,

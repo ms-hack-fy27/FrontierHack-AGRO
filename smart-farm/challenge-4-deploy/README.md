@@ -12,7 +12,7 @@ Run the Python orchestration, keep the two agents persistent, create a `Workflow
 ensure_agents_deployed()
         |
         v
-run_health_scan()       -- monitor agent and check_crop_health loop
+run_health_scan()       -- monitor agent and check_health_monitor loop
         |
         v
 run_advisor()           -- tool-free agricultural advice
@@ -30,11 +30,11 @@ cd smart-farm\challenge-4-deploy
 python deploy.py
 ```
 
-The script includes the required functions `check_crop_health`, `ensure_agents_deployed`, `run_health_scan`, `run_advisor`, `run_smart_farm_workflow`, `print_farm_report`, `create_workflow_agent`, and `run_portal_workflow`. It uses `gpt-5.4` by default and reads `PROJECT_CONNECTION_STRING` and `MODEL_DEPLOYMENT_NAME` from `.env`.
+The script includes the required functions `check_health_monitor`, `ensure_agents_deployed`, `run_health_scan`, `run_advisor`, `run_smart_farm_workflow`, `print_farm_report`, `create_workflow_agent`, and `run_portal_workflow`. It uses `gpt-5.4` by default and reads `PROJECT_CONNECTION_STRING` and `MODEL_DEPLOYMENT_NAME` from `.env`.
 
 ## Portal verification
 
-1. Open Foundry Build -> Agents and confirm `crop-health-monitor-agent` and `agricultural-advisor-agent`.
+1. Open Foundry Build -> Agents and confirm `smart-farm-monitor-agent` and `smart-farm-advisor-agent`.
 2. Confirm the created `smart-farm-health-workflow` workflow is listed.
 3. Preview the workflow and ask it to analyze the embedded readings.
 4. Inspect the run history and traces. The final response should call out ZONE-GAMMA as critical and explain why.

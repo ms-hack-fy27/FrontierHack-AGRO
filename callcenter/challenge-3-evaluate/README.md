@@ -69,7 +69,7 @@ The evaluation dataset has already been prepared for you at [eval_portal.jsonl](
 ### Step 2: Configure the evaluation
 
 3. Select **Agent** as the evaluation target
-4. Choose `intent-classification-agent` from the dropdown
+4. Choose `call-center-intent-classifier-agent` from the dropdown
 5. Select **Individual Turns** and then **Existing Dataset**
 6. Click **Upload new dataset**. First, you need to enter a name for the dataset — upload will remain disabled until you do so. Enter a name (for example, `callcenter-eval`), then add the file located at `callcenter/challenge-3-evaluate/eval_portal.jsonl` and confirm the upload.
 7. Leave **Field Mapping** and **Configure Agents** as they are.

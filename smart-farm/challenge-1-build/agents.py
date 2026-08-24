@@ -34,7 +34,7 @@ def _load_zones() -> list[dict]:
         return json.load(data_file)["zones"]
 
 
-def check_crop_health(zone_id: str) -> str:
+def check_health_monitor(zone_id: str) -> str:
     """Compare one crop zone's four readings with its configured thresholds."""
     zone = next(
         (item for item in _load_zones() if item["zone_id"] == zone_id or item["name"] == zone_id),
@@ -79,7 +79,7 @@ def check_crop_health(zone_id: str) -> str:
 
 
 CHECK_CROP_HEALTH_TOOL = FunctionTool(
-    name="check_crop_health",
+    name="check_health_monitor",
     description="Compare a crop zone's soil moisture, temperature, humidity, and pH with its thresholds and return threshold analysis.",
     parameters={
         "type": "object",
@@ -103,13 +103,13 @@ class CropHealthMonitorAgent:
         self.client = AIProjectClient(endpoint=PROJECT_CONNECTION_STRING, credential=DefaultAzureCredential())
         self.openai = self.client.get_openai_client()
         instructions = """
-You are the crop health monitor for GreenRise AgriTech. Always use check_crop_health for every requested zone.
+You are the crop health monitor for GreenRise AgriTech. Always use check_health_monitor for every requested zone.
 Return a structured status for each zone with zone ID, crop, status (normal, warning, or critical),
 all four metrics, threshold comparisons, anomalies, and a recommended immediate next step.
 Use the reported status as a signal but let the threshold analysis ground your explanation. Never invent readings.
 """
         self.agent = self.client.agents.create_version(
-            agent_name="crop-health-monitor-agent",
+            agent_name="smart-farm-monitor-agent",
             definition=PromptAgentDefinition(model=MODEL_DEPLOYMENT_NAME, instructions=instructions, tools=[CHECK_CROP_HEALTH_TOOL]),
         )
         return self.agent
@@ -126,7 +126,7 @@ Use the reported status as a signal but let the threshold analysis ground your e
                 outputs = []
                 for call in calls:
                     args = json.loads(call.arguments)
-                    result = check_crop_health(args["zone_id"]) if call.name == "check_crop_health" else json.dumps({"error": "Unknown tool"})
+                    result = check_health_monitor(args["zone_id"]) if call.name == "check_health_monitor" else json.dumps({"error": "Unknown tool"})
                     outputs.append(FunctionCallOutput(type="function_call_output", call_id=call.call_id, output=result))
                 response = self.openai.responses.create(input=outputs, conversation=conversation.id, extra_body=reference)
         finally:
@@ -157,7 +157,7 @@ crop-zone health analysis supplied in the user message. Apply these domain patte
 Give practical actions, urgency, and what to recheck. Distinguish evidence from hypotheses and do not invent data.
 """
         self.agent = self.client.agents.create_version(
-            agent_name="agricultural-advisor-agent",
+            agent_name="smart-farm-advisor-agent",
             definition=PromptAgentDefinition(model=MODEL_DEPLOYMENT_NAME, instructions=instructions),
         )
         return self.agent

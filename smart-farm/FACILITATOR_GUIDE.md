@@ -23,7 +23,7 @@ The schedule includes roughly 10 minutes of buffer for Azure provisioning and po
 ## Objectives by challenge
 
 - **Setup:** provision `smart-farm-project`, deploy `gpt-5.4`, and connect Application Insights.
-- **Build:** use `check_crop_health` as a deterministic grounding tool; create the monitor and advisor agents.
+- **Build:** use `check_health_monitor` as a deterministic grounding tool; create the monitor and advisor agents.
 - **Monitor:** enable GenAI instrumentation before importing `azure.ai.projects`; find a conversation trace.
 - **Evaluate:** upload the 10-line JSONL dataset and interpret coherence and fluency results.
 - **Workflow:** run monitor -> advisor -> report in Python and create a `WorkflowAgentDefinition` asset.
