@@ -1,0 +1,514 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.46.1.21595",
+      "templateHash": "2664098076770102849"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "swedencentral",
+      "metadata": {
+        "description": "Azure region for the lab resources."
+      }
+    },
+    "deploymentDate": {
+      "type": "string",
+      "defaultValue": "[utcNow('yyyyMMdd')]",
+      "metadata": {
+        "description": "UTC deployment date used to generate a stable daily suffix."
+      }
+    },
+    "suffix": {
+      "type": "string",
+      "defaultValue": "[take(uniqueString(resourceGroup().id, parameters('deploymentDate')), 8)]",
+      "metadata": {
+        "description": "Unique daily suffix used in globally unique resource names."
+      }
+    },
+    "foundryResourceName": {
+      "type": "string",
+      "defaultValue": "[format('foundry-hack-{0}', parameters('suffix'))]"
+    },
+    "projectName": {
+      "type": "string",
+      "defaultValue": "callcenter-project"
+    },
+    "modelDeploymentName": {
+      "type": "string",
+      "defaultValue": "gpt-5.4"
+    },
+    "modelName": {
+      "type": "string",
+      "defaultValue": "gpt-5.4"
+    },
+    "modelVersion": {
+      "type": "string",
+      "defaultValue": "2026-03-05"
+    },
+    "logAnalyticsName": {
+      "type": "string",
+      "defaultValue": "[format('foundry-hack-logs-{0}', parameters('suffix'))]"
+    },
+    "appInsightsName": {
+      "type": "string",
+      "defaultValue": "[format('foundry-hack-insights-{0}', parameters('suffix'))]"
+    },
+    "searchServiceName": {
+      "type": "string",
+      "defaultValue": "[format('search-hack-{0}', parameters('suffix'))]"
+    },
+    "searchSkuName": {
+      "type": "string",
+      "defaultValue": "basic",
+      "allowedValues": [
+        "basic",
+        "standard"
+      ]
+    },
+    "ragStorageAccountName": {
+      "type": "string",
+      "defaultValue": "[format('stragrag{0}', parameters('suffix'))]"
+    },
+    "ragContainerName": {
+      "type": "string",
+      "defaultValue": "rag-files"
+    },
+    "bingCustomSearchName": {
+      "type": "string",
+      "defaultValue": "[format('bing-custom-hack-{0}', parameters('suffix'))]"
+    },
+    "tags": {
+      "type": "object",
+      "defaultValue": {
+        "environment": "hack"
+      }
+    }
+  },
+  "variables": {
+    "searchServiceContributorRoleId": "7ca78c08-252a-4471-8644-bb5ff32d4ba0",
+    "searchIndexDataContributorRoleId": "8ebe5a00-799e-43f5-93ac-243d3dce84a7",
+    "storageBlobDataContributorRoleId": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
+    "cognitiveServicesUserRoleId": "a97b65f3-24c7-4388-baec-2e87135dc908"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2025-06-01",
+      "name": "[parameters('foundryResourceName')]",
+      "location": "[parameters('location')]",
+      "kind": "AIServices",
+      "sku": {
+        "name": "S0"
+      },
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "customSubDomainName": "[parameters('foundryResourceName')]",
+        "allowProjectManagement": true,
+        "disableLocalAuth": false,
+        "publicNetworkAccess": "Enabled"
+      }
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts/projects",
+      "apiVersion": "2025-06-01",
+      "name": "[format('{0}/{1}', parameters('foundryResourceName'), parameters('projectName'))]",
+      "location": "[parameters('location')]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "displayName": "[parameters('projectName')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Search/searchServices",
+      "apiVersion": "2023-11-01",
+      "name": "[parameters('searchServiceName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('searchSkuName')]"
+      },
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "tags": "[parameters('tags')]",
+      "properties": {
+        "authOptions": {
+          "aadOrApiKey": {
+            "aadAuthFailureMode": "http401WithBearerChallenge"
+          }
+        },
+        "hostingMode": "default",
+        "partitionCount": 1,
+        "publicNetworkAccess": "enabled",
+        "replicaCount": 1
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[resourceId('Microsoft.Search/searchServices', parameters('searchServiceName'))]",
+      "name": "[guid(resourceId('Microsoft.Search/searchServices', parameters('searchServiceName')), resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName')), variables('searchServiceContributorRoleId'))]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('searchServiceContributorRoleId'))]",
+        "principalId": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName')), '2025-06-01', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName'))]",
+        "[resourceId('Microsoft.Search/searchServices', parameters('searchServiceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[resourceId('Microsoft.Search/searchServices', parameters('searchServiceName'))]",
+      "name": "[guid(resourceId('Microsoft.Search/searchServices', parameters('searchServiceName')), resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName')), variables('searchIndexDataContributorRoleId'))]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('searchIndexDataContributorRoleId'))]",
+        "principalId": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName')), '2025-06-01', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName'))]",
+        "[resourceId('Microsoft.Search/searchServices', parameters('searchServiceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[resourceId('Microsoft.Search/searchServices', parameters('searchServiceName'))]",
+      "name": "[guid(resourceId('Microsoft.Search/searchServices', parameters('searchServiceName')), resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('foundryResourceName'), parameters('projectName')), variables('searchServiceContributorRoleId'))]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('searchServiceContributorRoleId'))]",
+        "principalId": "[reference(resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('foundryResourceName'), parameters('projectName')), '2025-06-01', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('foundryResourceName'), parameters('projectName'))]",
+        "[resourceId('Microsoft.Search/searchServices', parameters('searchServiceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[resourceId('Microsoft.Search/searchServices', parameters('searchServiceName'))]",
+      "name": "[guid(resourceId('Microsoft.Search/searchServices', parameters('searchServiceName')), resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('foundryResourceName'), parameters('projectName')), variables('searchIndexDataContributorRoleId'))]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('searchIndexDataContributorRoleId'))]",
+        "principalId": "[reference(resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('foundryResourceName'), parameters('projectName')), '2025-06-01', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('foundryResourceName'), parameters('projectName'))]",
+        "[resourceId('Microsoft.Search/searchServices', parameters('searchServiceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2023-01-01",
+      "name": "[parameters('ragStorageAccountName')]",
+      "location": "[parameters('location')]",
+      "kind": "StorageV2",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "tags": "[parameters('tags')]",
+      "properties": {
+        "allowBlobPublicAccess": false,
+        "minimumTlsVersion": "TLS1_2",
+        "supportsHttpsTrafficOnly": true
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices",
+      "apiVersion": "2023-01-01",
+      "name": "[format('{0}/{1}', parameters('ragStorageAccountName'), 'default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('ragStorageAccountName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2023-01-01",
+      "name": "[format('{0}/{1}/{2}', parameters('ragStorageAccountName'), 'default', parameters('ragContainerName'))]",
+      "properties": {
+        "publicAccess": "None"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('ragStorageAccountName'), 'default')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[resourceId('Microsoft.Storage/storageAccounts', parameters('ragStorageAccountName'))]",
+      "name": "[guid(resourceId('Microsoft.Storage/storageAccounts', parameters('ragStorageAccountName')), resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName')), variables('storageBlobDataContributorRoleId'))]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('storageBlobDataContributorRoleId'))]",
+        "principalId": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName')), '2025-06-01', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('ragStorageAccountName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[resourceId('Microsoft.Storage/storageAccounts', parameters('ragStorageAccountName'))]",
+      "name": "[guid(resourceId('Microsoft.Storage/storageAccounts', parameters('ragStorageAccountName')), resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('foundryResourceName'), parameters('projectName')), variables('storageBlobDataContributorRoleId'))]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('storageBlobDataContributorRoleId'))]",
+        "principalId": "[reference(resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('foundryResourceName'), parameters('projectName')), '2025-06-01', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('foundryResourceName'), parameters('projectName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('ragStorageAccountName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Bing/accounts",
+      "apiVersion": "2020-06-10",
+      "name": "[parameters('bingCustomSearchName')]",
+      "location": "global",
+      "kind": "Bing.GroundingCustomSearch",
+      "sku": {
+        "name": "G2"
+      },
+      "tags": "[parameters('tags')]",
+      "properties": {
+        "statisticsEnabled": false
+      }
+    },
+    {
+      "type": "Microsoft.Bing/accounts/customSearchConfigurations",
+      "apiVersion": "2025-05-01-preview",
+      "name": "[format('{0}/{1}', parameters('bingCustomSearchName'), 'default')]",
+      "properties": {},
+      "dependsOn": [
+        "[resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName'))]",
+      "name": "[guid(resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName')), resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName')), variables('cognitiveServicesUserRoleId'))]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('cognitiveServicesUserRoleId'))]",
+        "principalId": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName')), '2025-06-01', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName'))]",
+      "name": "[guid(resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName')), resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('foundryResourceName'), parameters('projectName')), variables('cognitiveServicesUserRoleId'))]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('cognitiveServicesUserRoleId'))]",
+        "principalId": "[reference(resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('foundryResourceName'), parameters('projectName')), '2025-06-01', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('foundryResourceName'), parameters('projectName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts/connections",
+      "apiVersion": "2025-06-01",
+      "name": "[format('{0}/{1}', parameters('foundryResourceName'), 'bing-custom-grounding-conn')]",
+      "properties": {
+        "category": "GroundingWithCustomSearch",
+        "target": "[reference(resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName')), '2020-06-10').endpoint]",
+        "authType": "ApiKey",
+        "credentials": {
+          "key": "[listKeys(resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName')), '2020-06-10').key1]"
+        },
+        "isSharedToAll": true,
+        "metadata": {
+          "ApiType": "Azure",
+          "ResourceId": "[resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName'))]",
+          "Location": "global",
+          "type": "bing_custom_search"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName'))]",
+        "[extensionResourceId(resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName')), 'Microsoft.Authorization/roleAssignments', guid(resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName')), resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName')), variables('cognitiveServicesUserRoleId')))]",
+        "[extensionResourceId(resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName')), 'Microsoft.Authorization/roleAssignments', guid(resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName')), resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('foundryResourceName'), parameters('projectName')), variables('cognitiveServicesUserRoleId')))]"
+      ]
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts/deployments",
+      "apiVersion": "2025-06-01",
+      "name": "[format('{0}/{1}', parameters('foundryResourceName'), parameters('modelDeploymentName'))]",
+      "sku": {
+        "name": "GlobalStandard",
+        "capacity": 10
+      },
+      "properties": {
+        "model": {
+          "format": "OpenAI",
+          "name": "[parameters('modelName')]",
+          "version": "[parameters('modelVersion')]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('foundryResourceName'), parameters('projectName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2023-09-01",
+      "name": "[parameters('logAnalyticsName')]",
+      "location": "[parameters('location')]",
+      "tags": "[parameters('tags')]",
+      "properties": {
+        "retentionInDays": 30
+      }
+    },
+    {
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2020-02-02",
+      "name": "[parameters('appInsightsName')]",
+      "location": "[parameters('location')]",
+      "kind": "web",
+      "tags": "[parameters('tags')]",
+      "properties": {
+        "Application_Type": "web",
+        "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts/connections",
+      "apiVersion": "2025-06-01",
+      "name": "[format('{0}/{1}', parameters('foundryResourceName'), 'appinsights-conn')]",
+      "properties": {
+        "category": "AppInsights",
+        "target": "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]",
+        "authType": "ApiKey",
+        "credentials": {
+          "key": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').ConnectionString]"
+        },
+        "isSharedToAll": true,
+        "metadata": {
+          "ApiType": "Azure",
+          "ResourceId": "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "subscriptionId": {
+      "type": "string",
+      "value": "[subscription().id]"
+    },
+    "resourceGroupName": {
+      "type": "string",
+      "value": "[resourceGroup().name]"
+    },
+    "foundryResourceName": {
+      "type": "string",
+      "value": "[parameters('foundryResourceName')]"
+    },
+    "projectName": {
+      "type": "string",
+      "value": "[parameters('projectName')]"
+    },
+    "foundryEndpoint": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('foundryResourceName')), '2025-06-01').endpoint]"
+    },
+    "projectConnectionString": {
+      "type": "string",
+      "value": "[format('https://{0}.services.ai.azure.com/api/projects/{1}', parameters('foundryResourceName'), parameters('projectName'))]"
+    },
+    "modelDeploymentName": {
+      "type": "string",
+      "value": "[parameters('modelDeploymentName')]"
+    },
+    "searchServiceName": {
+      "type": "string",
+      "value": "[parameters('searchServiceName')]"
+    },
+    "searchServiceEndpoint": {
+      "type": "string",
+      "value": "[format('https://{0}.search.windows.net', parameters('searchServiceName'))]"
+    },
+    "searchResourceId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Search/searchServices', parameters('searchServiceName'))]"
+    },
+    "appInsightsConnectionString": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').ConnectionString]"
+    },
+    "appInsightsInstrumentationKey": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').InstrumentationKey]"
+    },
+    "ragStorageAccountName": {
+      "type": "string",
+      "value": "[parameters('ragStorageAccountName')]"
+    },
+    "ragStorageAccountId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Storage/storageAccounts', parameters('ragStorageAccountName'))]"
+    },
+    "ragStorageBlobEndpoint": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('ragStorageAccountName')), '2023-01-01').primaryEndpoints.blob]"
+    },
+    "ragContainerName": {
+      "type": "string",
+      "value": "[parameters('ragContainerName')]"
+    },
+    "bingCustomSearchName": {
+      "type": "string",
+      "value": "[parameters('bingCustomSearchName')]"
+    },
+    "bingCustomSearchResourceId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Bing/accounts', parameters('bingCustomSearchName'))]"
+    },
+    "bingCustomSearchConfigName": {
+      "type": "string",
+      "value": "default"
+    },
+    "bingCustomSearchConnectionName": {
+      "type": "string",
+      "value": "bing-custom-grounding-conn"
+    }
+  }
+}
