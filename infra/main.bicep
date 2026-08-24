@@ -2,15 +2,15 @@
 param location string = 'swedencentral'
 
 @description('Unique suffix used in globally unique resource names.')
-param suffix string = take(uniqueString(resourceGroup().id), 8)
+param suffix string = 'frontier-${take(uniqueString(resourceGroup().id), 8)}'
 
-param foundryResourceName string = 'foundry-hack-${suffix}'
-param projectName string = 'callcenter-project'
+param foundryResourceName string = 'aif-${suffix}'
+param projectName string = 'prj-${suffix}'
 param modelDeploymentName string = 'gpt-5.4'
 param modelName string = 'gpt-5.4'
 param modelVersion string = '2026-03-05'
-param logAnalyticsName string = 'foundry-hack-logs-${suffix}'
-param appInsightsName string = 'foundry-hack-insights-${suffix}'
+param logAnalyticsName string = 'logs-${suffix}'
+param appInsightsName string = 'insights-${suffix}'
 param tags object = {
   environment: 'hack'
 }

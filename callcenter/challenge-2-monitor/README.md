@@ -56,7 +56,7 @@ APPLICATIONINSIGHTS_CONNECTION_STRING=InstrumentationKey=xxx;...
 
 The deployment script automatically links Application Insights to your Foundry project. To confirm it worked, open the [Microsoft Foundry portal](https://ai.azure.com/nextgen), navigate to your project, and click **Tracing** in the left sidebar — you should see the Application Insights resource already connected.
 
-If you see a **"Create or connect an App Insights resource to get started"** banner, automatic connection was blocked by a tenant policy. Fix it with one click: click **Connect**, select the `foundry-hack-insights-<suffix>` resource from the dropdown, and confirm. You only need to do this once.
+If you see a **"Create or connect an App Insights resource to get started"** banner, automatic connection was blocked by a tenant policy. Fix it with one click: click **Connect**, select the `insights-<suffix>` resource from the dropdown, and confirm. You only need to do this once.
 
 ## Get started
 
@@ -98,7 +98,7 @@ When the script finishes, your traces will be active. Explore them in the Azure 
 
 ### Step 2 - Application Insights
 
-1. Open [portal.azure.com](https://portal.azure.com) → search for **Application Insights** → open `foundry-hack-insights-<suffix>`
+1. Open [portal.azure.com](https://portal.azure.com) → search for **Application Insights** → open `insights-<suffix>`
 2. Left sidebar → **Investigate** → **Search**
 
 ![Application Insights Search](./images/screen22.png)
