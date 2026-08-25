@@ -7,7 +7,7 @@ param(
     [string] $UserPrefix = 'hack-dev',
 
     [Parameter()]
-    [switch] $NoWait,
+    [bool] $NoWait = $true,
 
     [Parameter()]
     [string] $SubscriptionId
