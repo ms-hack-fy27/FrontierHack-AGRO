@@ -14,26 +14,11 @@ param modelName string = 'gpt-5.4'
 param modelVersion string = '2026-03-05'
 param logAnalyticsName string = 'foundry-hack-logs-${suffix}'
 param appInsightsName string = 'foundry-hack-insights-${suffix}'
-param searchServiceName string = 'search-hack-${suffix}'
-
-@allowed([
-  'basic'
-  'standard'
-])
-param searchSkuName string = 'basic'
-
-param ragStorageAccountName string = 'stragrag${suffix}'
-param ragContainerName string = 'rag-files'
 param bingCustomSearchName string = 'bing-custom-hack-${suffix}'
 
 param tags object = {
   environment: 'hack'
 }
-
-var searchServiceContributorRoleId = '7ca78c08-252a-4471-8644-bb5ff32d4ba0'
-var searchIndexDataContributorRoleId = '8ebe5a00-799e-43f5-93ac-243d3dce84a7'
-var storageBlobDataContributorRoleId = 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
-var cognitiveServicesUserRoleId = 'a97b65f3-24c7-4388-baec-2e87135dc908'
 
 resource foundry 'Microsoft.CognitiveServices/accounts@2025-06-01' = {
   name: foundryResourceName
@@ -57,112 +42,6 @@ resource project 'Microsoft.CognitiveServices/accounts/projects@2025-06-01' = {
   properties: { displayName: projectName }
 }
 
-resource searchService 'Microsoft.Search/searchServices@2023-11-01' = {
-  name: searchServiceName
-  location: location
-  sku: { name: searchSkuName }
-  identity: { type: 'SystemAssigned' }
-  tags: tags
-  properties: {
-    authOptions: {
-      aadOrApiKey: {
-        aadAuthFailureMode: 'http401WithBearerChallenge'
-      }
-    }
-    hostingMode: 'default'
-    partitionCount: 1
-    publicNetworkAccess: 'enabled'
-    replicaCount: 1
-  }
-}
-
-resource foundrySearchServiceContributorRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(searchService.id, foundry.id, searchServiceContributorRoleId)
-  scope: searchService
-  properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', searchServiceContributorRoleId)
-    principalId: foundry.identity.principalId
-    principalType: 'ServicePrincipal'
-  }
-}
-
-resource foundrySearchDataContributorRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(searchService.id, foundry.id, searchIndexDataContributorRoleId)
-  scope: searchService
-  properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', searchIndexDataContributorRoleId)
-    principalId: foundry.identity.principalId
-    principalType: 'ServicePrincipal'
-  }
-}
-
-resource projectSearchServiceContributorRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(searchService.id, project.id, searchServiceContributorRoleId)
-  scope: searchService
-  properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', searchServiceContributorRoleId)
-    principalId: project.identity.principalId
-    principalType: 'ServicePrincipal'
-  }
-}
-
-resource projectSearchDataContributorRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(searchService.id, project.id, searchIndexDataContributorRoleId)
-  scope: searchService
-  properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', searchIndexDataContributorRoleId)
-    principalId: project.identity.principalId
-    principalType: 'ServicePrincipal'
-  }
-}
-
-resource ragStorageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
-  name: ragStorageAccountName
-  location: location
-  kind: 'StorageV2'
-  sku: { name: 'Standard_LRS' }
-  identity: { type: 'SystemAssigned' }
-  tags: tags
-  properties: {
-    allowBlobPublicAccess: false
-    minimumTlsVersion: 'TLS1_2'
-    supportsHttpsTrafficOnly: true
-  }
-}
-
-resource ragBlobService 'Microsoft.Storage/storageAccounts/blobServices@2023-01-01' = {
-  parent: ragStorageAccount
-  name: 'default'
-}
-
-resource ragContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = {
-  parent: ragBlobService
-  name: ragContainerName
-  properties: {
-    publicAccess: 'None'
-  }
-}
-
-resource foundryRagStorageBlobDataContributorRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(ragStorageAccount.id, foundry.id, storageBlobDataContributorRoleId)
-  scope: ragStorageAccount
-  properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', storageBlobDataContributorRoleId)
-    principalId: foundry.identity.principalId
-    principalType: 'ServicePrincipal'
-  }
-}
-
-resource projectRagStorageBlobDataContributorRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(ragStorageAccount.id, project.id, storageBlobDataContributorRoleId)
-  scope: ragStorageAccount
-  properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', storageBlobDataContributorRoleId)
-    principalId: project.identity.principalId
-    principalType: 'ServicePrincipal'
-  }
-}
-
 resource bingCustomSearch 'Microsoft.Bing/accounts@2020-06-10' = {
   name: bingCustomSearchName
   location: 'global'
@@ -178,26 +57,6 @@ resource bingCustomSearchConfig 'Microsoft.Bing/accounts/customSearchConfigurati
   parent: bingCustomSearch
   name: 'default'
   properties: {}
-}
-
-resource foundryBingGroundingRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(bingCustomSearch.id, foundry.id, cognitiveServicesUserRoleId)
-  scope: bingCustomSearch
-  properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', cognitiveServicesUserRoleId)
-    principalId: foundry.identity.principalId
-    principalType: 'ServicePrincipal'
-  }
-}
-
-resource projectBingGroundingRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(bingCustomSearch.id, project.id, cognitiveServicesUserRoleId)
-  scope: bingCustomSearch
-  properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', cognitiveServicesUserRoleId)
-    principalId: project.identity.principalId
-    principalType: 'ServicePrincipal'
-  }
 }
 
 // Bing keys are the auth mechanism required by the GroundingWithCustomSearch connection category
@@ -217,10 +76,6 @@ resource bingCustomSearchConnection 'Microsoft.CognitiveServices/accounts/connec
       type: 'bing_custom_search'
     }
   }
-  dependsOn: [
-    foundryBingGroundingRole
-    projectBingGroundingRole
-  ]
 }
 
 resource modelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2025-06-01' = {
@@ -281,15 +136,8 @@ output projectName string = project.name
 output foundryEndpoint string = foundry.properties.endpoint
 output projectConnectionString string = 'https://${foundry.name}.services.ai.azure.com/api/projects/${project.name}'
 output modelDeploymentName string = modelDeployment.name
-output searchServiceName string = searchService.name
-output searchServiceEndpoint string = 'https://${searchService.name}.search.windows.net'
-output searchResourceId string = searchService.id
 output appInsightsConnectionString string = appInsights.properties.ConnectionString
 output appInsightsInstrumentationKey string = appInsights.properties.InstrumentationKey
-output ragStorageAccountName string = ragStorageAccount.name
-output ragStorageAccountId string = ragStorageAccount.id
-output ragStorageBlobEndpoint string = ragStorageAccount.properties.primaryEndpoints.blob
-output ragContainerName string = ragContainer.name
 output bingCustomSearchName string = bingCustomSearch.name
 output bingCustomSearchResourceId string = bingCustomSearch.id
 output bingCustomSearchConfigName string = bingCustomSearchConfig.name
