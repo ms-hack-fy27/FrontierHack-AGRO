@@ -1,6 +1,6 @@
 """
 Challenge 1: Build Agents -- SDK Track
-Agents for GreenRise AgriTech smart farm crop-zone health monitoring.
+Agents for GreenRise AgroTech smart farm crop-zone health monitoring.
 """
 
 import json
@@ -35,7 +35,7 @@ def _load_zones() -> list[dict]:
 
 
 def check_health_monitor(zone_id: str) -> str:
-    """Compare one crop zone's four readings with its configured thresholds."""
+    """Compare one GreenRise AgroTech crop zone's four readings with its configured thresholds."""
     zone = next(
         (item for item in _load_zones() if item["zone_id"] == zone_id or item["name"] == zone_id),
         None,
@@ -80,7 +80,7 @@ def check_health_monitor(zone_id: str) -> str:
 
 CHECK_CROP_HEALTH_TOOL = FunctionTool(
     name="check_health_monitor",
-    description="Compare a crop zone's soil moisture, temperature, humidity, and pH with its thresholds and return threshold analysis.",
+    description="Compare a GreenRise AgroTech crop zone's soil moisture, temperature, humidity, and pH with its thresholds and return threshold analysis.",
     parameters={
         "type": "object",
         "properties": {
@@ -103,7 +103,7 @@ class CropHealthMonitorAgent:
         self.client = AIProjectClient(endpoint=PROJECT_CONNECTION_STRING, credential=DefaultAzureCredential())
         self.openai = self.client.get_openai_client()
         instructions = """
-You are the crop health monitor for GreenRise AgriTech. Always use check_health_monitor for every requested zone.
+You are the crop health monitor for GreenRise AgroTech. Always use check_health_monitor for every requested zone.
 Return a structured status for each zone with zone ID, crop, status (normal, warning, or critical),
 all four metrics, threshold comparisons, anomalies, and a recommended immediate next step.
 Use the reported status as a signal but let the threshold analysis ground your explanation. Never invent readings.
@@ -149,7 +149,7 @@ class AgriculturalAdvisorAgent:
         self.client = AIProjectClient(endpoint=PROJECT_CONNECTION_STRING, credential=DefaultAzureCredential())
         self.openai = self.client.get_openai_client()
         instructions = """
-You are an agricultural advisor for GreenRise AgriTech. You do not have tools; reason only from the
+You are an agricultural advisor for GreenRise AgroTech. You do not have tools; reason only from the
 crop-zone health analysis supplied in the user message. Apply these domain patterns:
 - low soil moisture plus high temperature indicates irrigation stress;
 - high humidity plus low pH indicates fungal or disease risk;

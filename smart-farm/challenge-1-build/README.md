@@ -4,11 +4,11 @@ Time: about 30 minutes
 
 ## Objectives
 
-Create a tool-grounded `smart-farm-monitor-agent` and a tool-free `smart-farm-advisor-agent`. Run them against five realistic crop zones and inspect the structured status output.
+Create a tool-grounded `smart-farm-monitor-agent` and a tool-free `smart-farm-advisor-agent` for GreenRise AgroTech. Run them against five realistic crop zones and inspect the structured status output.
 
 ## Data and tool
 
-Open `smart_farm_data.json`. It contains exactly five zones and four metrics per zone: `soil_moisture`, `temperature`, `humidity`, and `ph_level`. Every metric has `min` and `max` thresholds. The snapshot has two warnings, one critical zone, and two normal zones.
+Open `smart_farm_data.json`. It contains exactly five GreenRise AgroTech zones and four metrics per zone: `soil_moisture`, `temperature`, `humidity`, and `ph_level`. Every metric has `min` and `max` thresholds. The snapshot has two warnings, one critical zone, and two normal zones.
 
 `check_health_monitor(zone_id)` reads this file and returns JSON with every metric, its threshold, an inclusive range result, and an anomaly deviation. The monitor agent must call this tool for each requested zone.
 
@@ -24,7 +24,7 @@ cd smart-farm\challenge-1-build
 python agents.py
 ```
 
-The script creates both hosted agent versions, checks all five zones, forwards the monitor output to the advisor, and deletes the temporary versions and conversations when it exits.
+The script creates both hosted agent versions, checks all five GreenRise AgroTech zones, forwards the monitor output to the advisor, and deletes the temporary versions and conversations when it exits.
 
 ## What to inspect
 
