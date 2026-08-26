@@ -47,6 +47,7 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Azure Infrastructure: infra.md
   - 📞 Call Center:
       - Overview: callcenter/README.md
       - Challenge 0 — Setup: callcenter/challenge-0-setup/README.md

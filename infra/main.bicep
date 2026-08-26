@@ -9,6 +9,7 @@ param projectName string = 'prj-${suffix}'
 param modelDeploymentName string = 'gpt-5.4'
 param modelName string = 'gpt-5.4'
 param modelVersion string = '2026-03-05'
+param bingCustomSearchName string = 'bing-custom-hack-${suffix}'
 param logAnalyticsName string = 'logs-${suffix}'
 param appInsightsName string = 'insights-${suffix}'
 param tags object = {
@@ -35,6 +36,42 @@ resource project 'Microsoft.CognitiveServices/accounts/projects@2025-06-01' = {
   location: location
   identity: { type: 'SystemAssigned' }
   properties: { displayName: projectName }
+}
+
+resource bingCustomSearch 'Microsoft.Bing/accounts@2020-06-10' = {
+  name: bingCustomSearchName
+  location: 'global'
+  kind: 'Bing.GroundingCustomSearch'
+  sku: { name: 'G2' }
+  tags: tags
+  properties: {
+    statisticsEnabled: false
+  }
+}
+
+resource bingCustomSearchConfig 'Microsoft.Bing/accounts/customSearchConfigurations@2025-05-01-preview' = {
+  parent: bingCustomSearch
+  name: 'default'
+  properties: {}
+}
+
+// Bing keys are the auth mechanism required by the GroundingWithCustomSearch connection category
+resource bingCustomSearchConnection 'Microsoft.CognitiveServices/accounts/connections@2025-06-01' = {
+  parent: foundry
+  name: 'bing-custom-grounding-conn'
+  properties: {
+    category: 'GroundingWithCustomSearch'
+    target: bingCustomSearch.properties.endpoint
+    authType: 'ApiKey'
+    credentials: { key: bingCustomSearch.listKeys().key1 }
+    isSharedToAll: true
+    metadata: {
+      ApiType: 'Azure'
+      ResourceId: bingCustomSearch.id
+      Location: 'global'
+      type: 'bing_custom_search'
+    }
+  }
 }
 
 resource modelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2025-06-01' = {
@@ -97,3 +134,7 @@ output projectConnectionString string = 'https://${foundry.name}.services.ai.azu
 output modelDeploymentName string = modelDeployment.name
 output appInsightsConnectionString string = appInsights.properties.ConnectionString
 output appInsightsInstrumentationKey string = appInsights.properties.InstrumentationKey
+output bingCustomSearchName string = bingCustomSearch.name
+output bingCustomSearchResourceId string = bingCustomSearch.id
+output bingCustomSearchConfigName string = bingCustomSearchConfig.name
+output bingCustomSearchConnectionName string = bingCustomSearchConnection.name
