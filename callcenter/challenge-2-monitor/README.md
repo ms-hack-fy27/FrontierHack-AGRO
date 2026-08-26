@@ -56,7 +56,7 @@ APPLICATIONINSIGHTS_CONNECTION_STRING=InstrumentationKey=xxx;...
 
 The deployment script automatically links Application Insights to your Foundry project. To confirm it worked, open the [Microsoft Foundry portal](https://ai.azure.com/nextgen), navigate to your project, and click **Tracing** in the left sidebar — you should see the Application Insights resource already connected.
 
-If you see a **"Create or connect an App Insights resource to get started"** banner, automatic connection was blocked by a tenant policy. Fix it with one click: click **Connect**, select the `foundry-hack-insights-<suffix>` resource from the dropdown, and confirm. You only need to do this once.
+If you see a **"Create or connect an App Insights resource to get started"** banner, automatic connection was blocked by a tenant policy. Fix it with one click: click **Connect**, select the `insights-<suffix>` resource from the dropdown, and confirm. You only need to do this once.
 
 ## Get started
 
@@ -74,7 +74,7 @@ When the script finishes, your traces will be active. Explore them in the Azure 
 ### Step 1: Microsoft Foundry portal
 
 1. Open the [Microsoft Foundry Portal](https://ai.azure.com/nextgen) → open your project
-2. Click `resolution-advisor-agent` -> **Traces**
+2. Click `call-center-advisor-agent` -> **Traces**
 
    - **Traces panel** — The **Conversations** tab lists each agent run as a row, showing the conversation ID, trace ID, response ID, status, creation time, duration, input/output tokens, estimated cost, evaluation results, and agent version. Use the search box and **Status**, **Duration**, **Tokens**, and **Estimated Cost** filters (along with the date-range selector) to narrow the results, switch to the **Responses** tab to view individual model responses, or click **Create dataset** to turn these traces into an evaluation dataset.
 
@@ -90,7 +90,7 @@ When the script finishes, your traces will be active. Explore them in the Azure 
    - **Token usage** and **latency** per span
    - The model's full prompt and completion when `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true`
 5. Use the **timeline view** to find slow spans and the **details panel** to inspect individual messages
-6. Click `resolution-advisor-agent` -> **Monitor**
+6. Click `call-center-advisor-agent` -> **Monitor**
 
    - **Monitor panel** — The **Overview** tab provides a quick health summary with **Operational metrics** (estimated cost and total token usage), **Evaluations**, **Scheduled evaluations**, and **Scheduled red teaming run issues** cards. Below, the **Operational metrics** charts show **Agent runs** (how often the agent was called) and **Runs and token metrics** (calls versus tokens consumed) for the selected range. Use the **Tools** tab, date filters, **Settings**, or **Open in Azure Monitor** for deeper analysis.
 
@@ -98,7 +98,7 @@ When the script finishes, your traces will be active. Explore them in the Azure 
 
 ### Step 2 - Application Insights
 
-1. Open [portal.azure.com](https://portal.azure.com) → search for **Application Insights** → open `foundry-hack-insights-<suffix>`
+1. Open [portal.azure.com](https://portal.azure.com) → search for **Application Insights** → open `insights-<suffix>`
 2. Left sidebar → **Investigate** → **Search**
 
 ![Application Insights Search](./images/screen22.png)
@@ -118,7 +118,7 @@ You will see the **end-to-end transaction trace**, showing:
 ![alt text](./images/agentspane.png)
     - Use the **Time range** and **Agent** filters at the top to narrow the view, switch between the **Dashboard** and **All agents** tabs, or click **Explore in Grafana** for deeper analysis.
     - **Agent operational metrics**:
-       - **Agent Runs** — total invocations broken down by agent (for example, `resolution-advisor-agent`, `intent-classification-agent`). Click **View Traces with Agent Runs** to access the underlying traces.
+       - **Agent Runs** — total invocations broken down by agent (for example, `call-center-advisor-agent`, `call-center-intent-classifier-agent`). Click **View Traces with Agent Runs** to access the underlying traces.
        - **Gen AI Errors** — shows traces with GenAI errors in the selected window; a green check means none were found.
        - **Tool Calls** — a table of each tool (for example, `multi_tool_use.parallel`) with its error count, average duration, and number of calls, so you can identify slow or failing tools.
        - **Models** — a breakdown by model (for example, `gpt-5.4-2026-03-05`, `gpt-5.4`) showing errors, average duration, and call count.

@@ -25,8 +25,8 @@ PROJECT_CONNECTION_STRING = os.getenv("PROJECT_CONNECTION_STRING")
 MODEL_DEPLOYMENT_NAME = os.getenv("MODEL_DEPLOYMENT_NAME", "gpt-5.4")
 CALL_DATA_PATH = Path(__file__).resolve().parent.parent / "challenge-1-build" / "call_data.json"
 
-INTENT_AGENT_NAME = "intent-classification-agent"
-RESOLUTION_AGENT_NAME = "resolution-advisor-agent"
+INTENT_AGENT_NAME = "call-center-intent-classifier-agent"
+RESOLUTION_AGENT_NAME = "call-center-advisor-agent"
 # Set WORKFLOW_AGENT_NAME in .env after creating the workflow in the Foundry portal
 WORKFLOW_AGENT_NAME = os.getenv("WORKFLOW_AGENT_NAME", "")
 
@@ -313,7 +313,7 @@ def create_workflow_agent(workflow_agent_name: str = "callcenter-triage-workflow
         "    - kind: InvokeAzureAgent\n"
         "      id: step_classify\n"
         "      agent:\n"
-        "        name: intent-classification-agent\n"
+        "        name: call-center-intent-classifier-agent\n"
         "      conversationId: =System.ConversationId\n"
         "      input:\n"
         '        messages: ""\n'
@@ -322,7 +322,7 @@ def create_workflow_agent(workflow_agent_name: str = "callcenter-triage-workflow
         "    - kind: InvokeAzureAgent\n"
         "      id: step_resolve\n"
         "      agent:\n"
-        "        name: resolution-advisor-agent\n"
+        "        name: call-center-advisor-agent\n"
         "      conversationId: =System.ConversationId\n"
         "      input:\n"
         '        messages: ""\n'
@@ -357,7 +357,7 @@ def run_portal_workflow(workflow_name: str) -> str:
     """
     Invoke a WorkflowAgentDefinition agent via the Responses API.
 
-    Embeds the call data directly in the input so the intent-classification-agent
+    Embeds the call data directly in the input so the call-center-intent-classifier-agent
     can classify without needing to call the lookup_customer tool (workflow steps
     cannot handle function-call loops). Both agents execute sequentially.
 
@@ -383,8 +383,8 @@ def run_portal_workflow(workflow_name: str) -> str:
         print(f"  {portal_base.replace('services.ai.azure.com', 'ai.azure.com')}/build/agents")
 
     print(f"\n  Workflow steps:")
-    print(f"    1. intent-classification-agent  — classify all calls by intent, priority, sentiment")
-    print(f"    2. resolution-advisor-agent     — recommend resolution for high-priority calls")
+    print(f"    1. call-center-intent-classifier-agent  — classify all calls by intent, priority, sentiment")
+    print(f"    2. call-center-advisor-agent     — recommend resolution for high-priority calls")
 
     # Embed call data in the input so agents don't need tool calls
     with open(CALL_DATA_PATH, "r") as f:

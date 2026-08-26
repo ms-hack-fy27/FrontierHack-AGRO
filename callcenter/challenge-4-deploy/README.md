@@ -43,7 +43,7 @@ print_shift_report()            <-- Consolidated Shift Report
 
 Open [deploy.py](./deploy.py) and review:
 
-- **`ensure_agents_deployed()`** — lists existing agents and creates `intent-classification-agent` and `resolution-advisor-agent` if they are not present
+- **`ensure_agents_deployed()`** — lists existing agents and creates `call-center-intent-classifier-agent` and `call-center-advisor-agent` if they are not present
 - **`run_intent_classification()`** — calls the intent agent and handles the `lookup_customer` function-call loop
 - **`run_resolution_advisory()`** — calls the resolution agent for each high-priority call
 - **`run_call_center_workflow()`** — orchestrates all steps and returns the consolidated report
@@ -58,8 +58,8 @@ python deploy.py
 Expected output:
 ```
 === Step 1: Ensure Agents Are Deployed ===
-  Found existing: intent-classification-agent
-  Found existing: resolution-advisor-agent
+  Found existing: call-center-intent-classifier-agent
+  Found existing: call-center-advisor-agent
 
 === Step 2a: Intent Classification ===
   CALL-001: billing_dispute (HIGH) — frustrated, retention risk HIGH
@@ -92,8 +92,8 @@ NOVATEL CALL CENTER — SHIFT REPORT
 2. Select your project
 3. Select **Build** → **Agents** in the top bar
 4. Confirm that both agents appear:
-   - `intent-classification-agent`
-   - `resolution-advisor-agent`
+   - `call-center-intent-classifier-agent`
+   - `call-center-advisor-agent`
 
 
 ### Step 4: Create the workflow in the portal designer
@@ -107,7 +107,7 @@ NOVATEL CALL CENTER — SHIFT REPORT
 
    ![add agent](./images/add-agent.png)
 
-4. In the **Select an agent** selector, select `intent-classification-agent`
+4. In the **Select an agent** selector, select `call-center-intent-classifier-agent`
 
    ![select agent](./images/select-agent.png)
 
@@ -115,7 +115,7 @@ NOVATEL CALL CENTER — SHIFT REPORT
    \
     ![next node agent](./images/next-node-agent.png)
 
-6. Select the new agent node on the canvas and, in the **Select and agent** selector, select `resolution-advisor-agent`
+6. Select the new agent node on the canvas and, in the **Select and agent** selector, select `call-center-advisor-agent`
 
    ![select agent 2](./images/select-agent-2.png) 
 
