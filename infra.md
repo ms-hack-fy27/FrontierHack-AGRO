@@ -89,7 +89,7 @@ The Application Insights resource is workspace-based and uses the Log Analytics 
 
 ## Scope and known gaps
 
-- **Azure AI Search is not currently provisioned.** [`PLAN_AZURE_SEARCH_INTEGRATION.md`](PLAN_AZURE_SEARCH_INTEGRATION.md) describes a proposed integration, but `infra/main.bicep` contains no `Microsoft.Search/searchServices` resource or Search connection.
+- **Azure AI Search is not currently provisioned.** `infra/main.bicep` contains no `Microsoft.Search/searchServices` resource or Search connection.
 - The Bicep compiler reports `BCP081` warnings for the Bing resource API types because type metadata is unavailable. The template still builds successfully, but deployment should be smoke-tested after API-version changes.
 - The template exposes telemetry connection values as deployment outputs so the post-provision hook can create `.env`. Keep deployment output logs private.
 - The model name and version are hard-coded defaults. They can be changed by passing Bicep parameters through the `azd` environment when the target model is available in the selected region and subscription.
