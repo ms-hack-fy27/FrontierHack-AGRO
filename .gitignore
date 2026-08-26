@@ -33,3 +33,14 @@ site/
 
 # Workshop solutions
 challenge-*/sdk-track/solutions/
+
+# azd / Azure Developer CLI
+.azure/
+next-steps.md
+*.log
+
+# Terraform (se aplicável)
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
