@@ -1,0 +1,575 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "GreenRise AgriTech Smart Farm API",
+    "description": "Read-only REST API for crop-zone sensor data (soil moisture, temperature, humidity and pH) at the Salinas Valley Demonstration Farm. Every resource can be queried for a single zone/metric or for all of them.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Current server"
+    }
+  ],
+  "paths": {
+    "/farm": {
+      "get": {
+        "tags": [
+          "Farm"
+        ],
+        "summary": "Get full farm snapshot",
+        "description": "Returns farm metadata and every crop zone with its readings and thresholds.",
+        "operationId": "get_full_farm_farm_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Farm"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/zones": {
+      "get": {
+        "tags": [
+          "Zones"
+        ],
+        "summary": "List zones",
+        "description": "Returns all crop zones, or a single zone when `zone_id` is provided.",
+        "operationId": "list_zones_zones_get",
+        "parameters": [
+          {
+            "name": "zone_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Optional zone id to filter a single zone (e.g. ZONE-ALPHA). Omit to get all zones.",
+              "title": "Zone Id"
+            },
+            "description": "Optional zone id to filter a single zone (e.g. ZONE-ALPHA). Omit to get all zones."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Zone"
+                  },
+                  "title": "Response List Zones Zones Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Zone not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/zones/{zone_id}": {
+      "get": {
+        "tags": [
+          "Zones"
+        ],
+        "summary": "Get a single zone",
+        "description": "Returns the full record for one crop zone identified by `zone_id`.",
+        "operationId": "get_single_zone_zones__zone_id__get",
+        "parameters": [
+          {
+            "name": "zone_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Zone identifier, e.g. ZONE-ALPHA",
+              "title": "Zone Id"
+            },
+            "description": "Zone identifier, e.g. ZONE-ALPHA"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Zone"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Zone not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/zones/{zone_id}/readings": {
+      "get": {
+        "tags": [
+          "Readings"
+        ],
+        "summary": "Get readings for a zone",
+        "description": "Returns all sensor readings for a zone, or a single metric reading when `metric` is provided.",
+        "operationId": "get_zone_readings_zones__zone_id__readings_get",
+        "parameters": [
+          {
+            "name": "zone_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Zone identifier, e.g. ZONE-ALPHA",
+              "title": "Zone Id"
+            },
+            "description": "Zone identifier, e.g. ZONE-ALPHA"
+          },
+          {
+            "name": "metric",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/MetricName"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Optional metric name to filter a single reading. Omit to get all readings.",
+              "title": "Metric"
+            },
+            "description": "Optional metric name to filter a single reading. Omit to get all readings."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MetricReading"
+                  },
+                  "title": "Response Get Zone Readings Zones  Zone Id  Readings Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Zone or metric not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/crops": {
+      "get": {
+        "tags": [
+          "Crops"
+        ],
+        "summary": "List crops",
+        "description": "Returns the crop grown in every zone, or a single zone's crop when `crop` is provided.",
+        "operationId": "list_crops_crops_get",
+        "parameters": [
+          {
+            "name": "crop",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Optional crop name (case-insensitive, partial match) to filter results. Omit to get all crops.",
+              "title": "Crop"
+            },
+            "description": "Optional crop name (case-insensitive, partial match) to filter results. Omit to get all crops."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CropSummary"
+                  },
+                  "title": "Response List Crops Crops Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CropSummary": {
+        "properties": {
+          "crop": {
+            "type": "string",
+            "title": "Crop",
+            "description": "Crop name."
+          },
+          "zone_id": {
+            "type": "string",
+            "title": "Zone Id",
+            "description": "Zone growing this crop."
+          },
+          "zone_name": {
+            "type": "string",
+            "title": "Zone Name",
+            "description": "Zone display name."
+          }
+        },
+        "type": "object",
+        "required": [
+          "crop",
+          "zone_id",
+          "zone_name"
+        ],
+        "title": "CropSummary"
+      },
+      "ErrorResponse": {
+        "properties": {
+          "detail": {
+            "type": "string",
+            "title": "Detail",
+            "description": "Human readable error message."
+          }
+        },
+        "type": "object",
+        "required": [
+          "detail"
+        ],
+        "title": "ErrorResponse"
+      },
+      "Farm": {
+        "properties": {
+          "farm": {
+            "type": "string",
+            "title": "Farm",
+            "description": "Farm name."
+          },
+          "site": {
+            "type": "string",
+            "title": "Site",
+            "description": "Site/demonstration location name."
+          },
+          "timestamp": {
+            "type": "string",
+            "title": "Timestamp",
+            "description": "ISO-8601 timestamp of the data snapshot."
+          },
+          "zones": {
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            },
+            "type": "array",
+            "title": "Zones",
+            "description": "All crop zones monitored on the farm."
+          }
+        },
+        "type": "object",
+        "required": [
+          "farm",
+          "site",
+          "timestamp",
+          "zones"
+        ],
+        "title": "Farm"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "MetricName": {
+        "type": "string",
+        "enum": [
+          "soil_moisture",
+          "temperature",
+          "humidity",
+          "ph_level"
+        ],
+        "title": "MetricName"
+      },
+      "MetricReading": {
+        "properties": {
+          "zone_id": {
+            "type": "string",
+            "title": "Zone Id",
+            "description": "Zone the reading belongs to."
+          },
+          "metric": {
+            "$ref": "#/components/schemas/MetricName",
+            "description": "Metric name."
+          },
+          "value": {
+            "type": "number",
+            "title": "Value",
+            "description": "Metric value."
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit",
+            "description": "Unit of measure."
+          }
+        },
+        "type": "object",
+        "required": [
+          "zone_id",
+          "metric",
+          "value",
+          "unit"
+        ],
+        "title": "MetricReading"
+      },
+      "Reading": {
+        "properties": {
+          "value": {
+            "type": "number",
+            "title": "Value",
+            "description": "Current sensor reading value."
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit",
+            "description": "Unit of measure for the reading."
+          }
+        },
+        "type": "object",
+        "required": [
+          "value",
+          "unit"
+        ],
+        "title": "Reading"
+      },
+      "Threshold": {
+        "properties": {
+          "min": {
+            "type": "number",
+            "title": "Min",
+            "description": "Minimum acceptable value."
+          },
+          "max": {
+            "type": "number",
+            "title": "Max",
+            "description": "Maximum acceptable value."
+          }
+        },
+        "type": "object",
+        "required": [
+          "min",
+          "max"
+        ],
+        "title": "Threshold"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "Zone": {
+        "properties": {
+          "zone_id": {
+            "type": "string",
+            "title": "Zone Id",
+            "description": "Unique identifier of the crop zone."
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Human readable zone name."
+          },
+          "crop": {
+            "type": "string",
+            "title": "Crop",
+            "description": "Crop planted in the zone."
+          },
+          "status": {
+            "$ref": "#/components/schemas/ZoneStatus",
+            "description": "Overall health status of the zone."
+          },
+          "last_inspection": {
+            "type": "string",
+            "title": "Last Inspection",
+            "description": "Date of the last manual inspection (YYYY-MM-DD)."
+          },
+          "readings": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Reading"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/MetricName"
+            },
+            "type": "object",
+            "title": "Readings",
+            "description": "Latest sensor readings for the zone."
+          },
+          "thresholds": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Threshold"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/MetricName"
+            },
+            "type": "object",
+            "title": "Thresholds",
+            "description": "Acceptable ranges for each sensor metric."
+          }
+        },
+        "type": "object",
+        "required": [
+          "zone_id",
+          "name",
+          "crop",
+          "status",
+          "last_inspection",
+          "readings",
+          "thresholds"
+        ],
+        "title": "Zone"
+      },
+      "ZoneStatus": {
+        "type": "string",
+        "enum": [
+          "normal",
+          "warning",
+          "critical"
+        ],
+        "title": "ZoneStatus"
+      }
+    }
+  }
+}
