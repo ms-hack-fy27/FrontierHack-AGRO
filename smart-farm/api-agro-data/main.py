@@ -8,7 +8,9 @@ compatible with Microsoft Foundry OpenAPI tool integration.
 from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException, Path, Query
+from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
+from fastapi.responses import HTMLResponse
 
 from data_store import get_zone, get_zones, load_farm
 from models import CropSummary, ErrorResponse, Farm, MetricName, MetricReading, Zone
@@ -24,6 +26,11 @@ app = FastAPI(
     servers=[{"url": "/", "description": "Current server"}],
 )
 app.openapi_version = "3.0.3"
+
+
+@app.get("/swagger", include_in_schema=False)
+def swagger_ui() -> HTMLResponse:
+    return get_swagger_ui_html(openapi_url=app.openapi_url, title=f"{app.title} - Swagger UI")
 
 
 @app.get(
