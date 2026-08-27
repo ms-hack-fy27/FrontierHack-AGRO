@@ -153,6 +153,26 @@ def list_crops(
     ]
 
 
+def _flatten_nullable_anyof(node: object) -> object:
+    """Convert Pydantic v2's OpenAPI 3.1-style `anyOf: [X, {type: null}]` into the
+    OpenAPI 3.0-compatible `X` + `nullable: true`, recursively. OpenAPI 3.0 has no
+    `type: null`, and leaving it in trips strict validators (e.g. Foundry OpenAPI tool)."""
+    if isinstance(node, dict):
+        any_of = node.get("anyOf")
+        if isinstance(any_of, list) and any(item == {"type": "null"} for item in any_of):
+            remaining = [item for item in any_of if item != {"type": "null"}]
+            node = {k: v for k, v in node.items() if k != "anyOf"}
+            if len(remaining) == 1:
+                node.update(remaining[0])
+            else:
+                node["anyOf"] = remaining
+            node["nullable"] = True
+        return {key: _flatten_nullable_anyof(value) for key, value in node.items()}
+    if isinstance(node, list):
+        return [_flatten_nullable_anyof(item) for item in node]
+    return node
+
+
 def custom_openapi() -> dict:
     if app.openapi_schema:
         return app.openapi_schema
@@ -164,6 +184,7 @@ def custom_openapi() -> dict:
         servers=app.servers,
         openapi_version=app.openapi_version,
     )
+    schema = _flatten_nullable_anyof(schema)
     app.openapi_schema = schema
     return app.openapi_schema
 

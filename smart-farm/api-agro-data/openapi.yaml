@@ -6,7 +6,7 @@ info:
     be queried for a single zone/metric or for all of them.
   version: 1.0.0
 servers:
-- url: https://agrodata-e9adbxgsfubvbma9.swedencentral-01.azurewebsites.net/
+- url: /
   description: Current server
 paths:
   /farm:
@@ -36,12 +36,11 @@ paths:
         in: query
         required: false
         schema:
-          anyOf:
-          - type: string
-          - type: 'null'
           description: Optional zone id to filter a single zone (e.g. ZONE-ALPHA).
             Omit to get all zones.
           title: Zone Id
+          type: string
+          nullable: true
         description: Optional zone id to filter a single zone (e.g. ZONE-ALPHA). Omit
           to get all zones.
       responses:
@@ -122,12 +121,11 @@ paths:
         in: query
         required: false
         schema:
-          anyOf:
-          - $ref: '#/components/schemas/MetricName'
-          - type: 'null'
           description: Optional metric name to filter a single reading. Omit to get
             all readings.
           title: Metric
+          $ref: '#/components/schemas/MetricName'
+          nullable: true
         description: Optional metric name to filter a single reading. Omit to get
           all readings.
       responses:
@@ -165,12 +163,11 @@ paths:
         in: query
         required: false
         schema:
-          anyOf:
-          - type: string
-          - type: 'null'
           description: Optional crop name (case-insensitive, partial match) to filter
             results. Omit to get all crops.
           title: Crop
+          type: string
+          nullable: true
         description: Optional crop name (case-insensitive, partial match) to filter
           results. Omit to get all crops.
       responses:

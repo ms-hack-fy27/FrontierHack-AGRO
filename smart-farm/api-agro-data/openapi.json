@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://agrodata-e9adbxgsfubvbma9.swedencentral-01.azurewebsites.net/",
+      "url": "/",
       "description": "Current server"
     }
   ],
@@ -48,16 +48,10 @@
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
               "description": "Optional zone id to filter a single zone (e.g. ZONE-ALPHA). Omit to get all zones.",
-              "title": "Zone Id"
+              "title": "Zone Id",
+              "type": "string",
+              "nullable": true
             },
             "description": "Optional zone id to filter a single zone (e.g. ZONE-ALPHA). Omit to get all zones."
           }
@@ -180,16 +174,10 @@
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/MetricName"
-                },
-                {
-                  "type": "null"
-                }
-              ],
               "description": "Optional metric name to filter a single reading. Omit to get all readings.",
-              "title": "Metric"
+              "title": "Metric",
+              "$ref": "#/components/schemas/MetricName",
+              "nullable": true
             },
             "description": "Optional metric name to filter a single reading. Omit to get all readings."
           }
@@ -246,16 +234,10 @@
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
               "description": "Optional crop name (case-insensitive, partial match) to filter results. Omit to get all crops.",
-              "title": "Crop"
+              "title": "Crop",
+              "type": "string",
+              "nullable": true
             },
             "description": "Optional crop name (case-insensitive, partial match) to filter results. Omit to get all crops."
           }
