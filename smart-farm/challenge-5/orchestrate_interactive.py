@@ -36,21 +36,21 @@ ADVISOR_AGENT_NAME = "smart-farm-advisor-agent"
 
 def _load_zones() -> list[dict]:
     if not DATA_PATH.exists():
-        print(f"Erro: Arquivo de dados não encontrado em {DATA_PATH}")
+        print(f"Error: Data file not found at {DATA_PATH}")
         return []
     with open(DATA_PATH, "r", encoding="utf-8") as data_file:
         return json.load(data_file)["zones"]
 
 
 def check_health_monitor(zone_id: str) -> str:
-    """Ferramenta para comparar métricas da zona de cultivo com limites configurados."""
+    """Tool for comparing growing zone metrics with configured thresholds."""
     zones = _load_zones()
     zone = next(
         (item for item in zones if item["zone_id"] == zone_id or item["name"] == zone_id),
         None,
     )
     if not zone:
-        return json.dumps({"error": f"Zona de cultivo '{zone_id}' não encontrada."})
+        return json.dumps({"error": f"Growing zone '{zone_id}' was not found."})
 
     analysis = {
         "zone_id": zone["zone_id"],
@@ -74,7 +74,7 @@ def check_health_monitor(zone_id: str) -> str:
         }
         if not in_range:
             boundary = threshold["max"] if value > threshold["max"] else threshold["min"]
-            direction = "acima do máximo" if value > threshold["max"] else "abaixo do mínimo"
+            direction = "above the maximum" if value > threshold["max"] else "below the minimum"
             percent = abs(value - boundary) / boundary * 100 if boundary else 0
             analysis["anomalies"].append({
                 "metric": metric,
@@ -88,16 +88,29 @@ def check_health_monitor(zone_id: str) -> str:
 
 
 def ensure_agents_deployed(client) -> tuple[str, str]:
-    """Garante que os dois agentes estão implantados no Azure AI Projects / Foundry."""
-    from azure.ai.projects.models import FunctionTool, PromptAgentDefinition
+    """Verify that both agents already exist in Azure AI Projects / Foundry."""
+    from azure.ai.projects.models import FunctionTool
+
+    existing = {agent.name for agent in client.agents.list()}
+    missing = [
+        agent_name
+        for agent_name in (MONITOR_AGENT_NAME, ADVISOR_AGENT_NAME)
+        if agent_name not in existing
+    ]
+    if missing:
+        raise RuntimeError(
+            "Required agent(s) do not exist in Microsoft Foundry: "
+            + ", ".join(missing)
+            + ". Create them before running Challenge 5."
+        )
 
     tool = FunctionTool(
         name="check_health_monitor",
-        description="Compara as quatro métricas do solo/clima de uma zona com seus limites configurados.",
+        description="Compares the four soil and climate metrics for a zone with its configured thresholds.",
         parameters={
             "type": "object",
             "properties": {
-                "zone_id": {"type": "string", "description": "ID ou nome da zona (ex: ZONE-ALPHA)"}
+                "zone_id": {"type": "string", "description": "Zone ID or name (for example, ZONE-ALPHA)"}
             },
             "required": ["zone_id"],
             "additionalProperties": False,
@@ -105,47 +118,8 @@ def ensure_agents_deployed(client) -> tuple[str, str]:
         strict=False,
     )
 
-    existing = {agent.name for agent in client.agents.list()}
-
-    if MONITOR_AGENT_NAME not in existing:
-        instructions = """
-Você é o monitor de saúde de lavouras da GreenRise AgriTech.
-Sempre utilize a ferramenta check_health_monitor para obter os dados de cada zona solicitada.
-Retorne um status estruturado indicando ID da zona, cultura, status (normal, aviso ou crítico),
-métricas, anomalias e recomendação imediata.
-"""
-        client.agents.create_version(
-            agent_name=MONITOR_AGENT_NAME,
-            definition=PromptAgentDefinition(
-                model=MODEL_DEPLOYMENT_NAME,
-                instructions=instructions,
-                tools=[tool]
-            )
-        )
-        print(f"  [+] Agente criado: {MONITOR_AGENT_NAME}")
-    else:
-        print(f"  [✓] Agente existente localizado: {MONITOR_AGENT_NAME}")
-
-    if ADVISOR_AGENT_NAME not in existing:
-        instructions = """
-Você é o conselheiro agronômico da GreenRise AgriTech. Você não possui ferramentas;
-raciocine com base na análise de saúde recebida.
-Aplique estes padrões agronômicos:
-- Baixa umidade do solo + alta temperatura = estresse de irrigação;
-- Alta umidade + baixo pH = risco de fungos/doenças;
-- Múltiplas leituras críticas = escalonamento urgente para o agrônomo.
-Forneça ações práticas, nível de urgência e o que reavaliar.
-"""
-        client.agents.create_version(
-            agent_name=ADVISOR_AGENT_NAME,
-            definition=PromptAgentDefinition(
-                model=MODEL_DEPLOYMENT_NAME,
-                instructions=instructions
-            )
-        )
-        print(f"  [+] Agente criado: {ADVISOR_AGENT_NAME}")
-    else:
-        print(f"  [✓] Agente existente localizado: {ADVISOR_AGENT_NAME}")
+    print(f"  [✓] Existing agent located: {MONITOR_AGENT_NAME}")
+    print(f"  [✓] Existing agent located: {ADVISOR_AGENT_NAME}")
 
     return MONITOR_AGENT_NAME, ADVISOR_AGENT_NAME
 
@@ -194,8 +168,8 @@ def run_advisor_agent(client, agent_name: str, monitor_context: str) -> str:
 
     try:
         prompt_with_context = (
-            "Com base no relatório retornado pelo Monitor de Saúde da Lavoura abaixo, "
-            "forneça um diagnóstico agronômico detalhado e recomendações práticas de ação:\n\n"
+            "Based on the crop health monitor report below, "
+            "provide a detailed agronomic diagnosis and practical action recommendations:\n\n"
             f"{monitor_context}"
         )
         response = openai_client.responses.create(
@@ -211,32 +185,32 @@ def run_advisor_agent(client, agent_name: str, monitor_context: str) -> str:
 def display_flow_header():
     print("""
 ================================================================================
-           🌱 ORQUESTRAÇÃO MULTI-AGENTE - GREENRISE AGRITECH (CHALLENGE 5)
+                     🌱 MULTI-AGENT ORCHESTRATION - GREENRISE AGRITECH (CHALLENGE 5)
 ================================================================================
-  [ Fluxo de Execução ]
+    [ Execution Flow ]
 
    ┌───────────────────────────────────┐
-   │        👤  USUÁRIO (PROMPT)       │
+     │        👤  USER (PROMPT)           │
    └─────────────────┬─────────────────┘
                      │
-                     │  1. Prompt Inicial
+                                         │  1. Initial Prompt
                      ▼
    ┌───────────────────────────────────┐
-   │  🤖 AGENTE 1: MONITOR DE SAÚDE    │
+     │  🤖 AGENT 1: HEALTH MONITOR       │
    │   (smart-farm-classifier-agent)      │
    └─────────────────┬─────────────────┘
                      │
-                     │  2. Contexto de Análise / Anomalias
+                                         │  2. Analysis Context / Anomalies
                      ▼
    ┌───────────────────────────────────┐
-   │  🤖 AGENTE 2: ADVISOR AGRONÔMICO  │
+     │  🤖 AGENT 2: AGRONOMIC ADVISOR    │
    │   (smart-farm-advisor-agent)      │
    └─────────────────┬─────────────────┘
                      │
-                     │  3. Diagnóstico e Parecer Final
+                                         │  3. Diagnosis and Final Assessment
                      ▼
    ┌───────────────────────────────────┐
-   │      📄 RESPOSTA FINAL EXIBIDA    │
+     │      📄 FINAL RESPONSE DISPLAYED  │
    └───────────────────────────────────┘
 ================================================================================
 """)
@@ -244,8 +218,8 @@ def display_flow_header():
 
 def main():
     if not PROJECT_CONNECTION_STRING:
-        print("❌ Erro: PROJECT_CONNECTION_STRING não configurada no arquivo .env!")
-        print("Por favor, execute o Challenge 0 antes de continuar.")
+        print("❌ Error: PROJECT_CONNECTION_STRING is not configured in the .env file!")
+        print("Please run Challenge 0 before continuing.")
         sys.exit(1)
 
     from azure.ai.projects import AIProjectClient
@@ -253,59 +227,62 @@ def main():
 
     display_flow_header()
 
-    print("🔌 Conectando ao Azure AI Projects Client...")
+    print("🔌 Connecting to the Azure AI Projects client...")
     client = AIProjectClient(
         endpoint=PROJECT_CONNECTION_STRING,
         credential=DefaultAzureCredential()
     )
 
+    completed_successfully = False
     try:
-        print("\n🔍 Verificando agentes no Microsoft Foundry...")
+        print("\n🔍 Checking agents in Microsoft Foundry...")
         monitor_name, advisor_name = ensure_agents_deployed(client)
 
         print("\n--------------------------------------------------------------------------------")
-        prompt_default = "Analise o estado de saúde de todas as zonas (ZONE-ALPHA, ZONE-BETA, ZONE-GAMMA, ZONE-DELTA, ZONE-EPSILON) e identifique anomalias."
-        user_input = input(f"💬 Digite o prompt para os agentes (pressione Enter para usar o padrão):\n> ").strip()
+        prompt_default = "Analyze the health status of all zones (ZONE-ALPHA, ZONE-BETA, ZONE-GAMMA, ZONE-DELTA, ZONE-EPSILON) and identify anomalies."
+        user_input = input("💬 Enter the prompt for the agents (press Enter to use the default):\n> ").strip()
 
         if not user_input:
             user_input = prompt_default
-            print(f"ℹ️ Usando prompt padrão: '{user_input}'")
+            print(f"ℹ️ Using default prompt: '{user_input}'")
 
-        # --- ETAPA 1: AGENTE 1 (MONITOR) ---
+        # --- STEP 1: AGENT 1 (MONITOR) ---
         print("\n" + "="*80)
-        print(" 📥 [ETAPA 1] ENVIANDO PROMPT PARA AGENTE 1: MONITOR DE SAÚDE")
+        print(" 📥 [STEP 1] SENDING PROMPT TO AGENT 1: HEALTH MONITOR")
         print("="*80)
-        print(f"  ► Agente Alvo: {monitor_name}")
-        print(f"  ► Prompt Recebido: \"{user_input}\"")
-        print("  ⏳ Processando leituras e executando ferramentas (check_health_monitor)...")
+        print(f"  ► Target Agent: {monitor_name}")
+        print(f"  ► Received Prompt: \"{user_input}\"")
+        print("  ⏳ Processing readings and running tools (check_health_monitor)...")
 
         monitor_output = run_monitor_agent(client, monitor_name, user_input)
 
         print("\n" + "-"*80)
-        print(" 📤 [AGENTE 1 FINALIZADO] RESPOSTA GERADA PELO MONITOR DE SAÚDE:")
+        print(" 📤 [AGENT 1 COMPLETE] RESPONSE GENERATED BY THE HEALTH MONITOR:")
         print("-"*80)
         print(monitor_output)
 
-        # --- ETAPA 2: AGENTE 2 (ADVISOR) ---
+        # --- STEP 2: AGENT 2 (ADVISOR) ---
         print("\n" + "="*80)
-        print(" 🔄 [REPASSANDO CONTEXTO] AGENTE 1  ═══►  AGENTE 2 (ADVISOR AGRONÔMICO)")
+        print(" 🔄 [PASSING CONTEXT] AGENT 1  ═══►  AGENT 2 (AGRONOMIC ADVISOR)")
         print("="*80)
-        print(f"  ► Agente Alvo: {advisor_name}")
-        print("  ► Dados Transferidos: Relatório analítico do Monitor de Saúde")
-        print("  ⏳ Gerando parecer agronômico e plano de ação...")
+        print(f"  ► Target Agent: {advisor_name}")
+        print("  ► Transferred Data: Health Monitor analysis report")
+        print("  ⏳ Generating agronomic assessment and action plan...")
 
         final_advisor_output = run_advisor_agent(client, advisor_name, monitor_output)
 
-        # --- ETAPA 3: RESULTADO FINAL ---
+        # --- STEP 3: FINAL RESULT ---
         print("\n" + "="*80)
-        print(" 🎯 [ETAPA FINAL] RESPOSTA FINAL DO AGENTE CONSELEIRO AGRONÔMICO")
+        print(" 🎯 [FINAL STEP] FINAL RESPONSE FROM THE AGRONOMIC ADVISOR")
         print("="*80)
         print(final_advisor_output)
         print("="*80 + "\n")
+        completed_successfully = True
 
     finally:
         client.close()
-        print("✅ Execução do fluxo de orquestração concluída com sucesso!")
+        if completed_successfully:
+            print("✅ Orchestration flow completed successfully!")
 
 
 if __name__ == "__main__":
