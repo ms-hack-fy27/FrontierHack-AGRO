@@ -70,6 +70,19 @@ class SmartFarmClassifierAgent:
             definition=PromptAgentDefinition(model=MODEL_DEPLOYMENT_NAME, instructions=instructions),
         )
         return self.agent 
+    
+    def run(self, input_text: str) -> str:
+        """Run agent with the given input."""
+        conversation = self.openai.conversations.create()
+
+        response = self.openai.responses.create(
+            input=input_text,
+            conversation=conversation.id,
+            extra_body={"agent_reference": {"name": self.agent.name, "type": "agent_reference"}},
+        )
+
+        self.openai.conversations.delete(conversation_id=conversation.id)
+        return response.output_text
 
 
 class SmartFarmAdvisorAgent:
@@ -103,10 +116,10 @@ def main():
     classifier_agent = SmartFarmClassifierAgent()
     advisor_agent = SmartFarmAdvisorAgent()
     
-    monitor.create()
-    advisor.create()
+    classifier_agent.create()
+    advisor_agent.create()
     
-    result = monitor.run("""
+    result = classifier_agent.run("""
 Classify follow zones:
     Zone: ZONE-ALPHA
     Crop: Tomato
