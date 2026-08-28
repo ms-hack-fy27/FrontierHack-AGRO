@@ -512,9 +512,6 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/Reading"
             },
-            "propertyNames": {
-              "$ref": "#/components/schemas/MetricName"
-            },
             "type": "object",
             "title": "Readings",
             "description": "Latest sensor readings for the zone."
@@ -522,9 +519,6 @@
           "thresholds": {
             "additionalProperties": {
               "$ref": "#/components/schemas/Threshold"
-            },
-            "propertyNames": {
-              "$ref": "#/components/schemas/MetricName"
             },
             "type": "object",
             "title": "Thresholds",

@@ -35,8 +35,8 @@ class Zone(BaseModel):
     crop: str = Field(..., description="Crop planted in the zone.")
     status: ZoneStatus = Field(..., description="Overall health status of the zone.")
     last_inspection: str = Field(..., description="Date of the last manual inspection (YYYY-MM-DD).")
-    readings: Dict[MetricName, Reading] = Field(..., description="Latest sensor readings for the zone.")
-    thresholds: Dict[MetricName, Threshold] = Field(..., description="Acceptable ranges for each sensor metric.")
+    readings: Dict[str, Reading] = Field(..., description="Latest sensor readings for the zone.")
+    thresholds: Dict[str, Threshold] = Field(..., description="Acceptable ranges for each sensor metric.")
 
 
 class Farm(BaseModel):
