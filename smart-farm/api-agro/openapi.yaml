@@ -301,6 +301,34 @@ components:
       - value
       - unit
       title: Reading
+    SensorReadings:
+      properties:
+        soil_moisture:
+          $ref: '#/components/schemas/Reading'
+          description: Latest soil moisture reading.
+        temperature:
+          $ref: '#/components/schemas/Reading'
+          description: Latest temperature reading.
+        humidity:
+          $ref: '#/components/schemas/Reading'
+          description: Latest humidity reading.
+        ph_level:
+          $ref: '#/components/schemas/Reading'
+          description: Latest pH reading.
+        issues:
+          items:
+            type: string
+          type: array
+          title: Issues
+          description: Known pests, diseases, or other observed issues in the zone.
+      type: object
+      required:
+      - soil_moisture
+      - temperature
+      - humidity
+      - ph_level
+      - issues
+      title: SensorReadings
     Threshold:
       properties:
         min:
@@ -364,11 +392,8 @@ components:
           title: Last Inspection
           description: Date of the last manual inspection (YYYY-MM-DD).
         readings:
-          additionalProperties:
-            $ref: '#/components/schemas/Reading'
-          type: object
-          title: Readings
-          description: Latest sensor readings for the zone.
+          $ref: '#/components/schemas/SensorReadings'
+          description: Latest sensor readings and observed issues for the zone.
         thresholds:
           additionalProperties:
             $ref: '#/components/schemas/Threshold'

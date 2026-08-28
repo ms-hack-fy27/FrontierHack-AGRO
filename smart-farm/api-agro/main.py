@@ -126,6 +126,7 @@ def get_zone_readings(
             "unit": reading["unit"],
         }
         for name, reading in readings.items()
+        if name != "issues"
     ]
 
 

@@ -8,7 +8,7 @@ GreenRise monitors five crop zones. Each zone reports soil moisture, temperature
 
 The two agents are:
 
-- `smart-farm-monitor-agent`: has the `check_health_monitor` function tool and returns structured threshold analysis.
+- `smart-farm-classifier-agent`: has the `check_health_monitor` function tool and returns structured threshold analysis.
 - `smart-farm-advisor-agent`: has no tools and turns the monitor output into evidence-based agronomic advice.
 
 ## Challenges

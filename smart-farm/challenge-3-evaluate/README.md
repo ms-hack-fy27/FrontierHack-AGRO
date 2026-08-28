@@ -16,7 +16,7 @@ The portal dataset embeds values and thresholds in each query. This is intention
 
 1. Open the [Microsoft Foundry portal](https://ai.azure.com/nextgen) and select `smart-farm-project`.
 2. Open Build -> Evaluations -> Create and choose Agent.
-3. Select `smart-farm-monitor-agent`, Individual turns, and Existing dataset.
+3. Select `smart-farm-classifier-agent`, Individual turns, and Existing dataset.
 4. Enter a dataset name before selecting Upload new dataset. Upload `eval_portal.jsonl`.
 5. Keep field mapping unchanged.
 6. Keep Coherence and Fluency. Remove Tool Call Accuracy because the uploaded test turns do not run the local function.

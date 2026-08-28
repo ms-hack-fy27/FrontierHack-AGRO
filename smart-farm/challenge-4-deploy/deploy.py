@@ -21,7 +21,7 @@ PROJECT_CONNECTION_STRING = os.getenv("PROJECT_CONNECTION_STRING")
 MODEL_DEPLOYMENT_NAME = os.getenv("MODEL_DEPLOYMENT_NAME", "gpt-5.4")
 DATA_PATH = Path(__file__).resolve().parent.parent / "challenge-1-build" / "smart_farm_data.json"
 ZONE_IDS = ["ZONE-ALPHA", "ZONE-BETA", "ZONE-GAMMA", "ZONE-DELTA", "ZONE-EPSILON"]
-MONITOR_AGENT_NAME = "smart-farm-monitor-agent"
+MONITOR_AGENT_NAME = "smart-farm-classifier-agent"
 ADVISOR_AGENT_NAME = "smart-farm-advisor-agent"
 WORKFLOW_AGENT_NAME = os.getenv("WORKFLOW_AGENT_NAME", "smart-farm-health-workflow")
 

@@ -3,7 +3,7 @@ Challenge 5: Interactive Multi-Agent Orchestration -- Microsoft Agent Framework 
 GreenRise AgriTech Smart Farm Lab
 
 Orchestrates two agents:
-1. smart-farm-monitor-agent (Agent 1): Tool-grounded agent for metric threshold analysis.
+1. smart-farm-classifier-agent (Agent 1): Tool-grounded agent for metric threshold analysis.
 2. smart-farm-advisor-agent (Agent 2): Tool-free agent for agronomic reasoning & recommendations.
 
 Flow: User Prompt -> Agent 1 -> Response Context -> Agent 2 -> Final Agronomic Response.
@@ -30,7 +30,7 @@ PROJECT_CONNECTION_STRING = os.getenv("PROJECT_CONNECTION_STRING")
 MODEL_DEPLOYMENT_NAME = os.getenv("MODEL_DEPLOYMENT_NAME", "gpt-5.4")
 DATA_PATH = Path(__file__).resolve().parent.parent / "challenge-1-build" / "smart_farm_data.json"
 
-MONITOR_AGENT_NAME = "smart-farm-monitor-agent"
+MONITOR_AGENT_NAME = "smart-farm-classifier-agent"
 ADVISOR_AGENT_NAME = "smart-farm-advisor-agent"
 
 
@@ -223,7 +223,7 @@ def display_flow_header():
                      ▼
    ┌───────────────────────────────────┐
    │  🤖 AGENTE 1: MONITOR DE SAÚDE    │
-   │   (smart-farm-monitor-agent)      │
+   │   (smart-farm-classifier-agent)      │
    └─────────────────┬─────────────────┘
                      │
                      │  2. Contexto de Análise / Anomalias

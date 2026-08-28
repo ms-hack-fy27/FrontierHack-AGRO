@@ -1,7 +1,7 @@
 """Pydantic schemas for the GreenRise AgriTech Smart Farm API."""
 
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from pydantic import BaseModel, Field
 
@@ -24,6 +24,14 @@ class Reading(BaseModel):
     unit: str = Field(..., description="Unit of measure for the reading.")
 
 
+class SensorReadings(BaseModel):
+    soil_moisture: Reading = Field(..., description="Latest soil moisture reading.")
+    temperature: Reading = Field(..., description="Latest temperature reading.")
+    humidity: Reading = Field(..., description="Latest humidity reading.")
+    ph_level: Reading = Field(..., description="Latest pH reading.")
+    issues: List[str] = Field(..., description="Known pests, diseases, or other observed issues in the zone.")
+
+
 class Threshold(BaseModel):
     min: float = Field(..., description="Minimum acceptable value.")
     max: float = Field(..., description="Maximum acceptable value.")
@@ -35,7 +43,7 @@ class Zone(BaseModel):
     crop: str = Field(..., description="Crop planted in the zone.")
     status: ZoneStatus = Field(..., description="Overall health status of the zone.")
     last_inspection: str = Field(..., description="Date of the last manual inspection (YYYY-MM-DD).")
-    readings: Dict[str, Reading] = Field(..., description="Latest sensor readings for the zone.")
+    readings: SensorReadings = Field(..., description="Latest sensor readings and observed issues for the zone.")
     thresholds: Dict[str, Threshold] = Field(..., description="Acceptable ranges for each sensor metric.")
 
 

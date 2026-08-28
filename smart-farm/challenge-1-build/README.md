@@ -4,7 +4,7 @@ Time: about 30 minutes
 
 ## Objectives
 
-Create a tool-grounded `smart-farm-monitor-agent` and a tool-free `smart-farm-advisor-agent`. Run them against five realistic crop zones and inspect the structured status output.
+Create a tool-grounded `smart-farm-classifier-agent` and a tool-free `smart-farm-advisor-agent`. Run them against five realistic crop zones and inspect the structured status output.
 
 ## Data and tool
 
@@ -14,7 +14,7 @@ Open `smart_farm_data.json`. It contains exactly five zones and four metrics per
 
 ## Agent responsibilities
 
-- `smart-farm-monitor-agent` uses the function tool and reports zone ID, crop, status, all metrics, anomalies, and a next step.
+- `smart-farm-classifier-agent` uses the function tool and reports zone ID, crop, status, all metrics, anomalies, and a next step.
 - `smart-farm-advisor-agent` has no tools. It reasons from the monitor output using irrigation-stress, fungal/disease-risk, and urgent-escalation patterns.
 
 ## Run

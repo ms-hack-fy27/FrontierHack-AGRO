@@ -34,7 +34,7 @@ The script includes the required functions `check_health_monitor`, `ensure_agent
 
 ## Portal verification
 
-1. Open Foundry Build -> Agents and confirm `smart-farm-monitor-agent` and `smart-farm-advisor-agent`.
+1. Open Foundry Build -> Agents and confirm `smart-farm-classifier-agent` and `smart-farm-advisor-agent`.
 2. Confirm the created `smart-farm-health-workflow` workflow is listed.
 3. Preview the workflow and ask it to analyze the embedded readings.
 4. Inspect the run history and traces. The final response should call out ZONE-GAMMA as critical and explain why.
