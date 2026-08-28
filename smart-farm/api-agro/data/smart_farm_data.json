@@ -54,7 +54,7 @@
         "temperature": {"value": 35.0, "unit": "celsius"},
         "humidity": {"value": 91.0, "unit": "%"},
         "ph_level": {"value": 5.1, "unit": "pH"},
-        "issues": ["Polyphagotarsonemus latus"]
+        "issues": ["Ácaro-branco (Polyphagotarsonemus latus)"]
       },
       "thresholds": {
         "soil_moisture": {"min": 35.0, "max": 70.0},
