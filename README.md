@@ -1,6 +1,6 @@
 <img width="990" height="150" alt="Microsoft Agent-a-thon_banner_WEB_990x150" src="https://github.com/user-attachments/assets/5f550061-077d-421c-bba2-4a5820e72fad" />
 
-# Frontier Week Hack
+# Microsoft Frontier Hackathon
 ## Microsoft Foundry: Build, scale, observe, and secure your AI agents
  
 Welcome to the hands-on lab experience where ideas become real, enterprise-ready solutions. This is the most advanced of the three agent-building tracks. While the Explorer track creates your first no-code agent and the Maker track automates tasks with low-code tools, this track is designed for developers, engineers, and architects who want full control over models, orchestration, and operations.
