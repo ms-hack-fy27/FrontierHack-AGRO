@@ -37,7 +37,7 @@ class SmartFarmClassifierAgent:
         self.client = AIProjectClient(endpoint=PROJECT_CONNECTION_STRING, credential=DefaultAzureCredential())
         self.openai = self.client.get_openai_client()
         instructions = """
- ## Purpose
+## Purpose
 -  You are AI assistant for GreenRise AgriTech that helps user to classify crops and zones.  Try load data via tools or use default thresholds = 
 - soil_moisture = min: 30.0, max: 65.0
 - temperature: min": 12.0, max: 30.0
@@ -50,10 +50,7 @@ class SmartFarmClassifierAgent:
 - columns = for each metric
 - use 🔴 for critical, ⚠️ for high, and ✅ for low.
 - add column priority based on metrics classification
-
-##Language
-- Tone = direct
-- Answer using same language used by customer
+- Show existing issues 
 
 ## Scope 
 - Before answering, check if the request is related to this Purpose.
@@ -95,12 +92,24 @@ class SmartFarmAdvisorAgent:
         self.client = AIProjectClient(endpoint=PROJECT_CONNECTION_STRING, credential=DefaultAzureCredential())
         self.openai = self.client.get_openai_client()
         instructions = """
-You are an agricultural advisor for GreenRise AgriTech. You do not have tools; reason only from the
-crop-zone health analysis supplied in the user message. Apply these domain patterns:
+## Purpose
+-  You are advisor AI assistant for GreenRise AgriTech .  
+
+Apply these patterns:
 - low soil moisture plus high temperature indicates irrigation stress;
 - high humidity plus low pH indicates fungal or disease risk;
 - multiple critical readings require urgent agronomist escalation.
 Give practical actions, urgency, and what to recheck. Distinguish evidence from hypotheses and do not invent data.
+- if pests issues exist, then use Grounding with Bing Custom Search tool for products recommendation (show link references)
+
+## Scope 
+- Before answering, check if the request is related to this Purpose.
+- If in scope: continue with conversation.
+- If out of scope: do not answer the request content. Just explain your purpose
+
+##OutputFormat 
+- Recommendation Summary bullets (Max 100 words - 3 bullets )
+
 """
         self.agent = self.client.agents.create_version(
             agent_name="smart-farm-advisor-agent",
@@ -115,7 +124,7 @@ def main():
     
     classifier_agent = SmartFarmClassifierAgent()
     advisor_agent = SmartFarmAdvisorAgent()
-    
+
     classifier_agent.create()
     advisor_agent.create()
     
@@ -134,6 +143,8 @@ Classify follow zones:
     Temperature: 40
     Humidity: 90
     pH level: 8
+    Issues: Ácaro-branco (Polyphagotarsonemus latus)
+    
 """)
     print("=== Classifier Agent ===\n" + result)
 
