@@ -24,7 +24,7 @@ By the end of this challenge, you will have:
 
 There are two ways to get started — choose one:
 
-> **First step for either option:** [fork this repository](https://github.com/ms-hack-fy27/FrontierHack-Agro//fork) to your own GitHub account.
+> **First step for either option:** [fork this repository](https://github.com/ms-hack-fy27/FrontierHack-AGRO//fork) to your own GitHub account.
 
 ### Option A: GitHub Codespaces (recommended)
 
@@ -50,7 +50,7 @@ Run everything on your own machine. Requires Python 3.10+ and the Azure CLI.
 
 ```bash
 # 1. Clone this repo
-git clone https://github.com/ms-hack-fy27/FrontierHack-Agro/.git
+git clone https://github.com/ms-hack-fy27/FrontierHack-AGRO/.git
 cd FrontierWeekHack
 
 # 2. Create and activate a virtual environment

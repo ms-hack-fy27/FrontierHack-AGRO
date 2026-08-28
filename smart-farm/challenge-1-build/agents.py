@@ -127,8 +127,8 @@ def main():
 
     classifier_agent.create()
     advisor_agent.create()
-    
-    result = classifier_agent.run("""
+        
+    classifier_result = classifier_agent.run("""
 Classify follow zones:
     Zone: ZONE-ALPHA
     Crop: Tomato
@@ -144,9 +144,8 @@ Classify follow zones:
     Humidity: 90
     pH level: 8
     Issues: Ácaro-branco (Polyphagotarsonemus latus)
-    
 """)
-    print("=== Classifier Agent ===\n" + result)
+    print("=== Classifier Agent ===\n" + classifier_result)
 
 
 if __name__ == "__main__":
