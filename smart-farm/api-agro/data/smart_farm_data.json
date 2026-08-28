@@ -14,7 +14,7 @@
         "temperature": {"value": 31.5, "unit": "celsius"},
         "humidity": {"value": 64.0, "unit": "%"},
         "ph_level": {"value": 6.5, "unit": "pH"},
-        "issues": ["Polyphagotarsonemus latus"]
+        "issues": []
       },
       "thresholds": {
         "soil_moisture": {"min": 30.0, "max": 65.0},
@@ -54,7 +54,7 @@
         "temperature": {"value": 35.0, "unit": "celsius"},
         "humidity": {"value": 91.0, "unit": "%"},
         "ph_level": {"value": 5.1, "unit": "pH"},
-        "issues": []
+        "issues": ["Polyphagotarsonemus latus"]
       },
       "thresholds": {
         "soil_moisture": {"min": 35.0, "max": 70.0},
