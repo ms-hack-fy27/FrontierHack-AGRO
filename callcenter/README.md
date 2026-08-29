@@ -34,7 +34,7 @@ Build an AI agent system that:
 | 1 | [Build agents](./challenge-1-build/README.md) | Build Intent Classification and Resolution Advisory agents | 30 min |
 | 2 | [Monitor](./challenge-2-monitor/README.md) | Enable GenAI tracing with Application Insights | 20 min |
 | 3 | [Evaluate](./challenge-3-evaluate/README.md) | Run systematic quality evaluations | 30 min |
-| 4 | [Production workflow](./challenge-4-deploy/README.md) | Multi-agent orchestration and portal workflow | 20 min |
+| 4 | [Production workflow](./challenge-4-workflow/README.md) | Multi-agent orchestration and portal workflow | 20 min |
 
 ## Why the challenges are in this order
 

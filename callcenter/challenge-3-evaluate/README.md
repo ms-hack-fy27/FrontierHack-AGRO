@@ -39,7 +39,7 @@ Specifically for the NovaTel call center: an agent that classifies CALL-007 (sus
 
 ## The evaluation dataset
 
-The dataset is at [challenge-4-deploy/evaluation_dataset.json](../challenge-4-deploy/evaluation_dataset.json) — it contains:
+The dataset is at [challenge-4-workflow/evaluation_dataset.json](../challenge-4-workflow/evaluation_dataset.json) — it contains:
 
 - 10 call scenarios covering the 6 intent types
 - Each has an `input` (the call summary sent to the agent)

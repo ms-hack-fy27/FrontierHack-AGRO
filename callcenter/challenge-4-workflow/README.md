@@ -51,7 +51,7 @@ Open [deploy.py](./deploy.py) and review:
 ### Step 2: Run the workflow
 
 ```bash
-cd callcenter/challenge-4-deploy
+cd callcenter/challenge-4-workflow
 python deploy.py
 ```
 

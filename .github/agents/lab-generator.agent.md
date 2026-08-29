@@ -40,7 +40,7 @@ You are modeled after the TireForge Industries foundry-hackathon lab. You know:
 ├── challenge-3-evaluate/
 │   ├── README.md
 │   └── evaluate.py              # Evaluation pipeline with LLM-as-judge
-├── challenge-4-deploy/
+├── challenge-4-workflow/
 │   ├── README.md
 │   ├── deploy.py                # Multi-agent orchestration workflow
 │   └── evaluation_dataset.json  # 10 test cases for evaluation

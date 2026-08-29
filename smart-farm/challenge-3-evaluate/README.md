@@ -8,7 +8,7 @@ Run a repeatable evaluation against 10 crop-health cases and interpret coherence
 
 ## Dataset
 
-`eval_portal.jsonl` is a 10-line JSONL dataset for portal upload. The same cases, with explicit IDs and JSON expected outputs, are in `../challenge-4-deploy/evaluation_dataset.json` for scripted or future CI use.
+`eval_portal.jsonl` is a 10-line JSONL dataset for portal upload. The same cases, with explicit IDs and JSON expected outputs, are in `../challenge-4-workflow/evaluation_dataset.json` for scripted or future CI use.
 
 The portal dataset embeds values and thresholds in each query. This is intentional: portal evaluations cannot execute the local Python `check_health_monitor` function.
 

@@ -19,7 +19,7 @@ The two agents are:
 | 1 | [Build](./challenge-1-build/README.md) | Create and test both agents with farm data | 30 min |
 | 2 | [Monitor](./challenge-2-monitor/README.md) | Capture GenAI traces and inspect telemetry | 20 min |
 | 3 | [Evaluate](./challenge-3-evaluate/README.md) | Run a repeatable 10-case quality evaluation | 30 min |
-| 4 | [Workflow](./challenge-4-deploy/README.md) | Run Python orchestration and deploy a portal workflow | 20 min |
+| 4 | [Workflow](./challenge-4-workflow/README.md) | Run Python orchestration and deploy a portal workflow | 20 min |
 | 5 | [Orchestration](./challenge-5/README.md) | Interactive multi-agent orchestration with Agentic Framework | 20 min |
 
 Complete the challenges in order. Challenge 4 reuses agents created in Challenge 1 and demonstrates why local function loops and portal workflows need different inputs.
