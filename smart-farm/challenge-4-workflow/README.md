@@ -49,7 +49,7 @@ Open a terminal in the challenge directory and run the Python script:
 
 ```powershell
 cd smart-farm\challenge-5
-python orchestrate_interactive.py
+python orchestrate.py
 ```
 
 ### What the script does:

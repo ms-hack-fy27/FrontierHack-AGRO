@@ -1,5 +1,5 @@
-site_name: Build AI Agents with Microsoft Foundry
-site_description: A hands-on lab teaching you to build, monitor, evaluate, and orchestrate AI agents using the Microsoft Foundry SDK.
+site_name: Microsoft Frontier Hackathon
+site_description: A hands-on lab teaching you to build, monitor, evaluate, and orchestrate AI agents using the Microsoft Foundry.
 site_url: https://ms-hack-fy27.github.io/FrontierHack-AGRO/
 repo_url: https://github.com/ms-hack-fy27/FrontierHack-AGRO/
 repo_name: ms-hack-fy27/FrontierHack-AGRO/
@@ -63,5 +63,4 @@ nav:
       - Challenge 2 — Monitor: smart-farm/challenge-2-monitor/README.md
       - Challenge 3 — Evaluate: smart-farm/challenge-3-evaluate/README.md
       - Challenge 4 — Workflow: smart-farm/challenge-4-deploy/README.md
-      - Challenge 5 — Interactive Orchestration: smart-farm/challenge-5/README.md
       - Wrap Up: smart-farm/wrapup.md
