@@ -6,28 +6,28 @@ Time: ~30 minutes
 
 By the end of this challenge, you will have:
 
-- ✅ **Classification Agent** that analyzes call summaries and categorizes customer intent
-- ✅ **Advisor Agent** that recommends optimal service strategies
-- ✅ Both agents tested with real call center data
+- ✅ A **Classification Agent** that compares each zone's readings with its thresholds and reports status
+- ✅ An **Advisory Agent** that turns those findings into agronomic recommendations
+- ✅ Both agents created in your Foundry project and visible in the portal
 
-![build](./images/build.png)
+![Smart Farm Agents](./images/build.png)
 
 ## Context
 
-NovaTel Communications receives hundreds of calls every day. Each call has a summary, the customer's history, and account context. Your agents need to:
+GreenRise AgriTech monitors five growing zones at the Salinas Valley Demonstration Farm. Each zone has a crop, four metrics — `soil_moisture`, `temperature`, `humidity`, and `ph_level` — and its own `min` and `max` thresholds, so a reading that is safe in one zone can be an emergency in another. Your agents need to:
 
-1. **Classification**: analyze the call to determine what the customer needs (billing dispute, technical issue, cancellation risk, upsell opportunity, etc.)
-2. **Advisory**: given a classified intent and the customer's context, recommend the best resolution path with scripts, routing decisions, and available offers
+1. **Classification**: compare every reading with that zone's thresholds and mark each metric 🔴 critical, ⚠️ warning, or ✅ normal, including any recorded issues
+2. **Advisory**: given that classification, recommend irrigation, disease, and escalation actions — and look up treatment products when pests are present
 
-See [call_data.json](./call_data.json) for today's incoming calls.
+See [smart_farm_data.json](../api-agro/data/smart_farm_data.json) for the current farm snapshot.
 
 ## Portal or SDK?
 
 Microsoft Foundry offers two ways to build agents. The **Foundry portal** ([ai.azure.com/nextgen](https://ai.azure.com/nextgen)) provides a visual, no-code interface where you can create agents, attach tools, and test them interactively in a playground — ideal for exploration and rapid prototyping. The **Azure AI Agents SDK** provides full programmatic control: you define agent behavior, tools, and orchestration logic in Python, making versioning, testing, and integration with automated pipelines easier.
 
-![foundry](./images/foundry.png)
+![Microsoft Foundry](./images/foundry.png)
 
-In this challenge, we use the **SDK**. The code in [agents.py](./agents.py) creates both agents, registers their tools, and runs them against each call in `call_data.json` — all from the terminal. After the script runs, both agents will also be visible in the portal under **Agents**, where you can inspect them, tune their instructions, and test them interactively without changing code.
+In this challenge, we use the **SDK**. The code in [agents.py](./agents.py) creates both agents and runs the classifier — all from the terminal. After the script runs, both agents are also visible in the portal under **Agents**, where you can inspect them, tune their instructions, attach tools, and test them interactively without changing code.
 
 ## Agents and tools
 
@@ -51,47 +51,22 @@ From the model's perspective, tools are described by a **JSON schema** (name, de
 
 | Tool type | What it does | Best for |
 |-----------|-------------|----------|
-| **OpenAPI** | Calls a local Python function that you define | Any custom logic: database queries, APIs, and calculations |
+| **OpenAPI** | Calls an API that you define | Existing services such as the farm API in `api-agro` |
 | **Code Interpreter** | Lets the agent write and execute Python in a sandbox | Data analysis, chart generation, and file processing |
-| **File Search** | Performs semantic search over a Microsoft Foundry knowledge base | Policy documents, manuals, and historical records |
-| **Bing Search** | Searches the web in real time | Real-time information and news |
+| **File Search** | Performs semantic search over a Microsoft Foundry knowledge base | Agronomy manuals, crop protocols, and treatment guides |
+| **Bing Search** | Searches the web in real time | Pest treatment products and current agronomic guidance |
 | **Azure AI Search** | Queries an Azure Search index | Grounded retrieval from your own data at scale |
-
-#### Microsoft Foundry vector databases and knowledge bases
-
-When your agent needs to answer questions grounded in a large collection of documents — policy manuals, product specifications, and historical records — you need a **vector database**. Unlike keyword search, a vector database converts text into numeric embeddings and finds semantically similar passages at query time. This lets the agent ask a natural-language question and retrieve the right content even when the exact words do not appear in the query.
-
-**Microsoft Foundry** includes a built-in knowledge base backed by vector storage. You upload documents (PDFs, Word files, and plain text), and the service chunks them, generates embeddings, and builds the index automatically. When you attach this knowledge base to an agent as a **File Search** tool, the agent queries it during inference — bringing relevant passages into context before generating a response so its answers are grounded in your actual documents, not just the model's training data.
-
-For the NovaTel call center, useful knowledge bases could include:
-
-- **Customer service policy manual** — refund limits, routing rules, and retention-offer eligibility by plan tier
-- **Product and plan documentation** — features by tier, billing cycles, device return windows, and roaming policies
-- **Resolution scripts** — approved language for billing disputes, cancellation retention, and upsell conversations
-
-With these resources, the **Resolution Advisor Agent** could answer “which retention offers apply to a Premium customer with more than 3 years of tenure who wants to cancel?” and retrieve the exact offer details from the manual — instead of inventing plausible but potentially incorrect policies.
-
-In this challenge, the agents use **function tools**. The **Intent Classification Agent** uses `lookup_customer` to retrieve account history and customer tier before determining intent. Without this tool, the agent would have to guess based only on the call summary — with it, every classification is grounded in real account data.
 
 ## Get started
 
 Open [agents.py](./agents.py) and review the implementation of both agents.
 
-
-## Objectives
-
-Create a tool-grounded `smart-farm-classifier-agent` and a tool-free `smart-farm-advisor-agent`. Run them against five realistic crop zones and inspect the structured status output.
-
-## Data and tool
-
-Open `smart_farm_data.json`. It contains exactly five zones and four metrics per zone: `soil_moisture`, `temperature`, `humidity`, and `ph_level`. Every metric has `min` and `max` thresholds. The snapshot has two warnings, one critical zone, and two normal zones.
-
-`check_health_monitor(zone_id)` reads this file and returns JSON with every metric, its threshold, an inclusive range result, and an anomaly deviation. The monitor agent must call this tool for each requested zone.
+In this challenge the two agents are **prompt-only**: `agents.py` creates them with instructions but does not attach a tool yet. That is why the classifier's instructions carry fallback thresholds — it can still classify readings pasted directly into the prompt. Attaching a tool is what grounds it in the real dataset, and you do that in the portal at the end of this challenge.
 
 ## Agent responsibilities
 
-- `smart-farm-classifier-agent` uses the function tool and reports zone ID, crop, status, all metrics, anomalies, and a next step.
-- `smart-farm-advisor-agent` has no tools. It reasons from the monitor output using irrigation-stress, fungal/disease-risk, and urgent-escalation patterns.
+- **`smart-farm-classifier-agent`** reports a classification summary table only — one row per zone, one column per metric, marked 🔴 / ⚠️ / ✅, plus a priority column and any recorded issues. Its instructions explicitly forbid recommendations, which keeps classification separate from advice.
+- **`smart-farm-advisor-agent`** has no tools of its own. It reasons from the classifier's output using three patterns: low soil moisture with high temperature indicates irrigation stress; high humidity with low pH indicates fungal or disease risk; multiple critical readings require urgent agronomist escalation.
 
 ## Run
 
@@ -100,7 +75,7 @@ cd smart-farm\challenge-1-build
 python agents.py
 ```
 
-The script creates both hosted agent versions, checks all five zones, forwards the monitor output to the advisor, and deletes the temporary versions and conversations when it exits.
+The script creates both agent versions, then runs **only the classifier** against two zones written directly into the prompt, and prints the result. The advisor is created but not yet invoked — Challenge 4 wires the two together. Both agent versions are left in place so you can open them in the portal.
 
 ## Smart Farm data via API
 
@@ -137,12 +112,20 @@ uvicorn main:app --reload
 
 Then open `http://127.0.0.1:8000/swagger`. Static OpenAPI documents are checked in as `api-agro/openapi.json` and `api-agro/openapi.yaml`.
 
-## TODO: CONFIG AGENTS - MANUALLY ON FOUNDRY
+## Configure the agents in the portal
+
+The script leaves both agents in your project, so finish the challenge in the portal:
+
+1. Open [ai.azure.com/nextgen](https://ai.azure.com/nextgen), select your project, and go to **Agents**.
+2. Open `smart-farm-classifier-agent` and attach the farm data as an **OpenAPI** tool using `api-agro/openapi.json`, so it reads real zone readings instead of values pasted into the prompt. Start the API first, as shown above.
+3. Open `smart-farm-advisor-agent` and add the **Grounding with Bing Custom Search** tool, which its instructions already expect for pest product recommendations.
+4. Test both in the playground: ask the classifier for the status of all five zones, then pass its answer to the advisor.
 
 ## Success criteria
 
-- [ ] The tool returns threshold analysis for all four metrics.
-- [ ] The monitor identifies two warning, one critical, and two normal zones.
-- [ ] The advisor recommends irrigation action for irrigation stress.
+- [ ] `python agents.py` runs without errors and both agents appear in the portal under **Agents**.
+- [ ] The classifier returns a summary table covering all four metrics with 🔴 / ⚠️ / ✅ and a priority column.
+- [ ] With the farm data attached, the classifier identifies two warning zones, one critical zone, and two normal zones.
+- [ ] The advisor recommends an irrigation action for low soil moisture plus high temperature.
 - [ ] The advisor recommends fungal or disease investigation for high humidity plus low pH.
 - [ ] Multiple critical readings produce urgent agronomist escalation.
