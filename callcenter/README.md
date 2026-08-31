@@ -1,6 +1,6 @@
 # 📞 Scenario: Call Center Triage — NovaTel Communications
 
-## Contexto
+## Context
 
 ![scenario](./images/scenario.png)
 
@@ -13,8 +13,6 @@
 - **CALL-005** — Sarah Mitchell (Basic, 5 years) — Can't navigate new app
 - **CALL-006** — David Park (Premium, 1 year) — Charged for returned device
 - **CALL-007** — Emma Wilson (Basic, 8 months) — Suspected account hack
-
-
 
 ## Your mission
 
@@ -48,7 +46,7 @@ Build an AI agent system that:
 
 
 
-## Arquitetura
+## Architecture
 
 ![architecture](./images/architecture.png)
 

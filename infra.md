@@ -4,9 +4,8 @@ This repository provisions the shared Azure foundation used by the Call Center a
 
 ## Architecture
 
-![Azure Resources - Infra](./docs/assets/images/infra.png)
-
 ```mermaid
+
 flowchart LR
     Developer[Developer workstation] -->|azd up / azd provision| Bicep[infra/main.bicep]
     Bicep --> Foundry[Microsoft Foundry AI Services account]
@@ -20,6 +19,7 @@ flowchart LR
     Project --> Agents[Python lab agents]
     Model --> Agents
     Bing --> Agents
+    
 ```
 
 ## Provisioned resources
