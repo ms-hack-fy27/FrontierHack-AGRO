@@ -1,5 +1,5 @@
 """
-GreenRise AgriTech Smart Farm API.
+GreenRise AgroTech Smart Farm API.
 
 REST API exposing read-only (GET) access to crop-zone sensor data,
 compatible with Microsoft Foundry OpenAPI tool integration.
@@ -16,7 +16,7 @@ from data_store import get_zone, get_zones, load_farm
 from models import CropSummary, ErrorResponse, Farm, MetricName, MetricReading, Zone
 
 app = FastAPI(
-    title="GreenRise AgriTech Smart Farm API",
+    title="GreenRise AgroTech Smart Farm API",
     description=(
         "Read-only REST API for crop-zone sensor data (soil moisture, temperature, "
         "humidity and pH) at the Salinas Valley Demonstration Farm. "

@@ -50,7 +50,7 @@ def run_traced_agent():
     conversation = openai_client.conversations.create()
     try:
         response = openai_client.responses.create(
-            input="GreenRise AgriTech: ZONE-ALPHA warning, ZONE-BETA normal, ZONE-GAMMA critical, ZONE-DELTA normal, ZONE-EPSILON warning. Return a concise risk summary.",
+            input="GreenRise AgroTech: ZONE-ALPHA warning, ZONE-BETA normal, ZONE-GAMMA critical, ZONE-DELTA normal, ZONE-EPSILON warning. Return a concise risk summary.",
             conversation=conversation.id,
             extra_body={"agent_reference": {"name": agent.name, "type": "agent_reference"}},
         )

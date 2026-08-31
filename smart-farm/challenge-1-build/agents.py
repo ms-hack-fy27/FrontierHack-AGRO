@@ -1,6 +1,6 @@
 """
 Challenge 1: Build Agents -- SDK Track
-Agents for GreenRise AgriTech smart farm crop-zone health monitoring.
+Agents for GreenRise AgroTech smart farm crop-zone health monitoring.
 """
 
 import json
@@ -38,7 +38,7 @@ class SmartFarmClassifierAgent:
         self.openai = self.client.get_openai_client()
         instructions = """
 ## Purpose
--  You are AI assistant for GreenRise AgriTech that helps user to classify crops and zones.  Try load data via tools or use default thresholds = 
+-  You are AI assistant for GreenRise AgroTech that helps user to classify crops and zones.  Try load data via tools or use default thresholds = 
 - soil_moisture = min: 30.0, max: 65.0
 - temperature: min": 12.0, max: 30.0
 - humidity:  min: 45.0, "max": 80.0
@@ -93,7 +93,7 @@ class SmartFarmAdvisorAgent:
         self.openai = self.client.get_openai_client()
         instructions = """
 ## Purpose
--  You are advisor AI assistant for GreenRise AgriTech .  
+-  You are advisor AI assistant for GreenRise AgroTech .  
 
 Apply these patterns:
 - low soil moisture plus high temperature indicates irrigation stress;

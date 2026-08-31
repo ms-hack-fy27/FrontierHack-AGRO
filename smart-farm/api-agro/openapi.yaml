@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: GreenRise AgriTech Smart Farm API
+  title: GreenRise AgroTech Smart Farm API
   description: Read-only REST API for crop-zone sensor data (soil moisture, temperature,
     humidity and pH) at the Salinas Valley Demonstration Farm. Every resource can
     be queried for a single zone/metric or for all of them.

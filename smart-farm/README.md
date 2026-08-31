@@ -1,14 +1,14 @@
-# 🌱 Scenario: Smart Farm Crop Health — GreenRise AgriTech
+# 🌱 Scenario: Smart Farm Crop Health — GreenRise AgroTech
 
 ## Context
 
-**GreenRise AgriTech** runs the Salinas Valley Demonstration Farm, where five growing zones are monitored for soil moisture, temperature, humidity, and pH. Each zone has its own crop and its own safe thresholds, so the same reading can be normal in one zone and an emergency in another. Today's snapshot covers 5 zones:
+**GreenRise AgroTech** runs the Salinas Valley Demonstration Farm, where five growing zones are monitored for soil moisture, temperature, humidity, and pH. Each zone has its own crop and its own safe thresholds, so the same reading can be normal in one zone and an emergency in another. Today's snapshot covers 5 zones:
 
-- **ZONE-ALPHA** — North Lettuce Beds (romaine lettuce) — ⚠️ warning — dry soil and heat above threshold
-- **ZONE-BETA** — East Tomato Greenhouse (heirloom tomatoes) — ✅ normal
-- **ZONE-GAMMA** — South Strawberry Rows (strawberries) — 🔴 critical — several metrics out of range plus a broad mite infestation
-- **ZONE-DELTA** — West Bell Pepper Block (bell peppers) — ✅ normal
-- **ZONE-EPSILON** — Central Herb Garden (basil and cilantro) — ⚠️ warning — high humidity and low pH
+- **ZONE-ALPHA** — North Lettuce Beds (romaine lettuce)
+- **ZONE-BETA** — East Tomato Greenhouse (heirloom tomatoes) 
+- **ZONE-GAMMA** — South Strawberry Rows (strawberries) 
+- **ZONE-DELTA** — West Bell Pepper Block (bell peppers) 
+- **ZONE-EPSILON** — Central Herb Garden (basil and cilantro) 
 
 ## Your mission
 
@@ -29,50 +29,6 @@ Build an AI agent system that:
 | 4 | [Orchestrate](./challenge-4-workflow/README.md) | Interactive two-agent orchestration | 20 min |
 
 When you are done, see the [wrap up](./wrapup.md) for a recap and cleanup steps.
-
-## Why the challenges are in this order
-
-- **Build first.** Zone classification only works when the agent knows each zone's thresholds. A reading of 29 °C is fine in the pepper block and out of range in the tomato greenhouse — an agent without that context raises false alarms or misses a crop-threatening trend. Splitting the work in two also keeps each agent honest: the Classification Agent reports what the data says and is explicitly told not to recommend anything, while the Advisory Agent interprets those findings and proposes actions.
-
-- **Monitor next.** A crop-health system runs against every zone, every day. Application Insights traces let you see what the agent actually did for each run — whether it called the health-monitor tool, how long it took, how many tokens it used, and exactly what it reported. When an agronomist says, "the system missed ZONE-GAMMA," the traces show you why.
-
-- **Evaluate next.** The evaluation set has known-correct answers covering normal, warning, critical, single-metric, and multi-metric conditions. Scoring the agents before and after every change shows whether classification is improving or silently degrading. A prompt change that looks good on two spot-checked zones can still hurt the edge cases you did not check.
-
-- **Orchestrate last.** The two-agent workflow passes the classifier's grounded analysis to the advisor, so recommendations stay tied to real readings instead of invented ones. That is the difference between a manually run Python script and something the farm operations team trusts every morning
-
-## Farm data and API
-
-The source dataset is `api-agro/data/smart_farm_data.json`. It contains a snapshot of five zones with crop details, inspection dates, observed issues, and these readings:
-
-- `soil_moisture`
-- `temperature`
-- `humidity`
-- `ph_level`
-
-Each metric has a zone-specific minimum and maximum threshold. The stored statuses are two `warning` zones, one `critical` zone, and two `normal` zones.
-
-The API serves that dataset through:
-
-| Method | Route | Result |
-|---|---|---|
-| GET | `/farm` | Full farm snapshot |
-| GET | `/zones` | All zones; accepts optional `zone_id` |
-| GET | `/zones/{zone_id}` | One zone, matched case-insensitively |
-| GET | `/zones/{zone_id}/readings` | All metric readings; accepts optional `metric` |
-| GET | `/crops` | Crop summaries; accepts a case-insensitive partial `crop` filter |
-| GET | `/swagger` | Swagger UI |
-
-Run the API separately from the agent lab:
-
-```powershell
-cd smart-farm\api-agro
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
-
-Then open `http://127.0.0.1:8000/swagger`. Static OpenAPI documents are checked in as `api-agro/openapi.json` and `api-agro/openapi.yaml`.
 
 ## Next steps
 

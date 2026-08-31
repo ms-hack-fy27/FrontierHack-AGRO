@@ -1,6 +1,6 @@
-# 🎉 Lab complete — Smart Farm Crop Health (GreenRise AgriTech)
+# 🎉 Lab complete — Smart Farm Crop Health (GreenRise AgroTech)
 
-Congratulations — you built, observed, evaluated, and orchestrated a multi-agent crop-health system for GreenRise AgriTech. Here is what you accomplished.
+Congratulations — you built, observed, evaluated, and orchestrated a multi-agent crop-health system for GreenRise AgroTech. Here is what you accomplished.
 
 ---
 

@@ -1,6 +1,6 @@
 """
 Challenge 5: Interactive Multi-Agent Orchestration -- Microsoft Agent Framework (Python)
-GreenRise AgriTech Smart Farm Lab
+GreenRise AgroTech Smart Farm Lab
 
 Orchestrates two agents:
 1. smart-farm-classifier-agent (Agent 1): Tool-grounded agent for metric threshold analysis.
@@ -185,7 +185,7 @@ def run_advisor_agent(client, agent_name: str, monitor_context: str) -> str:
 def display_flow_header():
     print("""
 ================================================================================
-                     🌱 MULTI-AGENT ORCHESTRATION - GREENRISE AGRITECH (CHALLENGE 5)
+                     🌱 MULTI-AGENT ORCHESTRATION - GREENRISE AgroTech (CHALLENGE 5)
 ================================================================================
     [ Execution Flow ]
 
