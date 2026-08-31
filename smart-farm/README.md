@@ -1,53 +1,93 @@
-# GreenRise AgriTech Smart Farm Lab
+# GreenRise AgriTech Smart Farm
 
-Build, observe, evaluate, and orchestrate crop-health agents for GreenRise AgriTech, a five-zone demonstration farm. The lab uses Microsoft Foundry, Azure AI Projects, Application Insights, and a portal workflow.
+This folder contains a smart-farm dataset and read-only API plus examples for creating, tracing, evaluating, and orchestrating agents with Microsoft Foundry. This README describes the current implementation; some challenge guides describe intended behavior that is not wired into the code yet.
 
-## Scenario
+## What is implemented
 
-GreenRise monitors five crop zones. Each zone reports soil moisture, temperature, humidity, and pH. The supplied snapshot intentionally contains exactly two warning zones, one critical zone, and two normal zones so you can test both routine and urgent recommendations.
+| Component | Current behavior |
+|---|---|
+| Infrastructure | The repository-level `azure.yaml` and `infra/main.bicep` provision a Foundry resource and project, a `gpt-5.4` deployment, Bing Custom Search, Log Analytics, and Application Insights. |
+| Smart Farm API | `api-agro/main.py` exposes the farm snapshot, zones, readings, and crops through a read-only FastAPI application. It is not currently called by the agent scripts. |
+| Challenge 0 | Provisions the shared repository infrastructure. The post-provision hook writes `.env` at the repository root. |
+| Challenge 1 | Creates `smart-farm-classifier-agent` and `smart-farm-advisor-agent`, then runs only the classifier against two zones embedded in the prompt. It does not register a function or OpenAPI tool, load the farm dataset, invoke the advisor, or delete the created agent versions. |
+| Challenge 2 | Creates a temporary `smart-farm-tracing-agent`, sends one prompt containing five hard-coded zone statuses, exports telemetry to Application Insights, and then deletes the conversation and agent version. |
+| Challenge 3 | Provides `eval_portal.jsonl` with 10 cases for a manual Foundry portal evaluation. There is no local evaluation runner or `evaluation_dataset.json`. |
+| Challenge 4 | Contains an interactive two-agent orchestration script. The script expects `challenge-1-build/smart_farm_data.json`, which does not exist, and creates a `FunctionTool` definition without attaching it to the classifier. The local health-monitor function is therefore not wired end to end. |
 
-The two agents are:
+## Farm data and API
 
-- `smart-farm-classifier-agent`: has the `check_health_monitor` function tool and returns structured threshold analysis.
-- `smart-farm-advisor-agent`: has no tools and turns the monitor output into evidence-based agronomic advice.
+The source dataset is `api-agro/data/smart_farm_data.json`. It contains a snapshot of five zones with crop details, inspection dates, observed issues, and these readings:
 
-## Challenges
+- `soil_moisture`
+- `temperature`
+- `humidity`
+- `ph_level`
 
-| # | Challenge | Outcome | Time |
-|---|---|---|---|
-| 0 | [Setup](./challenge-0-setup/README.md) | Provision Foundry, the model, and Application Insights | 20 min |
-| 1 | [Build](./challenge-1-build/README.md) | Create and test both agents with farm data | 30 min |
-| 2 | [Monitor](./challenge-2-monitor/README.md) | Capture GenAI traces and inspect telemetry | 20 min |
-| 3 | [Evaluate](./challenge-3-evaluate/README.md) | Run a repeatable 10-case quality evaluation | 30 min |
-| 4 | [Workflow](./challenge-4-workflow/README.md) | Run Python orchestration and deploy a portal workflow | 20 min |
-| 5 | [Orchestration](./challenge-5/README.md) | Interactive multi-agent orchestration with Agentic Framework | 20 min |
+Each metric has a zone-specific minimum and maximum threshold. The stored statuses are two `warning` zones, one `critical` zone, and two `normal` zones.
 
-Complete the challenges in order. Challenge 4 reuses agents created in Challenge 1 and demonstrates why local function loops and portal workflows need different inputs.
+The API serves that dataset through:
 
-## Prerequisites
+| Method | Route | Result |
+|---|---|---|
+| GET | `/farm` | Full farm snapshot |
+| GET | `/zones` | All zones; accepts optional `zone_id` |
+| GET | `/zones/{zone_id}` | One zone, matched case-insensitively |
+| GET | `/zones/{zone_id}/readings` | All metric readings; accepts optional `metric` |
+| GET | `/crops` | Crop summaries; accepts a case-insensitive partial `crop` filter |
+| GET | `/swagger` | Swagger UI |
 
-- Azure subscription with permission to provision resources
-- Azure CLI, Azure Developer CLI (`azd`), Python 3.10+, and PowerShell
-- Microsoft Foundry access with permission to create and run agents
-- A signed-in Azure identity available to `DefaultAzureCredential`
-
-## Quick start
+Run the API separately from the agent lab:
 
 ```powershell
-cd smart-farm
+cd smart-farm\api-agro
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+Then open `http://127.0.0.1:8000/swagger`. Static OpenAPI documents are checked in as `api-agro/openapi.json` and `api-agro/openapi.yaml`.
+
+## Agent lab setup
+
+### Prerequisites
+
+- Azure subscription with permission to provision resources
+- Microsoft Foundry access with permission to create and run agents
+- Azure CLI, Azure Developer CLI (`azd`), Python 3.10+, and PowerShell
+- An Azure identity available to `DefaultAzureCredential`
+
+From the repository root:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r smart-farm\requirements.txt
+az login
 azd auth login
 azd provision
 ```
 
-The post-provision hook writes `smart-farm/.env`. Then follow the challenge links above. Run Python commands from the challenge directory shown in each guide.
+The `postprovision` hook runs `scripts/write-env.ps1` and writes the variables consumed by the Python scripts to the repository-root `.env`, including `PROJECT_CONNECTION_STRING`, `MODEL_DEPLOYMENT_NAME`, and `APPLICATIONINSIGHTS_CONNECTION_STRING`.
 
-## Data contract
+## Challenges
 
-`challenge-1-build/smart_farm_data.json` contains the farm timestamp, five unique zone IDs and names, crop names, status, inspection date, four readings, and minimum/maximum thresholds for every reading. The tool compares each value inclusively with its range and reports deviations as percentages from the violated boundary.
+| # | Guide | What can be run now |
+|---|---|---|
+| 0 | [Setup](./challenge-0-setup/README.md) | Provision the repository infrastructure and generate `.env`. |
+| 1 | [Build](./challenge-1-build/README.md) | Create both hosted agent versions and run the classifier's hard-coded two-zone example. |
+| 2 | [Monitor](./challenge-2-monitor/README.md) | Send one traced model call and export telemetry. |
+| 3 | [Evaluate](./challenge-3-evaluate/README.md) | Upload the 10-case JSONL dataset and run an evaluation manually in Foundry. |
+| 4 | [Workflow](./challenge-4-workflow/README.md) | Inspect the intended interactive handoff; code and data paths must be fixed before the documented tool-grounded flow works. |
+
+Run each Python command from the directory specified by its guide. The challenge guides may still refer to the intended end state; use the implementation notes above when behavior differs.
 
 ## Cleanup
 
-When finished, remove the lab's Azure resources with `azd down` from `smart-farm`. This does not change any other scenario in the repository.
+From the repository root, remove the resources provisioned by this repository:
+
+```powershell
+azd down
+```
+
+Because `azure.yaml` is shared at the repository root, this removes the shared deployment rather than resources scoped only to `smart-farm`.

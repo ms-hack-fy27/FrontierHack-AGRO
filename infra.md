@@ -1,8 +1,6 @@
 # Azure Infrastructure
 
-This repository provisions the shared Azure foundation used by the Call Center and Smart Farm labs. The source of truth is [`infra/main.bicep`](infra/main.bicep), and [`azure.yaml`](azure.yaml) tells Azure Developer CLI (`azd`) to deploy that Bicep template.
-
-> **Deployment status:** the `azd` environment inspected during this review was `fox-wk`, in resource group `rg-fox-wk`. That resource group was not found in the selected subscription, and the repository context records `azd down`. The resources below describe what the template provisions when deployed; they are not confirmation that the environment is currently running.
+This repository provisions the shared Azure foundation used by the Call Center and Smart Farm labs. The source of truth for deployed resources is [`infra/main.bicep`](infra/main.bicep), and [`azure.yaml`](azure.yaml) tells Azure Developer CLI (`azd`) to deploy that Bicep template. The repository does not track whether a particular `azd` environment is currently deployed.
 
 ## Architecture
 
@@ -54,23 +52,42 @@ azd auth login
 azd up
 ```
 
-`azd` creates or reuses an environment and resource group, deploys `infra/main.bicep`, and stores the Bicep outputs in the `azd` environment. The post-provision hook [`scripts/write-env.ps1`](scripts/write-env.ps1) reads those outputs and writes a root `.env` file for local challenges. The `.env` file is ignored by Git and must not be committed.
+`azd` creates or selects an environment and resource group, deploys `infra/main.bicep`, and stores the Bicep outputs in the `azd` environment. The post-provision hook [`scripts/write-env.ps1`](scripts/write-env.ps1) reads those outputs and writes a root `.env` file for local challenges. The `.env` file is ignored by Git and must not be committed.
 
-To select another subscription, environment, or region, configure the `azd` environment before provisioning. The Bicep `location` parameter defaults to `swedencentral`.
+To select another subscription or environment, configure `azd` before provisioning. The Bicep `location` parameter defaults to `swedencentral`. The repository does not include a `.bicepparam` or ARM parameters file that overrides the template's model, capacity, naming, or location defaults.
 
 ## Application configuration
 
-The hook exports the values consumed by the lab scripts:
+The hook writes the following values to `.env`:
 
-| Variable | Bicep output | Used for |
+| Variable | Source | Used for |
 |---|---|---|
-| `FOUNDRY_ENDPOINT` | `foundryEndpoint` | Foundry account endpoint |
-| `PROJECT_CONNECTION_STRING` | `projectConnectionString` | Project-scoped SDK connection |
-| `MODEL_DEPLOYMENT_NAME` | `modelDeploymentName` | Model calls, default `gpt-5.4` |
-| `APPLICATIONINSIGHTS_CONNECTION_STRING` | `appInsightsConnectionString` | OpenTelemetry and GenAI tracing |
-| `APPINSIGHTS_INSTRUMENTATION_KEY` | `appInsightsInstrumentationKey` | Legacy-compatible Application Insights configuration |
+| `AZURE_SUBSCRIPTION_ID` | `subscriptionId` output | Subscription containing the deployment |
+| `RESOURCE_GROUP` | `resourceGroupName` output | Resource group containing the deployment |
+| `FOUNDRY_RESOURCE_NAME` | `foundryResourceName` output | Foundry account name |
+| `PROJECT_NAME` | `projectName` output | Foundry project name |
+| `FOUNDRY_ENDPOINT` | `foundryEndpoint` output | Foundry account endpoint |
+| `PROJECT_CONNECTION_STRING` | `projectConnectionString` output | Project-scoped SDK endpoint; despite the variable name, the generated value is an HTTPS URL, not a credential-bearing connection string |
+| `MODEL_DEPLOYMENT_NAME` | `modelDeploymentName` output | Model calls, default `gpt-5.4` |
+| `APPLICATIONINSIGHTS_CONNECTION_STRING` | `appInsightsConnectionString` output | OpenTelemetry and GenAI tracing |
+| `APPINSIGHTS_INSTRUMENTATION_KEY` | `appInsightsInstrumentationKey` output | Legacy-compatible Application Insights configuration |
+| `AZURE_EXPERIMENTAL_ENABLE_GENAI_TRACING` | Literal `true` in `write-env.ps1` | Enables experimental GenAI tracing in the Azure SDK instrumentation |
+| `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT` | Literal `true` in `write-env.ps1` | Enables capture of GenAI message content in telemetry |
+
+The Bicep template also outputs the Bing account name, resource ID, configuration name, and Foundry connection name. The current hook does not copy those four outputs into `.env`.
 
 The deployment does not create a separate web application, database, storage account, Kubernetes cluster, or public API. The lab agents run from the participant's Python environment and call Foundry over its endpoint.
+
+## Facilitator scripts
+
+The scripts under `scripts/` perform tenant and subscription administration separately from `azd`:
+
+- [`hackthon-setup.ps1`](scripts/hackthon-setup.ps1) creates `hack-dev-001`, `hack-dev-002`, and subsequent Microsoft Entra users, creates matching `rg-hack-dev-001`, `rg-hack-dev-002`, and subsequent resource groups, and assigns each user the `Contributor` and `Foundry User` roles on their matching resource group by default.
+- The setup script does **not** run `azd` or deploy `infra/main.bicep` into those resource groups. Each participant or facilitator must perform the actual lab deployment separately.
+- The current setup implementation assigns the fixed temporary password `P@$$w0rd`, forces a password change at first sign-in, and prints newly assigned temporary passwords in its final output. Treat that output as sensitive and replace the fixed-password implementation before using the script outside a controlled workshop.
+- [`hackthon-cleanup.ps1`](scripts/hackthon-cleanup.ps1) deletes Microsoft Entra users and resource groups by name prefix. Its defaults match `hack-dev*` users and `rg-hack-dev*` resource groups. Resource-group deletion is asynchronous by default (`-NoWait $true`). Review the prefixes and active subscription before running it because deletion is destructive.
+
+Running these scripts requires permissions to create and delete Microsoft Entra users, create and delete resource groups, and assign Azure roles. Supplying `-SubscriptionId` changes the active Azure CLI subscription before resource-group operations.
 
 ## Identity and security
 
@@ -80,8 +97,9 @@ The Foundry account and project use system-assigned managed identities. The curr
 - `disableLocalAuth: false`, so local authentication remains enabled.
 - Bing credentials in the Foundry connection, sourced from the Bing account key at deployment time.
 - Application Insights connection credentials in the Foundry connection.
+- GenAI message-content capture to `true` in the generated local `.env` file.
 
-These settings are suitable for a short-lived workshop, but they are not a production security baseline. A production deployment should evaluate private networking, restricted ingress, Microsoft Entra ID-only authentication where supported, least-privilege role assignments, secret rotation, and policy controls. Do not print or commit generated connection strings or keys.
+These settings are suitable for a short-lived workshop, but they are not a production security baseline. A production deployment should evaluate private networking, restricted ingress, Microsoft Entra ID-only authentication where supported, least-privilege role assignments, secret rotation, telemetry content redaction, and policy controls. Do not print or commit generated connection strings, keys, temporary passwords, or captured prompt content.
 
 ## Observability path
 
@@ -92,7 +110,7 @@ The Application Insights resource is workspace-based and uses the Log Analytics 
 - **Azure AI Search is not currently provisioned.** `infra/main.bicep` contains no `Microsoft.Search/searchServices` resource or Search connection.
 - The Bicep compiler reports `BCP081` warnings for the Bing resource API types because type metadata is unavailable. The template still builds successfully, but deployment should be smoke-tested after API-version changes.
 - The template exposes telemetry connection values as deployment outputs so the post-provision hook can create `.env`. Keep deployment output logs private.
-- The model name and version are hard-coded defaults. They can be changed by passing Bicep parameters through the `azd` environment when the target model is available in the selected region and subscription.
+- The model deployment defaults to `gpt-5.4`, version `2026-03-05`, with `GlobalStandard` capacity `10`. These are Bicep parameters with defaults, but this repository has no checked-in parameter mapping for overriding them through `azd`. Any override must be wired into the deployment explicitly and must be available in the selected region and subscription.
 
 ## Useful verification
 

@@ -33,6 +33,8 @@ The script creates both hosted agent versions, checks all five zones, forwards t
 3. Confirm that ZONE-GAMMA is critical and that ZONE-ALPHA and ZONE-EPSILON are warnings.
 4. Open Foundry Build -> Agents and inspect both agents.
 
+## TODO: CONFIG AGENTS - MANUALLY ON FOUNDRY
+
 ## Success criteria
 
 - [ ] The tool returns threshold analysis for all four metrics.

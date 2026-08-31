@@ -17,27 +17,27 @@ Run a simple two-agent orchestration using the latest version of the **Microsoft
 
 ```text
  ┌───────────────────────────────────┐
- │        👤  USER (PROMPT)           │
+          👤  USER (PROMPT)         
  └─────────────────┬─────────────────┘
                    │
                    │  1. User Prompt
                    ▼
  ┌───────────────────────────────────┐
- │  🤖 AGENT 1: HEALTH MONITOR       │
- │   (smart-farm-classifier-agent)      │
+    🤖 AGENT 1: CLASSIFIER       
+     (smart-farm-classifier-agent)      
  └─────────────────┬─────────────────┘
                    │
                    │  2. Analysis Context / Anomalies
                    ▼
  ┌───────────────────────────────────┐
- │  🤖 AGENT 2: AGRONOMIC ADVISOR    │
- │   (smart-farm-advisor-agent)      │
+    🤖 AGENT 2: AGRONOMIC ADVISOR    
+     (smart-farm-advisor-agent)      
  └─────────────────┬─────────────────┘
                    │
                    │  3. Diagnosis and Final Assessment
                    ▼
  ┌───────────────────────────────────┐
- │      📄 FINAL RESPONSE DISPLAYED  │
+       📄 FINAL RESPONSE DISPLAYED  
  └───────────────────────────────────┘
 ```
 
@@ -48,7 +48,7 @@ Run a simple two-agent orchestration using the latest version of the **Microsoft
 Open a terminal in the challenge directory and run the Python script:
 
 ```powershell
-cd smart-farm\challenge-5
+cd smart-farm\challenge-4-workflow
 python orchestrate.py
 ```
 
