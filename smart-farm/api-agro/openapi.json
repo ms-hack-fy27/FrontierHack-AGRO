@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://agrodata-e9adbxgsfubvbma9.swedencentral-01.azurewebsites.net",
+      "url": "https://apiagro-b8evajeka5crb4da.swedencentral-01.azurewebsites.net/",
       "description": "Current server"
     }
   ],

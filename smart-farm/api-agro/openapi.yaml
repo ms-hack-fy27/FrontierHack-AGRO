@@ -6,7 +6,7 @@ info:
     be queried for a single zone/metric or for all of them.
   version: 1.0.0
 servers:
-- url: /
+- url: https://apiagro-b8evajeka5crb4da.swedencentral-01.azurewebsites.net/
   description: Current server
 paths:
   /farm:
