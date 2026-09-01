@@ -75,7 +75,32 @@ cd smart-farm\challenge-1-build
 python agents.py
 ```
 
-The script creates both agent versions, then runs **only the classifier** against two zones written directly into the prompt, and prints the result. The advisor is created but not yet invoked — Challenge 4 wires the two together. Both agent versions are left in place so you can open them in the portal.
+## Run the agents in the portal
+
+1. Open [ai.azure.com/nextgen](https://ai.azure.com/nextgen), select your project, and go to **Agents**.
+2. Open `smart-farm-classifier-agent` and test follow prompt
+
+```powershell
+Classify follow zones:
+    Zone: ZONE-ALPHA
+    Crop: Tomato
+    Soil moisture: 52
+    Temperature: 28
+    Humidity: 60
+    pH level: 6.5
+
+    Zone: ZONE-BETA
+    Crop: Lettuce
+    Soil moisture: 70
+    Temperature: 40
+    Humidity: 90
+    pH level: 8
+    Issues: Ácaro-branco (Polyphagotarsonemus latus)
+```
+
+See follow result:
+
+![Agent Result](./images/foundry-agent-result.png)
 
 ## Smart Farm data via API
 

@@ -27,7 +27,9 @@ The script loads environment variables first, imports and instruments `AIProject
 
 ## Inspect the trace
 
-In Foundry, open Build -> Agents -> `smart-farm-tracing-agent` or the Traces view. In Azure Portal, open the smart farm Application Insights resource and use Transaction search with a recent time range.
+In Foundry, open Build -> Agents -> `smart-farm-tracing-agent` and Monitor view. In Azure Portal, open the smart farm Application Insights resource and use Transaction search with a recent time range.
+
+![Foundry Agent Monitor](./images/foundry-monitor.png))
 
 Look for the input, model response, duration, token usage, and any errors. A trace is useful for proving which prompt and model call produced a result; it does not by itself prove that the recommendation was correct.
 
