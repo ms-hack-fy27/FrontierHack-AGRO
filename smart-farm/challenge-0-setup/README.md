@@ -22,10 +22,6 @@ By the end of this challenge, you will have:
 >
 > **Owner** (or Contributor) permissions on the subscription alone are **not** sufficient. They provide control-plane access to create and manage resources, but creating and running agents are data-plane operations that require the separate **Foundry User** role assigned on the Foundry account. An Owner can assign it to themselves; a Contributor must ask an administrator to assign it after deployment.
 
-There are two ways to get started — choose one:
-
-> **First step for either option:** [fork this repository](https://github.com/ms-hack-fy27/FrontierHack-AGRO//fork) to your own GitHub account.
-
 ---
 
 ### Setup: Local environment
@@ -44,8 +40,6 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 # 3. Install Python dependencies
 pip install -r requirements.txt
 
-# 4. Log in to Azure
-az login
 ```
 
 4. Continue to **Deploy infrastructure** below.
@@ -55,7 +49,9 @@ az login
 From the **smart-farm** folder, initialize the `azd` environment and provision the infrastructure:
 
 ```bash
-cd smart-farm
+
+az login --tenant <your-tenant-id>
+az account show #validate if your using expected subscription
 azd auth login
 azd up
 ```
