@@ -13,7 +13,7 @@ By the end of this challenge, you will have:
 
 ![setup](./images/setup.png)
 
-## Comece agora
+## Get Started
 
 > [!NOTE]
 > Before you start, make sure you have:
@@ -51,7 +51,7 @@ Run everything on your own machine. Requires Python 3.10+ and the Azure CLI.
 ```bash
 # 1. Clone this repo
 git clone https://github.com/ms-hack-fy27/FrontierHack-AGRO/.git
-cd FrontierWeekHack
+cd FrontierHack-AGRO
 
 # 2. Create and activate a virtual environment
 python3 -m venv .venv
