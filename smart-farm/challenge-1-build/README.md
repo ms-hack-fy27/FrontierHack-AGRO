@@ -6,8 +6,8 @@ Time: ~30 minutes
 
 By the end of this challenge, you will have:
 
-- ✅ A **Classification Agent** that compares each zone's readings with its thresholds and reports status
-- ✅ An **Advisory Agent** that turns those findings into agronomic recommendations
+- ✅ The **Classifier Agent** that compares each zone's readings with its thresholds and reports status
+- ✅ The **Advisory Agent** turns those findings into agronomic recommendations
 - ✅ Both agents created in your Foundry project and visible in the portal
 
 ![Smart Farm Agents](./images/build.png)
