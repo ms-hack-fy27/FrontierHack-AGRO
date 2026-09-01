@@ -19,7 +19,7 @@ app = FastAPI(
     title="GreenRise AgroTech Smart Farm API",
     description=(
         "Read-only REST API for crop-zone sensor data (soil moisture, temperature, "
-        "humidity and pH) at the Salinas Valley Demonstration Farm. "
+        "humidity and pH) at the Smart Farm Demonstration. "
         "Every resource can be queried for a single zone/metric or for all of them."
     ),
     version="1.0.0",

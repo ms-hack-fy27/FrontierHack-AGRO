@@ -2,7 +2,7 @@
 
 ## Context
 
-**GreenRise AgroTech** runs the Salinas Valley Demonstration Farm, where five growing zones are monitored for soil moisture, temperature, humidity, and pH. Each zone has its own crop and its own safe thresholds, so the same reading can be normal in one zone and an emergency in another. Today's snapshot covers 5 zones:
+**GreenRise AgroTech** runs the Smart Farm Demonstration, where five growing zones are monitored for soil moisture, temperature, humidity, and pH. Each zone has its own crop and its own safe thresholds, so the same reading can be normal in one zone and an emergency in another. Today's snapshot covers 5 zones:
 
 - **ZONE-ALPHA** — North Lettuce Beds (romaine lettuce)
 - **ZONE-BETA** — East Tomato Greenhouse (heirloom tomatoes) 

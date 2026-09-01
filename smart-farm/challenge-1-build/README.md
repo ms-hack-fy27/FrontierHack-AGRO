@@ -14,7 +14,7 @@ By the end of this challenge, you will have:
 
 ## Context
 
-GreenRise AgriTech monitors five growing zones at the Salinas Valley Demonstration Farm. Each zone has a crop, four metrics — `soil_moisture`, `temperature`, `humidity`, and `ph_level` — and its own `min` and `max` thresholds, so a reading that is safe in one zone can be an emergency in another. Your agents need to:
+GreenRise AgriTech monitors five growing zones at the Smart Farm Demonstration. Each zone has a crop, four metrics — `soil_moisture`, `temperature`, `humidity`, and `ph_level` — and its own `min` and `max` thresholds, so a reading that is safe in one zone can be an emergency in another. Your agents need to:
 
 1. **Classification**: compare every reading with that zone's thresholds and mark each metric 🔴 critical, ⚠️ warning, or ✅ normal, including any recorded issues
 2. **Advisory**: given that classification, recommend irrigation, disease, and escalation actions — and look up treatment products when pests are present
