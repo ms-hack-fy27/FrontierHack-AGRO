@@ -25,11 +25,14 @@ See [smart_farm_data.json](../api-agro/data/smart_farm_data.json) for the curren
 
 Microsoft Foundry offers two ways to build agents. The **Foundry portal** ([ai.azure.com/nextgen](https://ai.azure.com/nextgen)) provides a visual, no-code interface where you can create agents, attach tools, and test them interactively in a playground — ideal for exploration and rapid prototyping. The **Azure AI Agents SDK** provides full programmatic control: you define agent behavior, tools, and orchestration logic in Python, making versioning, testing, and integration with automated pipelines easier.
 
+## TODO: REVISAR ESSE DESENHO
+
 ![Microsoft Foundry](./images/foundry.png)
+
 
 In this challenge, we use the **SDK**. The code in [agents.py](./agents.py) creates both agents and runs the classifier — all from the terminal. After the script runs, both agents are also visible in the portal under **Agents**, where you can inspect them, tune their instructions, attach tools, and test them interactively without changing code.
 
-## Agents and tools
+## Agents and Tools
 
 ### What is an agent?
 
@@ -53,20 +56,14 @@ From the model's perspective, tools are described by a **JSON schema** (name, de
 |-----------|-------------|----------|
 | **OpenAPI** | Calls an API that you define | Existing services such as the farm API in `api-agro` |
 | **Code Interpreter** | Lets the agent write and execute Python in a sandbox | Data analysis, chart generation, and file processing |
-| **File Search** | Performs semantic search over a Microsoft Foundry knowledge base | Agronomy manuals, crop protocols, and treatment guides |
-| **Bing Search** | Searches the web in real time | Pest treatment products and current agronomic guidance |
 | **Azure AI Search** | Queries an Azure Search index | Grounded retrieval from your own data at scale |
 
-## Get started
 
-Open [agents.py](./agents.py) and review the implementation of both agents.
+# Get started
+
+1. **Open [agents.py](./agents.py) and review the implementation of both agents.**
 
 In this challenge the two agents are **prompt-only**: `agents.py` creates them with instructions but does not attach a tool yet. That is why the classifier's instructions carry fallback thresholds — it can still classify readings pasted directly into the prompt. Attaching a tool is what grounds it in the real dataset, and you do that in the portal at the end of this challenge.
-
-## Agent responsibilities
-
-- **`smart-farm-classifier-agent`** reports a classification summary table only — one row per zone, one column per metric, marked 🔴 / ⚠️ / ✅, plus a priority column and any recorded issues. Its instructions explicitly forbid recommendations, which keeps classification separate from advice.
-- **`smart-farm-advisor-agent`** has no tools of its own. It reasons from the classifier's output using three patterns: low soil moisture with high temperature indicates irrigation stress; high humidity with low pH indicates fungal or disease risk; multiple critical readings require urgent agronomist escalation.
 
 ## Run
 
@@ -74,6 +71,14 @@ In this challenge the two agents are **prompt-only**: `agents.py` creates them w
 cd smart-farm\challenge-1-build
 python agents.py
 ```
+
+
+### What you've deployed
+
+**`smart-farm-classifier-agent`** reports a classification summary table only — one row per zone, one column per metric, marked 🔴 / ⚠️ / ✅, plus a priority column and any recorded issues. Its instructions explicitly forbid recommendations, which keeps classification separate from advice.
+
+**`smart-farm-advisor-agent`** has no tools of its own. It reasons from the classifier's output using three patterns: low soil moisture with high temperature indicates irrigation stress; high humidity with low pH indicates fungal or disease risk; multiple critical readings require urgent agronomist escalation.
+
 
 ## Run the agents in the portal
 
@@ -125,7 +130,9 @@ The API serves that dataset through:
 | GET | `/crops` | Crop summaries; accepts a case-insensitive partial `crop` filter |
 | GET | `/swagger` | Swagger UI |
 
-Run the API separately from the agent lab:
+
+
+## Run
 
 ```powershell
 cd smart-farm\api-agro
@@ -135,16 +142,40 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
+> You can run to see the API locally. But, Check with your proctor the deployed URL
+> 
+
 Then open `http://127.0.0.1:8000/swagger`. Static OpenAPI documents are checked in as `api-agro/openapi.json` and `api-agro/openapi.yaml`.
 
-## Configure the agents in the portal
+
+## Configure TOOLS on the agents in the portal
 
 The script leaves both agents in your project, so finish the challenge in the portal:
 
+### Tool for Classifier Agent Steps
+
 1. Open [ai.azure.com/nextgen](https://ai.azure.com/nextgen), select your project, and go to **Agents**.
-2. Open `smart-farm-classifier-agent` and attach the farm data as an **OpenAPI** tool using `api-agro/openapi.json`, so it reads real zone readings instead of values pasted into the prompt. Start the API first, as shown above.
-3. Open `smart-farm-advisor-agent` and add the **Grounding with Bing Custom Search** tool, which its instructions already expect for pest product recommendations.
-4. Test both in the playground: ask the classifier for the status of all five zones, then pass its answer to the advisor.
+2. Open `smart-farm-classifier-agent` and expand the tabs **TOOLS**. ADD a TOOL.
+3. Once the selection window pops up, choose the tab **CUSTOM**. Choose the **OpenAPI tool**.
+4. Add the **Name** and **Description** of your preference. Note: Remember that the agent uses the description to locate your tool.
+5. On **OpenAPI 3.0+ schema** windows, attach the Json Schema for **OpenAPI** tool using `api-agro/openapi.json` file. 
+6. Create the Tool.
+
+### Tool for Advisor Agent Steps
+
+> On this Step, you will connect to a pre-loaded Search AI Index. This index is connected to some documents in a storage account. This will be the RAG (Retrieval‑Augmented Generation)
+
+
+1. Open `smart-farm-advisor-agent` and expand the tabs **TOOLS**. ADD a TOOL.
+2. Select the **Azure AI Search**
+3. Now, choose to select a resource. Look for **search-hack-shared**. Click to **Connect**
+4. Select the index listed in the box.
+5. Click to add the Tool.
+
+## Let's validate the tools? Proctor request.
+
+> Here you need a prompt to validade the content of your RAG, indexed on Azure Search or knowledge about the API
+
 
 ## Success criteria
 
