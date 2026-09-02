@@ -13,16 +13,13 @@ By the end of this challenge, you will have:
 
 ![setup](./images/setup.png)
 
-## Get Started
+## Prerequisites
 
-> [!NOTE]
-> Before you start, make sure you have:
-> - An **Azure subscription** where you have the **Contributor** role (to deploy infrastructure) and the **Foundry User** role (to create, evaluate, and run agents in Challenges 1–4).
-> - A **GitHub account** to fork this repository and run it in GitHub Codespaces.
->
-> **Owner** (or Contributor) permissions on the subscription alone are **not** sufficient. They provide control-plane access to create and manage resources, but creating and running agents are data-plane operations that require the separate **Foundry User** role assigned on the Foundry account. An Owner can assign it to themselves; a Contributor must ask an administrator to assign it after deployment.
-
----
+- Azure subscription with Contributor and Foundry User roles
+- Python 3.10 or later
+- Azure CLI (`az`) installed and authenticated (`az login`)
+- Azure Developer CLI (`azd`) installed
+- A terminal (PowerShell, bash or WSL)
 
 ### Setup: Local environment
 
@@ -35,7 +32,9 @@ cd FrontierHack-AGRO
 
 # 2. Create and activate a virtual environment
 python3 -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Activate venv on Windows: 
+.venv\Scripts\activate  # on linux: source .venv/bin/activate
 
 # 3. Install Python dependencies
 pip install -r requirements.txt
@@ -46,17 +45,26 @@ pip install -r requirements.txt
 
 ## Deploy infrastructure
 
-From the **smart-farm** folder, initialize the `azd` environment and provision the infrastructure:
-
 ```bash
 
 az login --tenant <your-tenant-id>
 az account show #validate if your using expected subscription
 azd auth login
 azd up
+# Command Prompt
+copy .env smart-farm\.env
+# PowerShell
+Copy-Item .env smart-farm\.env
+# Bash
+cp .env smart-farm/.env
+
+# Enter a unique environment name: hack-dev-XXX ( each participant must use a different number)
+# Create new resource group: rg-hack-dev-XXX
+# Recommended Location:  (Europe) Sweden Central (swedencentral)
+
 ```
 
-This provisions all resources and automatically writes your `.env` file to the **smart-farm** folder. Deployment takes a few minutes. To change the region or names, use `azd env set` before running `azd up`.
+This provisions all resources and writes your `.env` file to the repository root. The command above then copies it to the **smart-farm** folder. Deployment takes a few minutes. To change the region or names, use `azd env set` before running `azd up`.
 
 ## Verify resource creation
 

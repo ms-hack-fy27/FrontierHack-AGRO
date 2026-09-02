@@ -33,16 +33,8 @@ All scenarios follow the same five challenges:
 
 ## Prerequisites
 
-- Azure subscription with Contributor access
+- Azure subscription with Contributor and Foundry User roles
 - Python 3.10 or later
 - Azure CLI (`az`) installed and authenticated (`az login`)
 - Azure Developer CLI (`azd`) installed
-- A terminal (bash, PowerShell, or WSL)
-
-## Getting started
-
-1. Clone this repository and authenticate with `az login` and `azd auth login`.
-2. To provision the default call center scenario, run `azd up` from the repository root.
-3. For a specific scenario, enter `callcenter/` or `smart-farm/` and run `azd up`.
-4. Complete challenges 1–4 in order; each one builds on the previous challenge.
-5. The `agents.py` and `deploy.py` scripts are ready to run. Read the README in each challenge folder for instructions.
+- A terminal (PowerShell, bash or WSL)
