@@ -3,9 +3,7 @@
 # Microsoft Frontier Hackathon
 ## Microsoft Foundry: Build, scale, observe, and secure your AI agents
  
-Welcome to the hands-on lab experience where ideas become real, enterprise-ready solutions. This is the most advanced of the three agent-building tracks. While the Explorer track creates your first no-code agent and the Maker track automates tasks with low-code tools, this track is designed for developers, engineers, and architects who want full control over models, orchestration, and operations.
-
-In this lab, you will build, monitor, evaluate, and orchestrate AI agents using the Microsoft Foundry SDK. You will follow a guided, scenario-based experience designed to help turn a concept into a functional, enterprise-ready multi-agent system.
+Welcome to the hands-on lab experience where ideas become real, enterprise-ready solutions. In this lab, you will build, monitor, evaluate, and orchestrate AI agents using the Microsoft Foundry SDK. You will follow a guided, scenario-based experience designed to help turn a concept into a functional, enterprise-ready multi-agent system.
  
 By the end, you will not just understand how agents work: you will have built an agent that can be traced, evaluated, and deployed.
 
@@ -47,18 +45,6 @@ All scenarios follow the same five-challenge structure:
 - **Python 3.10 or later** installed locally (pre-installed when using Codespaces)
 - **Azure CLI** (`az`) installed (pre-installed when using Codespaces)
 - **Azure Developer CLI** (`azd`) installed (pre-installed when using Codespaces)
-
-## Deploy from the repository root
-
-The root `azd` project provisions the call center scenario. After authenticating with Azure, run:
-
-```bash
-az login
-azd auth login
-azd up
-```
-
-The command creates resources in the `azd` environment's resource group and generates the `.env` file in the repository root. To change the environment or subscription, use `azd env set` before running `azd up`.
 
 ## Ready to go further?
 

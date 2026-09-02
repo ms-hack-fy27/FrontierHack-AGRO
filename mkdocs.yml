@@ -53,7 +53,7 @@ markdown_extensions:
       permalink: true
 
 nav:
-  - Home: index.md
+  - Home: readme.md
   - Azure Infrastructure: infra.md
   - 📞 Call Center:
       - Overview: callcenter/README.md
