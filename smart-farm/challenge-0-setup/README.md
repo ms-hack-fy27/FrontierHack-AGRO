@@ -37,6 +37,7 @@ python3 -m venv .venv
 .venv\Scripts\activate  # on linux: source .venv/bin/activate
 
 # 3. Install Python dependencies
+python.exe -m pip install --upgrade pip
 pip install -r requirements.txt
 
 ```
