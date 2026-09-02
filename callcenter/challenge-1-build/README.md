@@ -54,7 +54,6 @@ From the model's perspective, tools are described by a **JSON schema** (name, de
 | **Function** | Calls a local Python function that you define | Any custom logic: database queries, APIs, and calculations |
 | **Code Interpreter** | Lets the agent write and execute Python in a sandbox | Data analysis, chart generation, and file processing |
 | **File Search** | Performs semantic search over a Microsoft Foundry knowledge base | Policy documents, manuals, and historical records |
-| **Bing Search** | Searches the web in real time | Real-time information and news |
 | **Azure AI Search** | Queries an Azure Search index | Grounded retrieval from your own data at scale |
 
 #### Microsoft Foundry vector databases and knowledge bases

@@ -11,14 +11,11 @@ flowchart LR
     Bicep --> Foundry[Microsoft Foundry AI Services account]
     Foundry --> Project[Foundry project]
     Foundry --> Model[gpt-5.4 deployment\nGlobalStandard capacity 10]
-    Foundry --> BingConn[GroundingWithCustomSearch connection]
-    BingConn --> Bing[Bing Custom Search]
     Foundry --> InsightsConn[Application Insights connection]
     InsightsConn --> AppInsights[Application Insights]
     AppInsights --> Logs[Log Analytics workspace\n30-day retention]
     Project --> Agents[Python lab agents]
     Model --> Agents
-    Bing --> Agents
     
 ```
 
@@ -29,7 +26,6 @@ flowchart LR
 | Foundry account | `Microsoft.CognitiveServices/accounts` (`AIServices`) | Hosts the project, model deployment, and Foundry connections | `swedencentral`, SKU `S0` |
 | Foundry project | `Microsoft.CognitiveServices/accounts/projects` | Logical project boundary used by the Python SDK and Foundry portal | `swedencentral` |
 | Model deployment | `Microsoft.CognitiveServices/accounts/deployments` | Serves the lab's generative model | `gpt-5.4`, version `2026-03-05`, `GlobalStandard`, capacity `10` |
-| Bing Custom Search account | `Microsoft.Bing/accounts` (`Bing.GroundingCustomSearch`) | Provides web grounding for agents | Global, SKU `G2` |
 | Log Analytics workspace | `Microsoft.OperationalInsights/workspaces` | Stores the workspace-backed Application Insights telemetry | `swedencentral`, 30-day retention |
 | Application Insights | `Microsoft.Insights/components` | Receives GenAI traces, request telemetry, errors, latency, and token metrics | `swedencentral`, workspace-based |
 
@@ -37,7 +33,6 @@ Resource names receive a unique suffix derived from the resource group ID. The d
 
 - Foundry account: `aif-frontier-<suffix>`
 - Foundry project: `prj-frontier-<suffix>`
-- Bing Custom Search: `bing-custom-hack-<suffix>`
 - Log Analytics: `logs-<suffix>`
 - Application Insights: `insights-<suffix>`
 
@@ -64,7 +59,5 @@ The hook writes the following values to `.env`:
 | `APPINSIGHTS_INSTRUMENTATION_KEY` | `appInsightsInstrumentationKey` output | Legacy-compatible Application Insights configuration |
 | `AZURE_EXPERIMENTAL_ENABLE_GENAI_TRACING` | Literal `true` in `write-env.ps1` | Enables experimental GenAI tracing in the Azure SDK instrumentation |
 | `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT` | Literal `true` in `write-env.ps1` | Enables capture of GenAI message content in telemetry |
-
-The Bicep template also outputs the Bing account name, resource ID, configuration name, and Foundry connection name. The current hook does not copy those four outputs into `.env`.
 
 The deployment does not create a separate web application, database, storage account, Kubernetes cluster, or public API. The lab agents run from the participant's Python environment and call Foundry over its endpoint.

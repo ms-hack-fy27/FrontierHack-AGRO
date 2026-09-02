@@ -17,7 +17,6 @@ The Foundry account and project use system-assigned managed identities. The curr
 
 - `publicNetworkAccess: 'Enabled'` on the Foundry account.
 - `disableLocalAuth: false`, so local authentication remains enabled.
-- Bing credentials in the Foundry connection, sourced from the Bing account key at deployment time.
 - Application Insights connection credentials in the Foundry connection.
 - GenAI message-content capture to `true` in the generated local `.env` file.
 
